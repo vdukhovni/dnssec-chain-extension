@@ -312,22 +312,22 @@
 
       <figure>
         <artwork>
-
-          opaque Reserved&lt;0..255&gt;
-          opaque AuthenticationChain&lt;1..2^16-1&gt;
+    struct {
+        uint16 SupportLifetime;
+        opaque AuthenticationChain&lt;1..2^16-1&gt;;
+    } DnssecChainExtension;
         </artwork>
       </figure>
 
       <t>
-    The Reserved field is reserved for future updates to this
-    document; in particular it is hoped that the issues discussed
-    in <xref target="increasing-trust" /> can be addressed.
-    Implementations of this specification MUST send a zero-length vector
-    and ignore the field on receipt.
+      A zero "SupportLifetime" prohibits the client from unilaterally
+      requiring ongoing use of the extension based on prior observation
+      of its use (pinning).  Use of non-zero values is described in
+      <xref target="extension-support-lifetime"/>
       </t>
 
       <t>
-    The AuthenticationChain structure is composed of a sequence of 
+    The AuthenticationChain is composed of a sequence of
     uncompressed wire format DNS resource record sets (RRset) and 
     corresponding signatures (RRSIG) record sets.  The TLS client
     should be prepared to receive this set of RRsets in any order.
@@ -554,6 +554,74 @@ RRSIG(. DNSKEY)
       </section>
 
     </section> <!-- authentication chain data -->
+
+
+    <section title="Extension Support Lifetime"
+             anchor="extension-support-lifetime">
+
+      <t>
+      A non-zero value of the SupportLifetime in the server extension
+      specifies the maximum number of hours for which the client
+      may cache a policy that requires the server to continue to
+      respond with the extension (containg fresh TLSA or denial of
+      existence data) for the specific port, protocol,
+      server name triple.  Continuity for time intervals of less
+      than an hour is best handled without mandating the extension,
+      via caching of the TLSA DNS RRset DNS for up to its DNS TTL.
+      </t>
+
+      <t>
+      Note that mandating use of the extension does not obligate
+      the server to continue to have TLSA records, nor even to
+      continue to have DNSSEC for its DNS zone.  If either condition
+      is not satisfied, the server can provide an authenticated
+      denial of existence of its TLSA records or secure delegation
+      of its domain as appropriate.  The only obligation on the
+      server is to continue to support the extension for the specified
+      service endpoint (port, protocol, DNS name triple) for at
+      least the indicated number of hours.
+      </t>
+
+      <t>
+      When the server's extension proves (valid DNSSEC denial of
+      existence) either the non-existence of its TLSA records, or
+      insecure delegation of the containing DNS zone, the client
+      MUST ignore any value specified in the SupportLifetime field,
+      and MUST immediately clear any policy that mandates the
+      extension for the service endpoint in question.
+      </t>
+
+      <t>
+      When the server's extension delivers a "secure" TLSA RRset
+      that validates its certificate chain in accordance with <xref
+      target="RFC7671"/>, a client that has a cached extension
+      support policy MUST use the returned SupportLifetime to
+      reduce its timeout to not exceed the indicated limit.  If
+      the new limit is zero, the resulting expired cached policy can
+      be immediately deleted. If the server extension has
+      a SupportLifetime that is longer than the remaining policy time,
+      the client MAY extend its cached policy up to the indicated
+      limit.
+      </t>
+
+      <t>
+      If a server declines the extension while a cached policy is
+      in effect, the client MUST consider this to be a downgrade
+      attack, and MUST decline to continue the TLS
+      handshake. It MAY attempt to obtain the required DNS data via
+      alternative means, such as regular DNS resolution.</t>
+
+      <t>
+      The same applies when the server's extension
+      provides a TLSA RRset that does not match its certificate
+      chain in accordance with DANE.  If the client nevertheless
+      decides to continue the TLS handshake, perhaps via user-sanctioned
+      fallback to WebPKI, it MUST NOT clear any cached extension
+      policy without explicit user confirmation or administrator
+      intervention.
+      </t>
+
+    </section>
   </section> <!-- dnssec authentication chain extension -->
 
   <section title="Construction of Serialized Authentication Chains">
@@ -826,29 +894,19 @@ RRSIG(. DNSKEY)
           farm" with multiple independent backends, which may not have
           uniform support for a given feature; it also does not account
           for situations where an operator wishes to administratively
-          disable the use of a feature without breakage.  Other
-          subtleties and complications are possibly not yet known (in
-          addition to the inherent limitations of pinning as not
-          applying to the initial connection and requiring repeated
-          visits during the window of the pin in order to avoid
-          reintroducing that limitation), and a
-          comprehensive solution not yet available.  Nonetheless, this
-          document is being published without a remediation strategy in
-          order to allow for deployments in scenarios where the issues
-          due to multiple trust anchors do not arise.  It is expected
-          that the Reserved field can be used to support a remediation
-          strategy in a backwards-compatible fashion.
+          disable the use of a feature without breakage.
         </t>
 
         <t>
-          Due to the myriad of potential complications listed above,
-          implementations of this specification MUST NOT treat support
-          for this extension on one connection as indication of support
-          for this extension on future connections (i.e., must not
-          "pin").  Pinning may still be permitted given additional
-          application-specific or preconfigured knowledge about a given
-          server.
-        </t>
+          Therefore, any expectation of ongoing support for the extension,
+          must be of limited duration, and be subject to consent by the server.
+          The SupportLifetime element of the server extension serves this
+          purpose by communicating to the client a maximum time interval
+          for which it may require the extension in future connections.
+          The SupportLifetime element can be used to harden this protocol
+          against downgrades after first contact.  This protocol cannot protect
+          the client against misissued WebPKI certificates on first contact.
+      </t>
 
       </section>
 
