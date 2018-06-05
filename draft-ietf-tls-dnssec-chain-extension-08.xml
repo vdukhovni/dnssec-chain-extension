@@ -766,12 +766,8 @@ RRSIG(. DNSKEY)
           containing zone.  This makes it possible for the application to
           continue to use WebPKI with servers securely determined to not yet
           support DNSSEC or DANE, making it possible to use the application
-          with many more servers before support DNSSEC is the norm and not the
-          exception.  Unlike the unilateral trust-on-first-use "pinning"
-          proscribed in <xref target="increasing-trust" />, an a priori
-          requirement to support the extension in a green fields application
-          is not subject to the same interoperability concerns in the face of
-          partial or changing support for the extension.
+          with many more servers before DNSSEC signing is the norm and not the
+          exception.
         </t>
 
         <t>
