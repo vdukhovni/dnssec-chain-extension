@@ -762,7 +762,7 @@ RRSIG(. DNSKEY)
           obligate them to have DNSSEC-signed TLSA records, nor even for the
           server's domain name to lie in a DNSSEC-signed zone.  Rather, the
           server is still free to return a denial of existence response,
-          providing non-existence of the TLSA records, or insecurity the some
+          proving non-existence of the TLSA records, or insecurity the some
           containing zone.  This makes it possible for the application to
           continue to use WebPKI with servers securely determined to not yet
           support DNSSEC or DANE, making it possible to use the application
