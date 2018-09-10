@@ -183,8 +183,13 @@
     <t>
       A client MAY include an extension of type
       "dnssec_chain" in the (extended) ClientHello.  The
-      "extension_data" field of this extension MUST be
-      empty.
+      "extension_data" field of this extension includes
+      the port number the client is connecting to as a
+      16 bit number in network byte order.  This, in combination
+      with the client's Server Name Indication (SNI) extension,
+      enables servers behind Destination Network Address Translation
+      (DNAT) devices to determine the correct DNS name for
+      the TLSA records needed by the client.
     </t>
 
     <t>
@@ -206,9 +211,9 @@
 
       <t>
         A client MAY include an extension of type
-        "dnssec_chain" in the ClientHello.  The
-        "extension_data" field of this extension MUST be
-        empty.
+        "dnssec_chain" in the ClientHello.  As with TLS 1.2 above,
+        the "extension_data" field of this extension is the server
+        port number in network byte order.
       </t>
 
       <t>
@@ -294,7 +299,7 @@
              anchor="auth_chain_data">
 
       <t>
-    The "extension_data" field of the "dnssec_chain" extension 
+    The "extension_data" field of the server's "dnssec_chain" extension
     MUST contain a DNSSEC Authentication Chain encoded in the
     following form:
       </t>
@@ -476,7 +481,8 @@
        <xref target="RFC6698" /> <xref target="RFC7671" /> of the 
        server, the DNS record set to be
        serialized is a TLSA record set corresponding to the 
-       server's domain name, protocol, and port number.
+       server's domain name, protocol, and the port number
+       from the client's "dnssec_chain" extension.
     </t>
 
     <t>
@@ -494,7 +500,10 @@
       The TLSA record to be queried is constructed by prepending
       the _port and _transport labels to the domain name as described
       in <xref target="RFC6698" />, where "port" is the port number
-      associated with the TLS server.  The transport is "tcp"
+      from the client's "dnssec_chain" extension. Servers will
+      generally support only a particular set of ports, often just one,
+      and will decline the extension if the client's "dnssec_chain"
+      extension specifies an unsupported port number. The transport is "tcp"
       for TLS servers, and "udp" for DTLS servers.  The port
       number label is the left-most label, followed by the
       transport, followed by the base domain name.
