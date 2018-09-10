@@ -182,13 +182,14 @@
 
     <t>
       A client MAY include an extension of type
-      "dnssec_chain" in the (extended) ClientHello.  The
-      "extension_data" field of this extension includes
-      the port number the client is connecting to as a
-      16 bit number in network byte order.  This, in combination
-      with the client's Server Name Indication (SNI) extension,
-      enables servers behind Destination Network Address Translation
-      (DNAT) devices to determine the correct DNS name for
+      "dnssec_chain" in the (extended) ClientHello.
+      The "extension_data" field of this extension includes the port
+      number the client is connecting to as a 16 bit number in network
+      byte order.  Clients that include the "dnssec_chain" extension
+      MUST also include server_name <xref target="RFC6066"/> extension.
+      The port number, in combination with the client's server_name
+      extension, enables servers behind Destination Network Address
+      Translation (DNAT) devices to determine the correct DNS name for
       the TLSA records needed by the client.
     </t>
 
@@ -486,14 +487,15 @@
     </t>
 
     <t>
-      The domain name of the server MUST be that included in
-      the TLS server_name extension <xref target="RFC6066"
-      /> when present. If the server_name extension is not
-      present, or if the server does not recognize the
-      provided name and wishes to proceed with the handshake
-      rather than to abort the connection, the server picks
-      one of its configured domain names associated with the
-      server IP address to which the connection has been established.
+      The domain name of the server MUST be that included in the client's
+      server_name extension.  If the server does not recognize the
+      provided name and wishes to proceed with the handshake rather than
+      to abort the connection, the server MUST decline the "dnssec_chain"
+      extension, but MAY continue the handshake with a suitable default
+      certificate chain, just as it would had the client not sent its
+      "dnssec_chain" extension.  If the server does recognize the provided
+      name, this becomes the TLSA "base domain name" (Section 3 of <xref
+      target="RFC6698"/>).
     </t>
 
     <t>
@@ -506,7 +508,7 @@
       extension specifies an unsupported port number. The transport is "tcp"
       for TLS servers, and "udp" for DTLS servers.  The port
       number label is the left-most label, followed by the
-      transport, followed by the base domain name.
+      transport label, and then the labels of the base domain name.
     </t>
 
     <t>
