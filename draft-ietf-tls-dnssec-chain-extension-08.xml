@@ -329,7 +329,8 @@
       <t>
     The AuthenticationChain structure is composed of a sequence of 
     uncompressed wire format DNS resource record sets (RRset) and 
-    corresponding signatures (RRSIG) record sets.
+    corresponding signatures (RRSIG) record sets.  The TLS client
+    should be prepared to receive this set of RRsets in any order.
       </t>
 
       <t>
@@ -387,42 +388,32 @@
       </t>
 
       <t>
-        The chain of records appears in logical order for validation.
-        If the owner name of the TLSA RRset is an alias (e.g., CNAME or DNAME),
-        then the chain of signed alias records MUST appear first in the
-        AuthenticationChain; otherwise, the TLSA RRset appears first.
-        If at some point along the alias chain the
-        target of an alias leads to an unsigned zone, the response will include a
+        If the owner name of the TLSA RRset is an alias (CNAME or DNAME),
+        then the chain of signed alias records MUST appear in the
+        AuthenticationChain. If at some point along the alias chain the
+        target of an alias leads to an unsigned zone, the response will be a
         denial of existence response proving insecure delegation of that
-        zone.  DNAME chains SHOULD omit unsigned CNAME records that may have
-        been synthesized in the response from a DNS resolver. (If unsigned
-        synthetic CNAMES are present, then the TLS client will just ignore
-        them, as they are not necessary to validate the chain.)
+        zone.  DNAME chains MUST omit unsigned CNAME records that may have
+        been synthesized in the response from a DNS resolver. Unsigned
+        synthetic CNAMES in the chain MUST be dropped by the TLS client,
+        as these records are not required to validate the chain.)
       </t>
 
       <t>
-        When the response contains valid TLSA records, the next (barring
-        aliases, first) RRset in the chain MUST contain the TLSA record set
-        being presented.
+        When the requested TLSA records exist and are "secure", the
+        response will include the TLSA RRset and its signatures.  When
+        the response is an authenticated denial of existence, the
+        response must instead include the signed NSEC or NSEC3 records
+        proving the non-existence of the TLSA RRset or insecure
+        delegation as described in <xref target="denial_of_existence"/>.
       </t>
 
       <t>
-      When the response is an authenticated denial of existence, the next
-      (barring aliases, first) set of RRsets in the chain MUST be the signed
-      records (e.g., NSEC or NSEC3) proving the non-existence of the TLSA RRset or of
-      insecure delegation, as described in <xref
-      target="denial_of_existence"/>.
-      </t>
-
-      <t>
-        Following the TLSA or denial of existence RRset,
-        the subsequent RRsets MUST contain the full set of DNS records
-        needed to authenticate the TLSA record set or denial of existence
-        response via the server's trust anchor.  Typically this means a set
-        of DNSKEY and DS RRsets that cover all zones from the target zone
-        containing the TLSA or NSEC/NSEC3 record set to the trust anchor zone. The TLS
-        client should be prepared to receive this set of RRsets in any
-        order.
+        The response MUST contain the full set of DNS records needed to
+        authenticate the TLSA record set or denial of existence response
+        via the server's trust anchor.  Typically this means a set of
+        DNSKEY and DS RRsets that cover all zones from the target zone
+        containing the TLSA record set to the trust anchor zone.
       </t>
 
       <t>
@@ -441,12 +432,13 @@
       </t>
 
       <t>
-        The final DNSKEY RRset in the authentication chain corresponds
-        to the trust anchor (typically the DNS root). This trust anchor 
-        is also preconfigured in the TLS client, but including it in the 
-        response from the server permits TLS clients to use the automated 
-        trust anchor rollover mechanism defined in RFC 5011 
-        <xref target="RFC5011" /> to update their configured trust anchor.
+        The trust anchor (typically the DNS root) DNSKEY RRset and
+        its signatures MUST be included in the authentication chain.
+        Though this trust anchor is also preconfigured in the TLS
+        client, including it in the response from the server permits
+        TLS clients to use the automated trust anchor rollover
+        mechanism defined in RFC 5011 <xref target="RFC5011" /> to
+        update their configured trust anchor.
       </t>
 
       <t>
