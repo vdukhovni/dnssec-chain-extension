@@ -163,7 +163,7 @@
     <t>
       This specification is based on Adam Langley's original
       proposal for serializing DNSSEC authentication chains
-      and delivering them in an X.509 certificate extension
+      that delivered these via an X.509 certificate extension
       <xref target="I-D.agl-dane-serializechain" />. It modifies the approach by using
       wire format DNS records in the serialized data (assuming
       that the data will be prepared and consumed by a DNS-specific
@@ -606,8 +606,9 @@ RRSIG(. DNSKEY)
 
       <t>
       When the server's extension delivers a "secure" TLSA RRset
-      that validates its certificate chain in accordance with <xref
-      target="RFC7671"/>, a client that has a cached extension
+      that validates its certificate chain in accordance with DANE
+      (<xref target="RFC6698"/> and <xref target="RFC7671"/>),
+      a client that has a cached extension
       support policy MUST use the returned SupportLifetime to
       reduce its timeout to not exceed the indicated limit.  If
       the new limit is zero, the resulting expired cached policy can
@@ -744,13 +745,12 @@ RRSIG(. DNSKEY)
     <t>
       DNS responses have associated TTLs, and clients MAY cache
       DNS responses obtained via this extension for the duration of
-      the validated (negative, for denial of existence records) TTL.
-      The
-      period of such caching MUST NOT exceed the TTL associated with
-      those records. A client that possesses a validated and unexpired
-      TLSA RRset, complete chain, or denial of existence in its cache does not need to send the
-      "dnssec_chain" extension for subsequent connections to the same TLS
-      server during the validity period; it can use the cached information instead of what it would have obtained in the server's response to the extension.
+      the validated TTL. DNS records MUST NOT be cached beyond their
+      associated TTL.  A client that possesses a validated and unexpired
+      TLSA RRset or denial of existence RRsets in its cache does not need to send the
+      "dnssec_chain" extension for subsequent connections to the same origin
+      during the validity period; it can use the cached information instead of
+      what it would have obtained in the server's response to the extension.
     </t>
 
   </section> <!-- verification -->
