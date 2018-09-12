@@ -721,12 +721,26 @@ RRSIG(. DNSKEY)
   <section title="Verification" anchor="sec_verification">
 
     <t>
+      A TLS client supporting this extension may also support obtaining TLSA
+      records using regular DNS queries. That means that the DNS cache of
+      such clients can contain records obtained via regular DNS or via the
+      authentication chain TLS extension. No assumptions should be made with
+      respect to the transport model used to obtain the validated DNS data.
+      A TLS client might have obtained a TLSA record via regular DNS queries
+      that are in its cache whose TTL has not yet expired. Such a TLS client
+      can omit the authentication chain TLS extension altogher. A TLS server
+      operator MUST NOT assume the only source of TLSA data comes from the
+      use of this extension. The authoritatve source of the TLSA record is the
+      DNS, not this TLS extension.
+    </t>
+
+    <t>
       A TLS client making use of this specification, and which receives a
       DNSSEC authentication chain extension from a server, uses this
-      information to perform DANE authentication of the server when the
-      response is not a denial of existence and has at least one "usable"
-      TLSA record as defined in <xref target="RFC6698"/> or other applicable
-      specification (perhaps application-specific).
+      DNS data in addition to its existing DNS cache to perform DANE authentication
+      of the server when the response is not a denial of existence and has at
+      least one "usable" TLSA record as defined in <xref target="RFC6698"/> or
+      other applicable specification (perhaps application-specific).
     </t>
 
     <t>
@@ -920,8 +934,11 @@ RRSIG(. DNSKEY)
           purpose by communicating to the client a maximum time interval
           for which it may require the extension in future connections.
           The SupportLifetime element can be used to harden this protocol
-          against downgrades after first contact.  This protocol cannot protect
-          the client against misissued WebPKI certificates on first contact.
+          against downgrades after first contact.  This extension cannot protect
+          TLS clients against misissued WebPKI certificates on first contact.
+          However, for TLS clients that have full working access to a validating
+          DNSSEC resolver can obtain TLS records directly and will be protected
+          against this attack, just not via this TLS extension.
       </t>
 
       </section>
