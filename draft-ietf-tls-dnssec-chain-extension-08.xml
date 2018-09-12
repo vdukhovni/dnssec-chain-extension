@@ -539,6 +539,16 @@ RRSIG(. DNSKEY)
         </t>
 
         <t>
+        Failure to continue to provide the extension will lead to communication
+        failure with clients that cached the specified SupportLifetime. Servers
+        that wish to discontinue supporting the extension must set the
+        SupportLifetime to zero and keep serving the extension with up to date
+        data (TLSA or denial of existence) until the SupportLifetime's original
+        value expired.  After such time, the server can safely stop serving the
+        extension.
+        </t>
+
+        <t>
         If the extension is negotiated, it MUST contain either
         authenticated TLSA records or authenticated denial of
         existence.  Authenticated denial of existence chains include
