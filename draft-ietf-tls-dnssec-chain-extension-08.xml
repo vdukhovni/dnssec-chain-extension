@@ -797,7 +797,10 @@ RRSIG(. DNSKEY)
       certificate for the latter. If the TLS server supports both DANE
       and traditional PKIX, and wants to allow efficient PKIX fallback
       within the same handshake, they should always provide the full
-      X.509 certificate chain.
+      X.509 certificate chain.  Note that conversely, DANE may require
+      a more complete chain than PKIX, this happens when a DANE-TA(2)
+      record matches a root CA, which may be left out of PKIX chains,
+      but is required in DANE-TA(2) chains.
     </t>
 
   </section>
