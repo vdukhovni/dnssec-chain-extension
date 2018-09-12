@@ -559,8 +559,8 @@ RRSIG(. DNSKEY)
         <t>
         <list style="symbols">
         <t>The TLSA record does not exist.</t>
-        <t>There is no signed delegation to a DNS zone which is either
-        an ancestor of, or the same as, the TLSA record name.</t>
+        <t>There is an insecure delegation somewhere in the chain from the root trust
+        anchor to the TLSA record resulting in an insecure TLSA record.</t>
         </list>
         </t>
 
