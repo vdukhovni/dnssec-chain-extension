@@ -147,15 +147,17 @@
     <t>
       The extension described here allows a TLS client to request that
       the TLS server return the DNSSEC authentication chain corresponding
-      to its DNSSEC-validated DANE TLSA resource record set (RRset), or
+      to the DNSSEC-validated DANE TLSA resource record set (RRset) matching
+      the requested server name and port, or
       authenticated denial of existence of such an RRset (as described in
-      <xref target="denial_of_existence"/>). If the server
-      supports this extension it performs the appropriate DNS queries,
-      builds the authentication chain, and returns it to the client.  The
-      server will usually use a previously cached authentication chain, but
-      it will need to rebuild it periodically as described in <xref
-      target="sec_caching"/>. The client then authenticates the chain
-      using a pre-configured trust anchor.
+      <xref target="denial_of_existence"/>). TLS servers can support this
+      extension directly by performing DNS queries, or indirectly by reading
+      a dnssec authentication chain prepared and refreshed at regular intervals
+      by an external process. The entity that creates the authentication chain
+      for the requested name and port performs the appropriate DNS queries,
+      builds the authentication chain. The data would be cached and would need
+      to be rebuild periodically as described in <xref target="sec_caching"/>.
+      The client then authenticates the chain using a pre-configured trust anchor.
     </t>
 
     <t>
