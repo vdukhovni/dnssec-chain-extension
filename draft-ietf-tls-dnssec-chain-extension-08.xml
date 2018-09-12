@@ -85,8 +85,6 @@
       perform DANE authentication of a TLS server
       without needing to perform additional DNS
       record lookups, in certain situations.
-      It is not intended to be used to validate
-      the TLS server's address records.
     </t>
   </abstract>
 </front>
@@ -117,17 +115,13 @@
       <xref target="RFC7671" /> of a TLS
       server without performing
       additional DNS record lookups and incurring the
-      associated latency penalty, but inherent difficulties
-      with having multiple distinct trust hierarchies can limit
-      its applicability in some situations. It also provides the
-      ability to avoid potential problems with TLS clients
-      being unable to look up DANE records because of an
+      associated latency penalty. It can also be used by
+      TLS clients that are unable to look up DANE records because of an
       interfering or broken middlebox on the path between
       the client and a DNS server <xref target="HAMPERING"/>.
-      And lastly, it allows a
-      TLS client to validate the server's DANE (TLSA) records
-      itself without needing access to a validating DNS resolver
-      to which it has a secure connection.
+      And lastly, it allows a TLS client to validate the server's
+      DANE (TLSA) records itself without needing access to a validating
+      DNS resolver to which it has a secure connection.
     </t>
 
     <t>
