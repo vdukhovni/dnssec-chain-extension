@@ -204,7 +204,7 @@
     <section title="Protocol, TLS 1.3">
 
       <t>
-        In TLS 1.3, the server adds its dnssec_extension to the extension block
+        In TLS 1.3, the server adds its dnssec_chain extension in the extension block
         of the Certificate message containing the end entity certificate being
         validated, rather than to the extended ServerHello message.
       </t>
@@ -905,12 +905,14 @@ _dane443.node1.provider.example. IN TLSA 1 1 1 ...
 
 
   <section title="IANA Considerations">
-
-    <t>
-      This extension requires the registration of a new value in the TLS
-      ExtensionsType registry.
-    </t>
-
+  <t>This document defines one new entry in the TLS ExtensionsType Values registry:</t>
+           <figure align="center" anchor="iana_requests">
+               <artwork align="left"><![CDATA[
+   Value   Extension Name   TLS 1.3  Recommended   Reference
+   -----   --------------   -------  -----------   ---------------
+   TBD     dnssec_chain     CH       No            [this document]
+               ]]></artwork>
+           </figure>
   </section> <!-- iana considerations -->
 
 
@@ -948,15 +950,6 @@ _dane443.node1.provider.example. IN TLSA 1 1 1 ...
     &rfc7671;
     &rfc8174;
     &rfc8446;
-    <reference anchor="TLSIANA"
-        target="https://tools.ietf.org/html/draft-ietf-tls-iana-registry-updates">
-        <front>
-          <title>IANA Registry Updates for TLS and DTLS</title>
-          <author fullname="Joe Salowey" initials="J" surname="Salowey"/>
-          <author fullname="Sean Turner" initials="S" surname="Turner"/>
-          <date/>
-        </front>
-    </reference>
   </references>
 
 
