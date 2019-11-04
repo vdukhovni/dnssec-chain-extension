@@ -801,7 +801,7 @@ _dane443.node1.provider.example. IN TLSA 1 1 1 ...
       publish TLSA RRs at an alternative DNS node (as in the example above),
       to which the hosting customer will publish a CNAME alias.  This results
       in all clients (whether they obtain TLSA records from DNS directly, or
-      employ this extension) seing the same TLSA records and sending the same
+      employ this extension) seeing the same TLSA records and sending the same
       SNI name.
     </t>
 
