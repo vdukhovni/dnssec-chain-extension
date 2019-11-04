@@ -847,6 +847,37 @@ _dane443.node1.provider.example. IN TLSA 1 1 1 ...
      extension pin offers.
     </t>
 
+    <t>
+      If the hosting provider intends to use end-entity TLSA records
+      (certificate usage PKIX-EE(1) or DANE-EE(3)) then the simplest
+      approach is to use the same key-pair for all the certificates
+      at a given hosting node, and publish "1 1 1" or "3 1 1" RRs
+      matching the common public key.  Since key rollover cannot
+      be simultaneous across multiple certificate updates, there
+      will be times when multiple "1 1 1" (or "3 1 1") records
+      will be required to match all the extant certificates.
+      Multiple TLSA records are in any case needed a few TTLs
+      before certificate updates as explained in Section 8 of
+      <xref target="RFC7671"/>.
+    </t>
+
+    <t>
+      If the hosting provider intends to use trust-anchor TLSA records
+      (certificate usage PKIX-TA(0) or DANE-TA(2)) then the same
+      TLSA record can match all end-entity certificates issues by
+      the certification authority in question, and continues to work
+      across end-entity certificate updates, so long as the issuer
+      certificate or public keys remains unchanged. This can be easier
+      to implement, at the cost of greater reliance on the security
+      of the selected provider.
+    </t>
+
+    <t>
+      The provider can of course publish separate TLSA records for
+      each customer, which increases the number of such RRsets that
+      need to be managed, but makes each one independent of the rest.
+    </t>
+
   </section>
 
 
