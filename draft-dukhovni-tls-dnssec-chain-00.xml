@@ -508,7 +508,7 @@ RRSIG(. DNSKEY)
     </section> <!-- authentication chain data -->
   </section> <!-- dnssec authentication chain extension -->
 
-  <section title="Construction of Serialized Authentication Chains">
+  <section title="Construction of Serialized Authentication Chains" anchor="construction">
 
     <t>
       This section describes a possible procedure for the
@@ -528,6 +528,14 @@ RRSIG(. DNSKEY)
       not recognize the SNI name as one if its own names, but wishes to proceed
       with the handshake rather than to abort the connection, the server MUST
       NOT send a dnssec_chain extension to the client.
+    </t>
+
+    <t>
+      The name in client's SNI extension MUST NOT be CNAME-expanded by the
+      server. The TLSA base domain (Section 3 of <xref target="RFC6698"/>)
+      SHALL be the hostname from the client's SNI extension and the guidance
+      in Section 7 of <xref target="RFC7671"/> does not apply.  See <xref
+      target="virtual"/> for further discussion.
     </t>
 
     <t>
@@ -744,6 +752,60 @@ RRSIG(. DNSKEY)
 
   </section> <!-- trust anchor maintenance  -->
 
+
+  <section title="Virtual Hosting" anchor="virtual">
+
+    <t>
+      Delivery of application services is often provided by a third party on
+      behalf of the domain owner (hosting customer). Since the domain owner may
+      want to be able to move the service between providers, non-zero support
+      lifetimes for this extension should only be enabled by mutual agreement
+      between the provider and domain owner.
+    </t>
+
+    <t>
+      When CNAME records are employed to redirect network connections to the
+      provider's network, as mentioned in <xref target="construction"/> the
+      server uses the client's SNI hostname as the TLSA base domain without
+      CNAME expansion. When the certificate chain for the service is managed by
+      the provider, it is impractical to coordinate certificate changes by the
+      provider with updates in the hosting customer's DNS. Therefore, the TLSA
+      RRset for the hosted domain is best configured as a CNAME from the
+      customer's domain to a TLSA RRset that is managed by the provider as part
+      of delivering the hosted service.  For example:
+    </t>
+
+      <figure>
+        <artwork>
+; Customer DNS
+www.example.com. IN CNAME node1.provider.example.
+_443._tcp.www.example.com. IN CNAME _dane443.node1.provider.example.
+; Provider DNS
+node1.provider.example. IN A 192.0.2.1
+_dane443.node1.provider.example. IN TLSA 1 1 1 ...
+        </artwork>
+      </figure>
+
+    <t>
+      Clients that obtain TLSA records directly from DNS, bypassing this
+      extension, may however perform CNAME-expansion as in Section 7 of <xref
+      target="RFC7671"/>, and if TLSA records are associated with the
+      fully-expanded name, may use that name as the TLSA base domain and SNI
+      name for the TLS handshake.
+    </t>
+
+    <t>
+      To avoid confusion, it is RECOMMENDED that server operators not publish
+      TLSA RRs (_port._tcp. + base domain) based on the expanded CNAMEs used
+      to locate their network addresses.  Instead, the server operator SHOULD
+      publish TLSA RRs at an alternative DNS node (as in the example above),
+      to which the hosting customer will publish a CNAME alias.  This results
+      in all clients (whether they obtain TLSA records from DNS directly, or
+      employ this extension) seing the same TLSA records and sending the same
+      SNI name.
+    </t>
+
+  </section> <!-- virtual hosting -->
 
   <section title="Operational Considerations">
 
