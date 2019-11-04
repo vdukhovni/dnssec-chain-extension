@@ -813,10 +813,9 @@ RRSIG(. DNSKEY)
 
   <section title="IANA Considerations">
 
-    <t>This extension requires the registration of a new
-      value in the TLS ExtensionsType registry.  The extension should
-      be marked "Recommended" in accordance with "IANA Registry
-      Updates for TLS and DTLS" <xref target="TLSIANA"/>.
+    <t>
+      This extension requires the registration of a new value in the TLS
+      ExtensionsType registry.
     </t>
 
   </section> <!-- iana considerations -->
