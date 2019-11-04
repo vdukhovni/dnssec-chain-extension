@@ -5,8 +5,8 @@
 #  com and org roll their KSK
 # example.com and example.net use a CSK (combined signing key)
 # 
-INCEPTION="20151103"
-EXPIRATION="20181128"
+INCEPTION="20181128"
+EXPIRATION="20201202"
 
 ldns-signzone -i $INCEPTION -e $EXPIRATION -o . root K.+013+47005 K.+013+31918 K.+013+02635 && \
 	grep -v '	RRSIG	.* 2635 \. ' root.signed > root.signed.2 && \

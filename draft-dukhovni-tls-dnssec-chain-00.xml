@@ -887,48 +887,11 @@ RRSIG(. DNSKEY)
 
   <section title="Test vectors">
     <t>
-       The provided test vectors will authenticate the certificate
-       used with https://example.com/, https://example.net/ and
-       https://example.org/ at the time of writing:
+       The test vectors in this appendix are representations of the
+       content of the "opaque AuthenticationChain" field in DNS
+       presentation format. And except for the "extention_data" in
+       <xref target="hex_dump"/>, do not contain the "uint16 ExtSupportLifetime" field.
     </t>
-    <figure>
-      <artwork>
------BEGIN CERTIFICATE-----
-MIIF8jCCBNqgAwIBAgIQDmTF+8I2reFLFyrrQceMsDANBgkqhkiG9w0BAQsFADBw
-MQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYDVQQLExB3
-d3cuZGlnaWNlcnQuY29tMS8wLQYDVQQDEyZEaWdpQ2VydCBTSEEyIEhpZ2ggQXNz
-dXJhbmNlIFNlcnZlciBDQTAeFw0xNTExMDMwMDAwMDBaFw0xODExMjgxMjAwMDBa
-MIGlMQswCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEUMBIGA1UEBxML
-TG9zIEFuZ2VsZXMxPDA6BgNVBAoTM0ludGVybmV0IENvcnBvcmF0aW9uIGZvciBB
-c3NpZ25lZCBOYW1lcyBhbmQgTnVtYmVyczETMBEGA1UECxMKVGVjaG5vbG9neTEY
-MBYGA1UEAxMPd3d3LmV4YW1wbGUub3JnMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A
-MIIBCgKCAQEAs0CWL2FjPiXBl61lRfvvE0KzLJmG9LWAC3bcBjgsH6NiVVo2dt6u
-Xfzi5bTm7F3K7srfUBYkLO78mraM9qizrHoIeyofrV/n+pZZJauQsPjCPxMEJnRo
-D8Z4KpWKX0LyDu1SputoI4nlQ/htEhtiQnuoBfNZxF7WxcxGwEsZuS1KcXIkHl5V
-RJOreKFHTaXcB1qcZ/QRaBIv0yhxvK1yBTwWddT4cli6GfHcCe3xGMaSL328Fgs3
-jYrvG29PueB6VJi/tbbPu6qTfwp/H1brqdjh29U52Bhb0fJkM9DWxCP/Cattcc7a
-z8EXnCO+LK8vkhw/kAiJWPKx4RBvgy73nwIDAQABo4ICUDCCAkwwHwYDVR0jBBgw
-FoAUUWj/kK8CB3U8zNllZGKiErhZcjswHQYDVR0OBBYEFKZPYB4fLdHn8SOgKpUW
-5Oia6m5IMIGBBgNVHREEejB4gg93d3cuZXhhbXBsZS5vcmeCC2V4YW1wbGUuY29t
-ggtleGFtcGxlLmVkdYILZXhhbXBsZS5uZXSCC2V4YW1wbGUub3Jngg93d3cuZXhh
-bXBsZS5jb22CD3d3dy5leGFtcGxlLmVkdYIPd3d3LmV4YW1wbGUubmV0MA4GA1Ud
-DwEB/wQEAwIFoDAdBgNVHSUEFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwdQYDVR0f
-BG4wbDA0oDKgMIYuaHR0cDovL2NybDMuZGlnaWNlcnQuY29tL3NoYTItaGEtc2Vy
-dmVyLWc0LmNybDA0oDKgMIYuaHR0cDovL2NybDQuZGlnaWNlcnQuY29tL3NoYTIt
-aGEtc2VydmVyLWc0LmNybDBMBgNVHSAERTBDMDcGCWCGSAGG/WwBATAqMCgGCCsG
-AQUFBwIBFhxodHRwczovL3d3dy5kaWdpY2VydC5jb20vQ1BTMAgGBmeBDAECAjCB
-gwYIKwYBBQUHAQEEdzB1MCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2Vy
-dC5jb20wTQYIKwYBBQUHMAKGQWh0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9E
-aWdpQ2VydFNIQTJIaWdoQXNzdXJhbmNlU2VydmVyQ0EuY3J0MAwGA1UdEwEB/wQC
-MAAwDQYJKoZIhvcNAQELBQADggEBAISomhGn2L0LJn5SJHuyVZ3qMIlRCIdvqe0Q
-6ls+C8ctRwRO3UU3x8q8OH+2ahxlQmpzdC5al4XQzJLiLjiJ2Q1p+hub8MFiMmVP
-PZjb2tZm2ipWVuMRM+zgpRVM6nVJ9F3vFfUSHOb4/JsEIUvPY+d8/Krc+kPQwLvy
-ieqRbcuFjmqfyPmUv1U9QoI4TQikpw7TZU0zYZANP4C/gj4Ry48/znmUaRvy2kvI
-l7gRQ21qJTK5suoiYoYNo3J9T+pXPGU7Lydz/HwW+w0DpArtAaukI8aNX4ohFUKS
-wDSiIIWIWJiJGbEeIO0TIFwEVWTOnbNl/faPXpk5IRXicapqiII=
------END CERTIFICATE-----
-      </artwork>
-    </figure>
     <t>For brevity and reproducibility all DNS zones involved with the test vectors
     are signed using keys with algorithm 13: ECDSA Curve P-256 with SHA-256.</t>
     <t>To reflect operational practice, different zones in the examples are in
@@ -942,7 +905,7 @@ wDSiIIWIWJiJGbEeIO0TIFwEVWTOnbNl/faPXpk5IRXicapqiII=
       </list>
     </t>
     <t>The test vectors are DNSSEC valid in the same period as the certificate is
-    valid, which is in between November 3 2015 and November 28 2018, with the 
+    valid, which is in between November 28 2018 and December 2 2020, with the 
     following root trust anchor:</t>
     <figure>
       <artwork>
@@ -950,29 +913,79 @@ wDSiIIWIWJiJGbEeIO0TIFwEVWTOnbNl/faPXpk5IRXicapqiII=
         641bb568746f2ffc4d4 )
       </artwork>
     </figure>
+    <t>
+       The test vectors will authenticate the certificate
+       used with https://example.com/, https://example.net/ and
+       https://example.org/ at the time of writing:
+    </t>
+    <figure>
+      <artwork>
+-----BEGIN CERTIFICATE-----
+MIIHQDCCBiigAwIBAgIQD9B43Ujxor1NDyupa2A4/jANBgkqhkiG9w0BAQsFADBN
+MQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMScwJQYDVQQDEx5E
+aWdpQ2VydCBTSEEyIFNlY3VyZSBTZXJ2ZXIgQ0EwHhcNMTgxMTI4MDAwMDAwWhcN
+MjAxMjAyMTIwMDAwWjCBpTELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3Ju
+aWExFDASBgNVBAcTC0xvcyBBbmdlbGVzMTwwOgYDVQQKEzNJbnRlcm5ldCBDb3Jw
+b3JhdGlvbiBmb3IgQXNzaWduZWQgTmFtZXMgYW5kIE51bWJlcnMxEzARBgNVBAsT
+ClRlY2hub2xvZ3kxGDAWBgNVBAMTD3d3dy5leGFtcGxlLm9yZzCCASIwDQYJKoZI
+hvcNAQEBBQADggEPADCCAQoCggEBANDwEnSgliByCGUZElpdStA6jGaPoCkrp9vV
+rAzPpXGSFUIVsAeSdjF11yeOTVBqddF7U14nqu3rpGA68o5FGGtFM1yFEaogEv5g
+rJ1MRY/d0w4+dw8JwoVlNMci+3QTuUKf9yH28JxEdG3J37Mfj2C3cREGkGNBnY80
+eyRJRqzy8I0LSPTTkhr3okXuzOXXg38ugr1x3SgZWDNuEaE6oGpyYJIBWZ9jF3pJ
+QnucP9vTBejMh374qvyd0QVQq3WxHrogy4nUbWw3gihMxT98wRD1oKVma1NTydvt
+hcNtBfhkp8kO64/hxLHrLWgOFT/l4tz8IWQt7mkrBHjbd2XLVPkCAwEAAaOCA8Ew
+ggO9MB8GA1UdIwQYMBaAFA+AYRyCMWHVLyjnjUY4tCzhxtniMB0GA1UdDgQWBBRm
+mGIC4AmRp9njNvt2xrC/oW2nvjCBgQYDVR0RBHoweIIPd3d3LmV4YW1wbGUub3Jn
+ggtleGFtcGxlLmNvbYILZXhhbXBsZS5lZHWCC2V4YW1wbGUubmV0ggtleGFtcGxl
+Lm9yZ4IPd3d3LmV4YW1wbGUuY29tgg93d3cuZXhhbXBsZS5lZHWCD3d3dy5leGFt
+cGxlLm5ldDAOBgNVHQ8BAf8EBAMCBaAwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsG
+AQUFBwMCMGsGA1UdHwRkMGIwL6AtoCuGKWh0dHA6Ly9jcmwzLmRpZ2ljZXJ0LmNv
+bS9zc2NhLXNoYTItZzYuY3JsMC+gLaArhilodHRwOi8vY3JsNC5kaWdpY2VydC5j
+b20vc3NjYS1zaGEyLWc2LmNybDBMBgNVHSAERTBDMDcGCWCGSAGG/WwBATAqMCgG
+CCsGAQUFBwIBFhxodHRwczovL3d3dy5kaWdpY2VydC5jb20vQ1BTMAgGBmeBDAEC
+AjB8BggrBgEFBQcBAQRwMG4wJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2lj
+ZXJ0LmNvbTBGBggrBgEFBQcwAoY6aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29t
+L0RpZ2lDZXJ0U0hBMlNlY3VyZVNlcnZlckNBLmNydDAMBgNVHRMBAf8EAjAAMIIB
+fwYKKwYBBAHWeQIEAgSCAW8EggFrAWkAdwCkuQmQtBhYFIe7E6LMZ3AKPDWYBPkb
+37jjd80OyA3cEAAAAWdcMZVGAAAEAwBIMEYCIQCEZIG3IR36Gkj1dq5L6EaGVycX
+sHvpO7dKV0JsooTEbAIhALuTtf4wxGTkFkx8blhTV+7sf6pFT78ORo7+cP39jkJC
+AHYAh3W/51l8+IxDmV+9827/Vo1HVjb/SrVgwbTq/16ggw8AAAFnXDGWFQAABAMA
+RzBFAiBvqnfSHKeUwGMtLrOG3UGLQIoaL3+uZsGTX3MfSJNQEQIhANL5nUiGBR6g
+l0QlCzzqzvorGXyB/yd7nttYttzo8EpOAHYAb1N2rDHwMRnYmQCkURX/dxUcEdkC
+wQApBo2yCJo32RMAAAFnXDGWnAAABAMARzBFAiEA5Hn7Q4SOyqHkT+kDsHq7ku7z
+RDuM7P4UDX2ft2Mpny0CIE13WtxJAUr0aASFYZ/XjSAMMfrB0/RxClvWVss9LHKM
+MA0GCSqGSIb3DQEBCwUAA4IBAQBzcIXvQEGnakPVeJx7VUjmvGuZhrr7DQOLeP4R
+8CmgDM1pFAvGBHiyzvCH1QGdxFl6cf7wbp7BoLCRLR/qPVXFMwUMzcE1GLBqaGZM
+v1Yh2lvZSLmMNSGRXdx113pGLCInpm/TOhfrvr0TxRImc8BdozWJavsn1N2qdHQu
+N+UBO6bQMLCD0KHEdSGFsuX6ZwAworxTg02/1qiDu7zW7RyzHvFYA4IAjpzvkPIa
+X6KjBtpdvp/aXabmL95YgBjT8WJ7pqOfrqhpcmOBZa6Cg6O1l4qbIFH/Gj9hQB5I
+0Gs4+eH6F9h3SojmPTYkT+8KuZ9w84Mn+M8qBXUQoYoKgIjN
+-----END CERTIFICATE-----
+      </artwork>
+    </figure>
     <section title="_443._tcp.www.example.com">
       <figure>
         <artwork>
 _443._tcp.www.example.com.  3600  IN  TLSA  ( 3 1 1 
-        c66bef6a5c1a3e78b82016e13f314f3cc5fa25b1e52aab9adb9ec5989b165
-        ada )
+        8bd1da95272f7fa4ffb24137fc0ed03aae67e5c4d8b3c50734e1050a7920b
+        922 )
 _443._tcp.www.example.com.  3600  IN  RRSIG  ( TLSA 13 5 3600
-        20181128000000 20151103000000 1870 example.com.
-        v8N91gZ/eFvT8KwKFqtTLbF/KYu6H5GalYPdAafE7bISOXVOhqI8GiTWyb4OE
-        9g/YJdwaGjyFVi9x5rsLmZv0Q== )
+        20201202000000 20181128000000 1870 example.com.
+        rqY69NnTf4CN3GBGQjKEJCLAMsRkUrXe0JW8IqDb5rQHHzxNqqPeEoi+2vI6S
+        z2BhaswpGLVVuoijuVdzxYjmw== )
 example.com.  3600  IN  DNSKEY  ( 257 3 13
         JnA1XgyJTZz+psWvbrfUWLV6ULqIJyUS2CQdhUH9VK35bslWeJpRzrlxCUs7s
         /TsSfZMaGWVvlsuieh5nHcXzA== ) ; Key ID = 1870
 example.com.  3600  IN  RRSIG  ( DNSKEY 13 2 3600
-        20181128000000 20151103000000 1870 example.com.
-        iSQmfIb8PdM5mEB1vNh31vMfSLqUjAJoFwW8EUvjXHtQhHe2jSml4OdojumlW
-        +YFx6XeWRx2t+jBTYmAVOsRRw== )
+        20201202000000 20181128000000 1870 example.com.
+        nYisnu/26Sw1qmGuREa9o/fLgYuA4oNPt4+6PMBZoN0MS8Gjtli9NVRYeSIzt
+        QHPGSpvRxTUC4tZi62z1UgGDw== )
 example.com.  172800  IN  DS  ( 1870 13 2 e9b533a049798e900b5c29c90cd
-        25a986e8a44f319ac3cd302bafc08f5b81e16 )
+       25a986e8a44f319ac3cd302bafc08f5b81e16)
 example.com.  172800  IN  RRSIG  ( DS 13 2 172800
-        20181128000000 20151103000000 34327 com.
-        UDG6IfSgVJlZfPbC20U+j41vrlDitlWGh662ILScnOZWlXamxh73qtXqCeuLa
-        Ve9fa5s1u2a4CSrZiFmdPUcRA== )
+        20201202000000 20181128000000 34327 com.
+        sEAKvX4H6pJfN8nKcclB1NRcRSPOztx8omr4fCSHu6lp+uESP/Le4iF2sKukO
+        J1hhWSB6jgubEVl17rGNOA/YQ== )
 com.  172800  IN  DNSKEY  ( 256 3 13
         7IIE5Dol8jSMUqHTvOOiZapdEbQ9wqRxFi/zQcSdufUKLhpByvLpzSAQTqCWj
         3URIZ8L3Fa2gBLMOZUzZ1GQCw== ) ; Key ID = 34327
@@ -982,22 +995,22 @@ com.  172800  IN  DNSKEY  ( 257 3 13
 com.  172800  IN  DNSKEY  ( 257 3 13
         szc7biLo5J4OHlkan1vZrF4aD4YYf+NHA/GAqdNslY9xxK9Izg68XHkqck4Rt
         DiVk37lNAQmgSlHbrGu0yOTkA== ) ; Key ID = 28809
-com.  172800  IN  RRSIG  ( DNSKEY 13 1 172800 20181128000000
-        20151103000000 18931 com.
-        yzAYyY7Sr/Rz5qwAd7cVCREHe2FordFSYkB5eonqQE3m6rUlRSYq9nrh4xWYK
-        u3JkwHpF5UQLRslLVrsuuZc8g== )
-com.  172800  IN  RRSIG  ( DNSKEY 13 1 172800 20181128000000
-        20151103000000 28809 com.
-        CYiMUA1mgF/i00FEHjPSBpuXYuZWo1qrqc0xgyMzAWZzR0z0zXlJGlExIZT93
-        yYTsCWWVKTWHzQG9rv2tFvr8w== )
+com.  172800  IN  RRSIG  ( DNSKEY 13 1 172800 20201202000000
+        20181128000000 18931 com.
+        LJ4p5ORS2ViILwTotSlWixElqRXHY5tOdIuHlPWTdBGPMq3y40QNr1V+ZOyA5
+        7LFdPKpcvb8BvhM+GqKWGBEsg== )
+com.  172800  IN  RRSIG  ( DNSKEY 13 1 172800 20201202000000
+        20181128000000 28809 com.
+        sO+4X2N21yS6x8+dBVBzbRo9+55MM8n7+RUvdBuxRFVh6JaBlqDOC5LLkl7Ev
+        mDXqz6KEhhQjT+aQWDt6WFHlA== )
 com.  86400  IN  DS  ( 18931 13 2 20f7a9db42d0e2042fbbb9f9ea015941202
         f9eabb94487e658c188e7bcb52115 )
 com.  86400  IN  DS  ( 28809 13 2 ad66b3276f796223aa45eda773e92c6d98e
         70643bbde681db342a9e5cf2bb380 )
-com.  86400  IN  RRSIG  ( DS 13 1 86400 20181128000000
-        20151103000000 31918 .
-        zCsvW1syx+DkEr9+y6Z+S5PP0VsQSOKMt4EGig1JafbPufQej7KlZopBdt1VZ
-        c4khYrs5OqhzgnZ45g1vlPObQ== )
+com.  86400  IN  RRSIG  ( DS 13 1 86400 20201202000000
+        20181128000000 31918 .
+        nDiDlBjXEE/6AudhC++Hui1ckPcuAnGbjEASNoxA3ZHjlXRzL050UzePko5Pb
+        vBKTf6pk8JRCqnfzlo2QY+WXA== )
 .  86400  IN  DNSKEY  ( 256 3 13
         zKz+DCWkNA/vuheiVPcGqsH40U84KZAlrMRIyozj9WHzf8PsFp/oR8j8vmjjW
         P98cbte4d8NvlGLxzbUzo3+FA== ) ; Key ID = 31918
@@ -1007,113 +1020,114 @@ com.  86400  IN  RRSIG  ( DS 13 1 86400 20181128000000
 .  86400  IN  DNSKEY  ( 257 3 13
         yvX+VNTUjxZiGvtr060hVbrPV9H6rVusQtF9lIxCFzbZOJxMQBFmbqlc8Xclv
         Q+gDOXnFOTsgs/frMmxyGOtRg== ) ; Key ID = 47005
-.  86400  IN  RRSIG  ( DNSKEY 13 0 86400 20181128000000
-        20151103000000 47005 .
-        BHtoZKDyZrl15nQvbdcwB92zifXkT1uqnSIwc/BfvdK7MXHIzOPV8IOIcxIgv
-        Yvl+HBzaIjxvs3mDtoAMAdyPg== )
+.  86400  IN  RRSIG  ( DNSKEY 13 0 86400 20201202000000
+        20181128000000 47005 .
+        0EPW1ca+N/ZhZPKla77STG734cTeIOjUwq7eW0HsnOfudWmnCEVeco2wLLq9m
+        nBT1dtNjIczvLG9pQTnOKUsHQ== )
         </artwork>
       </figure>
-      <t>A hex dump of the wire format data of this content is:</t>
-      <figure>
+      <t>A hex dump of the "extension_data" of the server's "dnssec_chain"
+      extension represention this with an ExtSupportLifetime value of 0 is:</t>
+      <figure anchor="hex_dump">
         <artwork>
-0000:  04 5f 34 34 33 04 5f 74  63 70 03 77 77 77 07 65
-0010:  78 61 6d 70 6c 65 03 63  6f 6d 00 00 34 00 01 00
-0020:  00 0e 10 00 23 03 01 01  c6 6b ef 6a 5c 1a 3e 78
-0030:  b8 20 16 e1 3f 31 4f 3c  c5 fa 25 b1 e5 2a ab 9a
-0040:  db 9e c5 98 9b 16 5a da  04 5f 34 34 33 04 5f 74
-0050:  63 70 03 77 77 77 07 65  78 61 6d 70 6c 65 03 63
-0060:  6f 6d 00 00 2e 00 01 00  00 0e 10 00 5f 00 34 0d
-0070:  05 00 00 0e 10 5b fd da  80 56 37 f9 00 07 4e 07
-0080:  65 78 61 6d 70 6c 65 03  63 6f 6d 00 bf c3 7d d6
-0090:  06 7f 78 5b d3 f0 ac 0a  16 ab 53 2d b1 7f 29 8b
-00a0:  ba 1f 91 9a 95 83 dd 01  a7 c4 ed b2 12 39 75 4e
-00b0:  86 a2 3c 1a 24 d6 c9 be  0e 13 d8 3f 60 97 70 68
-00c0:  68 f2 15 58 bd c7 9a ec  2e 66 6f d1 07 65 78 61
-00d0:  6d 70 6c 65 03 63 6f 6d  00 00 30 00 01 00 00 0e
-00e0:  10 00 44 01 01 03 0d 26  70 35 5e 0c 89 4d 9c fe
-00f0:  a6 c5 af 6e b7 d4 58 b5  7a 50 ba 88 27 25 12 d8
-0100:  24 1d 85 41 fd 54 ad f9  6e c9 56 78 9a 51 ce b9
-0110:  71 09 4b 3b b3 f4 ec 49  f6 4c 68 65 95 be 5b 2e
-0120:  89 e8 79 9c 77 17 cc 07  65 78 61 6d 70 6c 65 03
-0130:  63 6f 6d 00 00 2e 00 01  00 00 0e 10 00 5f 00 30
-0140:  0d 02 00 00 0e 10 5b fd  da 80 56 37 f9 00 07 4e
-0150:  07 65 78 61 6d 70 6c 65  03 63 6f 6d 00 89 24 26
-0160:  7c 86 fc 3d d3 39 98 40  75 bc d8 77 d6 f3 1f 48
-0170:  ba 94 8c 02 68 17 05 bc  11 4b e3 5c 7b 50 84 77
-0180:  b6 8d 29 a5 e0 e7 68 8e  e9 a5 5b e6 05 c7 a5 de
-0190:  59 1c 76 b7 e8 c1 4d 89  80 54 eb 11 47 07 65 78
-01a0:  61 6d 70 6c 65 03 63 6f  6d 00 00 2b 00 01 00 02
-01b0:  a3 00 00 24 07 4e 0d 02  e9 b5 33 a0 49 79 8e 90
-01c0:  0b 5c 29 c9 0c d2 5a 98  6e 8a 44 f3 19 ac 3c d3
-01d0:  02 ba fc 08 f5 b8 1e 16  07 65 78 61 6d 70 6c 65
-01e0:  03 63 6f 6d 00 00 2e 00  01 00 02 a3 00 00 57 00
-01f0:  2b 0d 02 00 02 a3 00 5b  fd da 80 56 37 f9 00 86
-0200:  17 03 63 6f 6d 00 50 31  ba 21 f4 a0 54 99 59 7c
-0210:  f6 c2 db 45 3e 8f 8d 6f  ae 50 e2 b6 55 86 87 ae
-0220:  b6 20 b4 9c 9c e6 56 95  76 a6 c6 1e f7 aa d5 ea
-0230:  09 eb 8b 69 57 bd 7d ae  6c d6 ed 9a e0 24 ab 66
-0240:  21 66 74 f5 1c 44 03 63  6f 6d 00 00 30 00 01 00
-0250:  02 a3 00 00 44 01 00 03  0d ec 82 04 e4 3a 25 f2
-0260:  34 8c 52 a1 d3 bc e3 a2  65 aa 5d 11 b4 3d c2 a4
-0270:  71 16 2f f3 41 c4 9d b9  f5 0a 2e 1a 41 ca f2 e9
-0280:  cd 20 10 4e a0 96 8f 75  11 21 9f 0b dc 56 b6 80
-0290:  12 cc 39 95 33 67 51 90  0b 03 63 6f 6d 00 00 30
-02a0:  00 01 00 02 a3 00 00 44  01 01 03 0d 45 b9 1c 3b
-02b0:  ef 7a 5d 99 a7 a7 c8 d8  22 e3 38 96 bc 80 a7 77
-02c0:  a0 42 34 a6 05 a4 a8 88  0e c7 ef a4 e6 d1 12 c7
-02d0:  3c d3 d4 c6 55 64 fa 74  34 7c 87 37 23 cc 5f 64
-02e0:  33 70 f1 66 b4 3d ed ff  83 64 00 ff 03 63 6f 6d
-02f0:  00 00 30 00 01 00 02 a3  00 00 44 01 01 03 0d b3
-0300:  37 3b 6e 22 e8 e4 9e 0e  1e 59 1a 9f 5b d9 ac 5e
-0310:  1a 0f 86 18 7f e3 47 03  f1 80 a9 d3 6c 95 8f 71
-0320:  c4 af 48 ce 0e bc 5c 79  2a 72 4e 11 b4 38 95 93
-0330:  7e e5 34 04 26 81 29 47  6e b1 ae d3 23 93 90 03
-0340:  63 6f 6d 00 00 2e 00 01  00 02 a3 00 00 57 00 30
-0350:  0d 01 00 02 a3 00 5b fd  da 80 56 37 f9 00 49 f3
-0360:  03 63 6f 6d 00 cb 30 18  c9 8e d2 af f4 73 e6 ac
-0370:  00 77 b7 15 09 11 07 7b  61 68 ad d1 52 62 40 79
-0380:  7a 89 ea 40 4d e6 ea b5  25 45 26 2a f6 7a e1 e3
-0390:  15 98 2a ed c9 93 01 e9  17 95 10 2d 1b 25 2d 5a
-03a0:  ec ba e6 5c f2 03 63 6f  6d 00 00 2e 00 01 00 02
-03b0:  a3 00 00 57 00 30 0d 01  00 02 a3 00 5b fd da 80
-03c0:  56 37 f9 00 70 89 03 63  6f 6d 00 09 88 8c 50 0d
-03d0:  66 80 5f e2 d3 41 44 1e  33 d2 06 9b 97 62 e6 56
-03e0:  a3 5a ab a9 cd 31 83 23  33 01 66 73 47 4c f4 cd
-03f0:  79 49 1a 51 31 21 94 fd  df 26 13 b0 25 96 54 a4
-0400:  d6 1f 34 06 f6 bb f6 b4  5b eb f3 03 63 6f 6d 00
-0410:  00 2b 00 01 00 01 51 80  00 24 49 f3 0d 02 20 f7
-0420:  a9 db 42 d0 e2 04 2f bb  b9 f9 ea 01 59 41 20 2f
-0430:  9e ab b9 44 87 e6 58 c1  88 e7 bc b5 21 15 03 63
-0440:  6f 6d 00 00 2b 00 01 00  01 51 80 00 24 70 89 0d
-0450:  02 ad 66 b3 27 6f 79 62  23 aa 45 ed a7 73 e9 2c
-0460:  6d 98 e7 06 43 bb de 68  1d b3 42 a9 e5 cf 2b b3
-0470:  80 03 63 6f 6d 00 00 2e  00 01 00 01 51 80 00 53
-0480:  00 2b 0d 01 00 01 51 80  5b fd da 80 56 37 f9 00
-0490:  7c ae 00 cc 2b 2f 5b 5b  32 c7 e0 e4 12 bf 7e cb
-04a0:  a6 7e 4b 93 cf d1 5b 10  48 e2 8c b7 81 06 8a 0d
-04b0:  49 69 f6 cf b9 f4 1e 8f  b2 a5 66 8a 41 76 dd 55
-04c0:  65 ce 24 85 8a ec e4 ea  a1 ce 09 d9 e3 98 35 be
-04d0:  53 ce 6d 00 00 30 00 01  00 01 51 80 00 44 01 00
-04e0:  03 0d cc ac fe 0c 25 a4  34 0f ef ba 17 a2 54 f7
-04f0:  06 aa c1 f8 d1 4f 38 29  90 25 ac c4 48 ca 8c e3
-0500:  f5 61 f3 7f c3 ec 16 9f  e8 47 c8 fc be 68 e3 58
-0510:  ff 7c 71 bb 5e e1 df 0d  be 51 8b c7 36 d4 ce 8d
-0520:  fe 14 00 00 30 00 01 00  01 51 80 00 44 01 00 03
-0530:  0d f3 03 19 67 89 73 1d  dc 8a 67 87 ef f2 4c ac
-0540:  fe dd d0 32 58 2f 11 a7  5b b1 bc aa 5a b3 21 c1
-0550:  d7 52 5c 26 58 19 1a ec  01 b3 e9 8a b7 91 5b 16
-0560:  d5 71 dd 55 b4 ea e5 14  17 11 0c c4 cd d1 1d 17
-0570:  11 00 00 30 00 01 00 01  51 80 00 44 01 01 03 0d
-0580:  ca f5 fe 54 d4 d4 8f 16  62 1a fb 6b d3 ad 21 55
-0590:  ba cf 57 d1 fa ad 5b ac  42 d1 7d 94 8c 42 17 36
-05a0:  d9 38 9c 4c 40 11 66 6e  a9 5c f1 77 25 bd 0f a0
-05b0:  0c e5 e7 14 e4 ec 82 cf  df ac c9 b1 c8 63 ad 46
-05c0:  00 00 2e 00 01 00 01 51  80 00 53 00 30 0d 00 00
-05d0:  01 51 80 5b fd da 80 56  37 f9 00 b7 9d 00 04 7b
-05e0:  68 64 a0 f2 66 b9 75 e6  74 2f 6d d7 30 07 dd b3
-05f0:  89 f5 e4 4f 5b aa 9d 22  30 73 f0 5f bd d2 bb 31
-0600:  71 c8 cc e3 d5 f0 83 88  73 12 20 bd 8b e5 f8 70
-0610:  73 68 88 f1 be cd e6 0e  da 00 30 07 72 3e
+0000:  00 00 04 5f 34 34 33 04  5f 74 63 70 03 77 77 77
+0010:  07 65 78 61 6d 70 6c 65  03 63 6f 6d 00 00 34 00
+0020:  01 00 00 0e 10 00 23 03  01 01 8b d1 da 95 27 2f
+0030:  7f a4 ff b2 41 37 fc 0e  d0 3a ae 67 e5 c4 d8 b3
+0040:  c5 07 34 e1 05 0a 79 20  b9 22 04 5f 34 34 33 04
+0050:  5f 74 63 70 03 77 77 77  07 65 78 61 6d 70 6c 65
+0060:  03 63 6f 6d 00 00 2e 00  01 00 00 0e 10 00 5f 00
+0070:  34 0d 05 00 00 0e 10 5f  c6 d9 00 5b fd da 80 07
+0080:  4e 07 65 78 61 6d 70 6c  65 03 63 6f 6d 00 ce 1d
+0090:  3a de b7 dc 7c ee 65 6d  61 cf b4 72 c5 97 7c 8c
+00a0:  9c ae ae 9b 76 51 55 c5  18 fb 10 7b 6a 1f e0 35
+00b0:  5f ba af 75 3c 19 28 32  fa 62 1f a7 3a 8b 85 ed
+00c0:  79 d3 74 11 73 87 59 8f  cc 81 2e 1e f3 fb 07 65
+00d0:  78 61 6d 70 6c 65 03 63  6f 6d 00 00 30 00 01 00
+00e0:  00 0e 10 00 44 01 01 03  0d 26 70 35 5e 0c 89 4d
+00f0:  9c fe a6 c5 af 6e b7 d4  58 b5 7a 50 ba 88 27 25
+0100:  12 d8 24 1d 85 41 fd 54  ad f9 6e c9 56 78 9a 51
+0110:  ce b9 71 09 4b 3b b3 f4  ec 49 f6 4c 68 65 95 be
+0120:  5b 2e 89 e8 79 9c 77 17  cc 07 65 78 61 6d 70 6c
+0130:  65 03 63 6f 6d 00 00 2e  00 01 00 00 0e 10 00 5f
+0140:  00 30 0d 02 00 00 0e 10  5f c6 d9 00 5b fd da 80
+0150:  07 4e 07 65 78 61 6d 70  6c 65 03 63 6f 6d 00 46
+0160:  28 38 30 75 b8 e3 4b 74  3a 20 9b 27 ae 14 8d 11
+0170:  0d 4e 1a 24 61 38 a9 10  83 24 9c b4 a1 2a 2d 9b
+0180:  c4 c2 d7 ab 5e b3 af b9  f5 d1 03 7e 4d 5d a8 33
+0190:  9c 16 2a 92 98 e9 be 18  07 41 a8 ca 74 ac cc 07
+01a0:  65 78 61 6d 70 6c 65 03  63 6f 6d 00 00 2b 00 01
+01b0:  00 02 a3 00 00 24 07 4e  0d 02 e9 b5 33 a0 49 79
+01c0:  8e 90 0b 5c 29 c9 0c d2  5a 98 6e 8a 44 f3 19 ac
+01d0:  3c d3 02 ba fc 08 f5 b8  1e 16 07 65 78 61 6d 70
+01e0:  6c 65 03 63 6f 6d 00 00  2e 00 01 00 02 a3 00 00
+01f0:  57 00 2b 0d 02 00 02 a3  00 5f c6 d9 00 5b fd da
+0200:  80 86 17 03 63 6f 6d 00  a2 03 e7 04 a6 fa cb eb
+0210:  13 fc 93 84 fd d6 de 6b  50 de 56 59 27 1f 38 ce
+0220:  81 49 86 84 e6 36 31 72  d4 7e 23 19 fd b4 a2 2a
+0230:  58 a2 31 ed c2 f1 ff 4f  b2 81 1a 18 07 be 72 cb
+0240:  52 41 aa 26 fd ae e0 39  03 63 6f 6d 00 00 30 00
+0250:  01 00 02 a3 00 00 44 01  00 03 0d ec 82 04 e4 3a
+0260:  25 f2 34 8c 52 a1 d3 bc  e3 a2 65 aa 5d 11 b4 3d
+0270:  c2 a4 71 16 2f f3 41 c4  9d b9 f5 0a 2e 1a 41 ca
+0280:  f2 e9 cd 20 10 4e a0 96  8f 75 11 21 9f 0b dc 56
+0290:  b6 80 12 cc 39 95 33 67  51 90 0b 03 63 6f 6d 00
+02a0:  00 30 00 01 00 02 a3 00  00 44 01 01 03 0d 45 b9
+02b0:  1c 3b ef 7a 5d 99 a7 a7  c8 d8 22 e3 38 96 bc 80
+02c0:  a7 77 a0 42 34 a6 05 a4  a8 88 0e c7 ef a4 e6 d1
+02d0:  12 c7 3c d3 d4 c6 55 64  fa 74 34 7c 87 37 23 cc
+02e0:  5f 64 33 70 f1 66 b4 3d  ed ff 83 64 00 ff 03 63
+02f0:  6f 6d 00 00 30 00 01 00  02 a3 00 00 44 01 01 03
+0300:  0d b3 37 3b 6e 22 e8 e4  9e 0e 1e 59 1a 9f 5b d9
+0310:  ac 5e 1a 0f 86 18 7f e3  47 03 f1 80 a9 d3 6c 95
+0320:  8f 71 c4 af 48 ce 0e bc  5c 79 2a 72 4e 11 b4 38
+0330:  95 93 7e e5 34 04 26 81  29 47 6e b1 ae d3 23 93
+0340:  90 03 63 6f 6d 00 00 2e  00 01 00 02 a3 00 00 57
+0350:  00 30 0d 01 00 02 a3 00  5f c6 d9 00 5b fd da 80
+0360:  49 f3 03 63 6f 6d 00 18  a9 48 eb 23 d4 4f 80 ab
+0370:  c9 92 38 fc b4 3c 5a 18  de be 57 00 4f 73 43 59
+0380:  3f 6d eb 6e d7 1e 04 65  4a 43 3f 7a a1 97 21 30
+0390:  d9 bd 92 1c 73 dc f6 3f  cf 66 5f 2f 05 a0 aa eb
+03a0:  af b0 59 dc 12 c9 65 03  63 6f 6d 00 00 2e 00 01
+03b0:  00 02 a3 00 00 57 00 30  0d 01 00 02 a3 00 5f c6
+03c0:  d9 00 5b fd da 80 70 89  03 63 6f 6d 00 61 70 e6
+03d0:  95 9b d9 ed 6e 57 58 37  b6 f5 80 bd 99 db d2 4a
+03e0:  44 68 2b 0a 35 96 26 a2  46 b1 81 2f 5f 90 96 b7
+03f0:  5e 15 7e 77 84 8f 06 8a  e0 08 5e 1a 60 9f c1 92
+0400:  98 c3 3b 73 68 63 fb cc  d4 d8 1f 5e b2 03 63 6f
+0410:  6d 00 00 2b 00 01 00 01  51 80 00 24 49 f3 0d 02
+0420:  20 f7 a9 db 42 d0 e2 04  2f bb b9 f9 ea 01 59 41
+0430:  20 2f 9e ab b9 44 87 e6  58 c1 88 e7 bc b5 21 15
+0440:  03 63 6f 6d 00 00 2b 00  01 00 01 51 80 00 24 70
+0450:  89 0d 02 ad 66 b3 27 6f  79 62 23 aa 45 ed a7 73
+0460:  e9 2c 6d 98 e7 06 43 bb  de 68 1d b3 42 a9 e5 cf
+0470:  2b b3 80 03 63 6f 6d 00  00 2e 00 01 00 01 51 80
+0480:  00 53 00 2b 0d 01 00 01  51 80 5f c6 d9 00 5b fd
+0490:  da 80 7c ae 00 12 2e 27  6d 45 d9 e9 81 6f 79 22
+04a0:  ad 6e a2 e7 3e 82 d2 6f  ce 0a 4b 71 86 25 f3 14
+04b0:  53 1a c9 2f 8a e8 24 18  df 9b 89 8f 98 9d 32 e8
+04c0:  0b c4 de ab a7 c4 a7 c8  f1 72 ad b5 7c ed 7f b5
+04d0:  e7 7a 78 4b 07 00 00 30  00 01 00 01 51 80 00 44
+04e0:  01 00 03 0d cc ac fe 0c  25 a4 34 0f ef ba 17 a2
+04f0:  54 f7 06 aa c1 f8 d1 4f  38 29 90 25 ac c4 48 ca
+0500:  8c e3 f5 61 f3 7f c3 ec  16 9f e8 47 c8 fc be 68
+0510:  e3 58 ff 7c 71 bb 5e e1  df 0d be 51 8b c7 36 d4
+0520:  ce 8d fe 14 00 00 30 00  01 00 01 51 80 00 44 01
+0530:  00 03 0d f3 03 19 67 89  73 1d dc 8a 67 87 ef f2
+0540:  4c ac fe dd d0 32 58 2f  11 a7 5b b1 bc aa 5a b3
+0550:  21 c1 d7 52 5c 26 58 19  1a ec 01 b3 e9 8a b7 91
+0560:  5b 16 d5 71 dd 55 b4 ea  e5 14 17 11 0c c4 cd d1
+0570:  1d 17 11 00 00 30 00 01  00 01 51 80 00 44 01 01
+0580:  03 0d ca f5 fe 54 d4 d4  8f 16 62 1a fb 6b d3 ad
+0590:  21 55 ba cf 57 d1 fa ad  5b ac 42 d1 7d 94 8c 42
+05a0:  17 36 d9 38 9c 4c 40 11  66 6e a9 5c f1 77 25 bd
+05b0:  0f a0 0c e5 e7 14 e4 ec  82 cf df ac c9 b1 c8 63
+05c0:  ad 46 00 00 2e 00 01 00  01 51 80 00 53 00 30 0d
+05d0:  00 00 01 51 80 5f c6 d9  00 5b fd da 80 b7 9d 00
+05e0:  de 7a 67 40 ee ec ba 4b  da 1e 5c 2d d4 89 9b 2c
+05f0:  96 58 93 f3 78 6c e7 47  f4 1e 50 d9 de 8c 0a 72
+0600:  df 82 56 0d fb 48 d7 14  de 32 83 ae 99 a4 9c 0f
+0610:  cb 50 d3 aa ad b1 a3 fc  62 ee 3a 8a 09 88 b6 be
         </artwork>
       </figure>
     </section>  <!-- _443._tcp.www.example.com -->
@@ -1121,31 +1135,31 @@ com.  86400  IN  RRSIG  ( DS 13 1 86400 20181128000000
       <figure>
         <artwork>
 _25._tcp.example.com.  3600  IN  TLSA  ( 3 1 1 
-        c66bef6a5c1a3e78b82016e13f314f3cc5fa25b1e52aab9adb9ec5989b165
-        ada )
+        8bd1da95272f7fa4ffb24137fc0ed03aae67e5c4d8b3c50734e1050a7920b
+        922 )
 _25._tcp.example.com.  3600  IN  RRSIG  ( TLSA 13 3 3600
-        20181128000000 20151103000000 1870 example.com.
-        qo4l24OdKVAZXLbtGdv/bpHguyqNL5LiIB/16NI3YVUeOS+UGZorvt253NimC
-        m67EH2A6qkmcqhHcqHG9n7nbw== )
+        20201202000000 20181128000000 1870 example.com.
+        BZawXvte5SyF8hnXviKDWqll5E2v+RMXqaSE+NOcAMlZOrSMUkfyPqvkv53K2
+        rfL4DFP8rO3VMgI0v+ogrox0w== )
 *._tcp.example.com.  3600  IN  NSEC  ( smtp.example.com. RRSIG
         NSEC TLSA )
 *._tcp.example.com.  3600  IN  RRSIG  ( NSEC 13 3 3600
-        20181128000000 20151103000000 1870 example.com.
-        lOatdUxGVvufDPBfLnb4zYv0eVXv9sFkY8xsfe8xyuF0fg2M74lxOXviLf1yg
-        5z5KhWPmr34nz2rm3U4IkhOvA== )
+        20201202000000 20181128000000 1870 example.com.
+        K6u8KrR8ca5bjtbce3w8yjMXr9vw12225lAwyIHpxptY43OMLCUCenwpYW5qd
+        mpFvAacqj4+tSkKiN279SI9pA== )
 example.com.  3600  IN  DNSKEY  ( 257 3 13
         JnA1XgyJTZz+psWvbrfUWLV6ULqIJyUS2CQdhUH9VK35bslWeJpRzrlxCUs7s
         /TsSfZMaGWVvlsuieh5nHcXzA== ) ; Key ID = 1870
 example.com.  3600  IN  RRSIG  ( DNSKEY 13 2 3600
-        20181128000000 20151103000000 1870 example.com.
-        iSQmfIb8PdM5mEB1vNh31vMfSLqUjAJoFwW8EUvjXHtQhHe2jSml4OdojumlW
-        +YFx6XeWRx2t+jBTYmAVOsRRw== )
+        20201202000000 20181128000000 1870 example.com.
+        nYisnu/26Sw1qmGuREa9o/fLgYuA4oNPt4+6PMBZoN0MS8Gjtli9NVRYeSIzt
+        QHPGSpvRxTUC4tZi62z1UgGDw== )
 example.com.  172800  IN  DS  ( 1870 13 2 e9b533a049798e900b5c29c90cd
         25a986e8a44f319ac3cd302bafc08f5b81e16 )
 example.com.  172800  IN  RRSIG  ( DS 13 2 172800
-        20181128000000 20151103000000 34327 com.
-        UDG6IfSgVJlZfPbC20U+j41vrlDitlWGh662ILScnOZWlXamxh73qtXqCeuLa
-        Ve9fa5s1u2a4CSrZiFmdPUcRA== )
+        20201202000000 20181128000000 34327 com.
+        sEAKvX4H6pJfN8nKcclB1NRcRSPOztx8omr4fCSHu6lp+uESP/Le4iF2sKukO
+        J1hhWSB6jgubEVl17rGNOA/YQ== )
 com.  172800  IN  DNSKEY  ( 256 3 13
         7IIE5Dol8jSMUqHTvOOiZapdEbQ9wqRxFi/zQcSdufUKLhpByvLpzSAQTqCWj
         3URIZ8L3Fa2gBLMOZUzZ1GQCw== ) ; Key ID = 34327
@@ -1155,22 +1169,22 @@ com.  172800  IN  DNSKEY  ( 257 3 13
 com.  172800  IN  DNSKEY  ( 257 3 13
         szc7biLo5J4OHlkan1vZrF4aD4YYf+NHA/GAqdNslY9xxK9Izg68XHkqck4Rt
         DiVk37lNAQmgSlHbrGu0yOTkA== ) ; Key ID = 28809
-com.  172800  IN  RRSIG  ( DNSKEY 13 1 172800 20181128000000
-        20151103000000 18931 com.
-        yzAYyY7Sr/Rz5qwAd7cVCREHe2FordFSYkB5eonqQE3m6rUlRSYq9nrh4xWYK
-        u3JkwHpF5UQLRslLVrsuuZc8g== )
-com.  172800  IN  RRSIG  ( DNSKEY 13 1 172800 20181128000000
-        20151103000000 28809 com.
-        CYiMUA1mgF/i00FEHjPSBpuXYuZWo1qrqc0xgyMzAWZzR0z0zXlJGlExIZT93
-        yYTsCWWVKTWHzQG9rv2tFvr8w== )
+com.  172800  IN  RRSIG  ( DNSKEY 13 1 172800 20201202000000
+        20181128000000 18931 com.
+        LJ4p5ORS2ViILwTotSlWixElqRXHY5tOdIuHlPWTdBGPMq3y40QNr1V+ZOyA5
+        7LFdPKpcvb8BvhM+GqKWGBEsg== )
+com.  172800  IN  RRSIG  ( DNSKEY 13 1 172800 20201202000000
+        20181128000000 28809 com.
+        sO+4X2N21yS6x8+dBVBzbRo9+55MM8n7+RUvdBuxRFVh6JaBlqDOC5LLkl7Ev
+        mDXqz6KEhhQjT+aQWDt6WFHlA== )
 com.  86400  IN  DS  ( 18931 13 2 20f7a9db42d0e2042fbbb9f9ea015941202
         f9eabb94487e658c188e7bcb52115 )
 com.  86400  IN  DS  ( 28809 13 2 ad66b3276f796223aa45eda773e92c6d98e
         70643bbde681db342a9e5cf2bb380 )
-com.  86400  IN  RRSIG  ( DS 13 1 86400 20181128000000
-        20151103000000 31918 .
-        zCsvW1syx+DkEr9+y6Z+S5PP0VsQSOKMt4EGig1JafbPufQej7KlZopBdt1VZ
-        c4khYrs5OqhzgnZ45g1vlPObQ== )
+com.  86400  IN  RRSIG  ( DS 13 1 86400 20201202000000
+        20181128000000 31918 .
+        nDiDlBjXEE/6AudhC++Hui1ckPcuAnGbjEASNoxA3ZHjlXRzL050UzePko5Pb
+        vBKTf6pk8JRCqnfzlo2QY+WXA== )
 .  86400  IN  DNSKEY  ( 256 3 13
         zKz+DCWkNA/vuheiVPcGqsH40U84KZAlrMRIyozj9WHzf8PsFp/oR8j8vmjjW
         P98cbte4d8NvlGLxzbUzo3+FA== ) ; Key ID = 31918
@@ -1180,10 +1194,10 @@ com.  86400  IN  RRSIG  ( DS 13 1 86400 20181128000000
 .  86400  IN  DNSKEY  ( 257 3 13
         yvX+VNTUjxZiGvtr060hVbrPV9H6rVusQtF9lIxCFzbZOJxMQBFmbqlc8Xclv
         Q+gDOXnFOTsgs/frMmxyGOtRg== ) ; Key ID = 47005
-.  86400  IN  RRSIG  ( DNSKEY 13 0 86400 20181128000000
-        20151103000000 47005 .
-        BHtoZKDyZrl15nQvbdcwB92zifXkT1uqnSIwc/BfvdK7MXHIzOPV8IOIcxIgv
-        Yvl+HBzaIjxvs3mDtoAMAdyPg== )
+.  86400  IN  RRSIG  ( DNSKEY 13 0 86400 20201202000000
+        20181128000000 47005 .
+        0EPW1ca+N/ZhZPKla77STG734cTeIOjUwq7eW0HsnOfudWmnCEVeco2wLLq9m
+        nBT1dtNjIczvLG9pQTnOKUsHQ== )
         </artwork>
       </figure>
     </section> <!-- _25._tcp.example.com wildcard -->
@@ -1191,19 +1205,19 @@ com.  86400  IN  RRSIG  ( DS 13 1 86400 20181128000000
       <figure>
         <artwork>
 _25._tcp.example.org.  3600  IN  TLSA  ( 3 1 1 
-        c66bef6a5c1a3e78b82016e13f314f3cc5fa25b1e52aab9adb9ec5989b165
-        ada )
+        8bd1da95272f7fa4ffb24137fc0ed03aae67e5c4d8b3c50734e1050a7920b
+        922 )
 _25._tcp.example.org.  3600  IN  RRSIG  ( TLSA 13 3 3600
-        20181128000000 20151103000000 56566 example.org.
-        AzKfRUquuHpcjnlSpBRd1SeXJ+2kuTUqkKN7NRahgyTW1Yg3frZKyaLiwlSrJ
-        gaeoxJiKRyzKo45AFIn2Tlc0Q== )
+        20201202000000 20181128000000 56566 example.org.
+        lNp6th/CJel5WsYlLsLadcQ/YdSTJAIOttzYKnNkNzeZ0jxtDyEP818Q1R4lL
+        cYzJ7vCvqb9gFCiCJjK2gAamw== )
 dlm7rss9pejqnh0ev6h7k1ikqqcl5mae.example.org.  3600  IN  NSEC3  (
         1 0 1 - t6lf7uuoi0qofq0nvdjroavo46pp20im RRSIG TLSA )
 dlm7rss9pejqnh0ev6h7k1ikqqcl5mae.example.org.  3600  IN  RRSIG  (
-        NSEC3 13 3 3600 20181128000000 20151103000000 56566
+        NSEC3 13 3 3600 20201202000000 20181128000000 56566
         example.org.
-        HM1LMR5mbbCsJzHcW7WdSgCjamjFZIQsBjV/zba4O4BRehs2F6wMCFmeKR1rz
-        CNiYORR9DKBV7ymxf9kQSde4Q== )
+        guUyy9LIZlYb0FZttAdYJGrFNKpKu91Tm+dPOz98rnpwIlwwvLifXIvIl90nE
+        X38cWzEQOpreJu3t4WAfPsxdg== )
 example.org.  3600  IN  DNSKEY  ( 256 3 13
         NrbL6utGqIW1wrhhjeexdA6bMdD1lC1hj0Fnpevaa1AMyY2uy83TmoGnR996N
         UR5TlG4Zh+YPbbmUIixe4nS3w== ) ; Key ID = 56566
@@ -1211,15 +1225,15 @@ example.org.  3600  IN  DNSKEY  ( 257 3 13
         uspaqp17jsMTX6AWVgmbog/3Sttz+9ANFUWLn6qKUHr0BOqRuChQWj8jyYUUr
         Wy9txxesNQ9MkO4LUrFght1LQ== ) ; Key ID = 44384
 example.org.  3600  IN  RRSIG  ( DNSKEY 13 2 3600
-        20181128000000 20151103000000 44384 example.org.
-        0iz4rhb5BvPog73WqYjZfFXqnalGn2ACwe1Dm13VJaWHia08FL0tdlYSvFoBV
-        ghsXelOOL5CNXXxx88WkBn0ow== )
+        20201202000000 20181128000000 44384 example.org.
+        ttse9pYp9PSu0pJ+TOpIVFLWJ6NKOMWZX4Q/SlU6ZfaiKQc0Bg7Tut9+wPunk
+        6OPPvyHjVXMAsvk0tqV0B+/ag== )
 example.org.  86400  IN  DS  ( 44384 13 2 ec307e2efc8f0117ed96ab48a51
         3c8003e1d9121f1ff11a08b4cdd348d090aa6 )
-example.org.  86400  IN  RRSIG  ( DS 13 2 86400 20181128000000
-        20151103000000 9523 org.
-        79fPtEuK4zIc/s4RscLlQ4auq40IqS8P5Ilb1tfvSqqASmLkm+i9WvBQp1sSF
-        iLwqM5/XHcpvDGBO5Yirzm1gw== )
+example.org.  86400  IN  RRSIG  ( DS 13 2 86400 20201202000000
+        20181128000000 9523 org.
+        m86Xz0CEa2sWG40a0bS2kqLKPmIlyiVyDeoWXAq3djeGiPaikLuKORNzWXu62
+        clpAfvZHx59Ackst4X+zXYpUA== )
 org.  86400  IN  DNSKEY  ( 256 3 13
         fuLp60znhSSEr9HowILpTpyLKQdM6ixcgkTE0gqVdsLx+DSNHSc69o6fLWC0e
         HfWx7kzlBBoJB0vLrvsJtXJ6g== ) ; Key ID = 47417
@@ -1232,22 +1246,22 @@ org.  86400  IN  DNSKEY  ( 257 3 13
 org.  86400  IN  DNSKEY  ( 257 3 13
         0SZfoe8Yx+eoaGgyAGEeJax/ZBV1AuG+/smcOgRm+F6doNlgc3lddcM1MbTvJ
         HTjK6Fvy8W6yZ+cAptn8sQheg== ) ; Key ID = 12651
-org.  86400  IN  RRSIG  ( DNSKEY 13 1 86400 20181128000000
-        20151103000000 12651 org.
-        4LZLq/tp6NgDp0smMZTimmyglxf1jGlCTtfAqiN8UBpKkFCNNdxUdqhwHTrBk
-        9rxkmy9S2+0FVMX4W+kfdgadQ== )
-org.  86400  IN  RRSIG  ( DNSKEY 13 1 86400 20181128000000
-        20151103000000 49352 org.
-        +/npDnaC5OFeXaVosFmC1T+OWQG9F8vcoxyLLayu47zX1ZzpNC5E7OvsUyIQm
-        7Jy7uzWFyvyjpVkFpYwsTG4Fw== )
+org.  86400  IN  RRSIG  ( DNSKEY 13 1 86400 20201202000000
+        20181128000000 12651 org.
+        Gq9wf+z3pasXXUwE210jYc0LhJnMAhcwXydnvkHtCVY6/0jUafHO4RksN84Zt
+        us0pUgWngbT/OWXskdMYXZU4A== )
+org.  86400  IN  RRSIG  ( DNSKEY 13 1 86400 20201202000000
+        20181128000000 49352 org.
+        VGEkEMWBJ2IbOpm2Z56Qxu2NGPcVUDWCbYRyk+Qk1+HzGtyd2qPEKkpgMs/0p
+        vZEMj1YXD+dIqb2nUK9PGBAXw== )
 org.  86400  IN  DS  ( 12651 13 2 3979a51f98bbf219fcaf4a4176e766dfa8f
         9db5c24a75743eb1e704b97a9fabc )
 org.  86400  IN  DS  ( 49352 13 2 03d11a1aa114abbb8f708c3c0ff0db765fe
         f4a2f18920db5f58710dd767c293b )
-org.  86400  IN  RRSIG  ( DS 13 1 86400 20181128000000
-        20151103000000 31918 .
-        mOA+Y4fCWoWweQl+ipddwhnCK2wU3vx9FLyaPWo9lbfvzUZU7SPmy7FJkyygG
-        dYz9jTjAzl8ohbgacFcy44Acw== )
+org.  86400  IN  RRSIG  ( DS 13 1 86400 20201202000000
+        20181128000000 31918 .
+        adiFuP2UIulQw5Edsb/7WSPqr5nkRSTVXbZ2tkBeZRQcMjdCD3pyonWO5JPRV
+        EemgaE357S4pX5D0tVZzeZJ6A== )
 .  86400  IN  DNSKEY  ( 256 3 13
         zKz+DCWkNA/vuheiVPcGqsH40U84KZAlrMRIyozj9WHzf8PsFp/oR8j8vmjjW
         P98cbte4d8NvlGLxzbUzo3+FA== ) ; Key ID = 31918
@@ -1257,28 +1271,29 @@ org.  86400  IN  RRSIG  ( DS 13 1 86400 20181128000000
 .  86400  IN  DNSKEY  ( 257 3 13
         yvX+VNTUjxZiGvtr060hVbrPV9H6rVusQtF9lIxCFzbZOJxMQBFmbqlc8Xclv
         Q+gDOXnFOTsgs/frMmxyGOtRg== ) ; Key ID = 47005
-.  86400  IN  RRSIG  ( DNSKEY 13 0 86400 20181128000000
-        20151103000000 47005 .
-        BHtoZKDyZrl15nQvbdcwB92zifXkT1uqnSIwc/BfvdK7MXHIzOPV8IOIcxIgv
-        Yvl+HBzaIjxvs3mDtoAMAdyPg== )
+.  86400  IN  RRSIG  ( DNSKEY 13 0 86400 20201202000000
+        20181128000000 47005 .
+        0EPW1ca+N/ZhZPKla77STG734cTeIOjUwq7eW0HsnOfudWmnCEVeco2wLLq9m
+        nBT1dtNjIczvLG9pQTnOKUsHQ== )
         </artwork>
       </figure>
     </section> <!-- _25._tcp.example.org NSEC3 wildcard -->
     <section title="_443._tcp.www.example.org CNAME">
       <figure>
         <artwork>
-_443._tcp.www.example.org.  3600  IN  CNAME  dane311.example.org.
+_443._tcp.www.example.org.  3600  IN  CNAME  (
+        dane311.example.org. )
 _443._tcp.www.example.org.  3600  IN  RRSIG  ( CNAME 13 5 3600
-        20181128000000 20151103000000 56566 example.org.
-        ghRwyn7rWkJCKmJYDw01BXbtUppbm0o0VxSpOgCMkyZSBxAIj1XbblsdInrSd
-        FLvyFrxsJYmtRliDD3u2VYvSg== )
+        20201202000000 20181128000000 56566 example.org.
+        R0dUe6Rt4G+2ablrQH9Zw8j9NhBLMgNYTI5+H7nO8SNz5Nm8w0NZrXv3Qp7gx
+        Qb/a90O696120NsYaZX2+ebBA== )
 dane311.example.org.  3600  IN  TLSA  ( 3 1 1 
-        c66bef6a5c1a3e78b82016e13f314f3cc5fa25b1e52aab9adb9ec5989b165
-        ada )
+        8bd1da95272f7fa4ffb24137fc0ed03aae67e5c4d8b3c50734e1050a7920b
+        922 )
 dane311.example.org.  3600  IN  RRSIG  ( TLSA 13 3 3600
-        20181128000000 20151103000000 56566 example.org.
-        du6PG0KDeqna1y6bLI4wRMGGarfXT/fRfREZ3mHqKCIcdczu7y4B/4G1VV540
-        c+HVwadzTDjexYRfgbjIeW+eQ== )
+        20201202000000 20181128000000 56566 example.org.
+        f6TbTZTpu3h6MYpLkKQwWILAkYQ3EUY+Nsoa6any6yt+aeuunMUjw+IJB2QLm
+        0x0PrD7m39JA3NUSkUp9riNNQ== )
 example.org.  3600  IN  DNSKEY  ( 256 3 13
         NrbL6utGqIW1wrhhjeexdA6bMdD1lC1hj0Fnpevaa1AMyY2uy83TmoGnR996N
         UR5TlG4Zh+YPbbmUIixe4nS3w== ) ; Key ID = 56566
@@ -1286,15 +1301,15 @@ example.org.  3600  IN  DNSKEY  ( 257 3 13
         uspaqp17jsMTX6AWVgmbog/3Sttz+9ANFUWLn6qKUHr0BOqRuChQWj8jyYUUr
         Wy9txxesNQ9MkO4LUrFght1LQ== ) ; Key ID = 44384
 example.org.  3600  IN  RRSIG  ( DNSKEY 13 2 3600
-        20181128000000 20151103000000 44384 example.org.
-        0iz4rhb5BvPog73WqYjZfFXqnalGn2ACwe1Dm13VJaWHia08FL0tdlYSvFoBV
-        ghsXelOOL5CNXXxx88WkBn0ow== )
+        20201202000000 20181128000000 44384 example.org.
+        ttse9pYp9PSu0pJ+TOpIVFLWJ6NKOMWZX4Q/SlU6ZfaiKQc0Bg7Tut9+wPunk
+        6OPPvyHjVXMAsvk0tqV0B+/ag== )
 example.org.  86400  IN  DS  ( 44384 13 2 ec307e2efc8f0117ed96ab48a51
         3c8003e1d9121f1ff11a08b4cdd348d090aa6 )
-example.org.  86400  IN  RRSIG  ( DS 13 2 86400 20181128000000
-        20151103000000 9523 org.
-        79fPtEuK4zIc/s4RscLlQ4auq40IqS8P5Ilb1tfvSqqASmLkm+i9WvBQp1sSF
-        iLwqM5/XHcpvDGBO5Yirzm1gw== )
+example.org.  86400  IN  RRSIG  ( DS 13 2 86400 20201202000000
+        20181128000000 9523 org.
+        m86Xz0CEa2sWG40a0bS2kqLKPmIlyiVyDeoWXAq3djeGiPaikLuKORNzWXu62
+        clpAfvZHx59Ackst4X+zXYpUA== )
 org.  86400  IN  DNSKEY  ( 256 3 13
         fuLp60znhSSEr9HowILpTpyLKQdM6ixcgkTE0gqVdsLx+DSNHSc69o6fLWC0e
         HfWx7kzlBBoJB0vLrvsJtXJ6g== ) ; Key ID = 47417
@@ -1307,22 +1322,22 @@ org.  86400  IN  DNSKEY  ( 257 3 13
 org.  86400  IN  DNSKEY  ( 257 3 13
         0SZfoe8Yx+eoaGgyAGEeJax/ZBV1AuG+/smcOgRm+F6doNlgc3lddcM1MbTvJ
         HTjK6Fvy8W6yZ+cAptn8sQheg== ) ; Key ID = 12651
-org.  86400  IN  RRSIG  ( DNSKEY 13 1 86400 20181128000000
-        20151103000000 12651 org.
-        4LZLq/tp6NgDp0smMZTimmyglxf1jGlCTtfAqiN8UBpKkFCNNdxUdqhwHTrBk
-        9rxkmy9S2+0FVMX4W+kfdgadQ== )
-org.  86400  IN  RRSIG  ( DNSKEY 13 1 86400 20181128000000
-        20151103000000 49352 org.
-        +/npDnaC5OFeXaVosFmC1T+OWQG9F8vcoxyLLayu47zX1ZzpNC5E7OvsUyIQm
-        7Jy7uzWFyvyjpVkFpYwsTG4Fw== )
+org.  86400  IN  RRSIG  ( DNSKEY 13 1 86400 20201202000000
+        20181128000000 12651 org.
+        Gq9wf+z3pasXXUwE210jYc0LhJnMAhcwXydnvkHtCVY6/0jUafHO4RksN84Zt
+        us0pUgWngbT/OWXskdMYXZU4A== )
+org.  86400  IN  RRSIG  ( DNSKEY 13 1 86400 20201202000000
+        20181128000000 49352 org.
+        VGEkEMWBJ2IbOpm2Z56Qxu2NGPcVUDWCbYRyk+Qk1+HzGtyd2qPEKkpgMs/0p
+        vZEMj1YXD+dIqb2nUK9PGBAXw== )
 org.  86400  IN  DS  ( 12651 13 2 3979a51f98bbf219fcaf4a4176e766dfa8f
         9db5c24a75743eb1e704b97a9fabc )
 org.  86400  IN  DS  ( 49352 13 2 03d11a1aa114abbb8f708c3c0ff0db765fe
         f4a2f18920db5f58710dd767c293b )
-org.  86400  IN  RRSIG  ( DS 13 1 86400 20181128000000
-        20151103000000 31918 .
-        mOA+Y4fCWoWweQl+ipddwhnCK2wU3vx9FLyaPWo9lbfvzUZU7SPmy7FJkyygG
-        dYz9jTjAzl8ohbgacFcy44Acw== )
+org.  86400  IN  RRSIG  ( DS 13 1 86400 20201202000000
+        20181128000000 31918 .
+        adiFuP2UIulQw5Edsb/7WSPqr5nkRSTVXbZ2tkBeZRQcMjdCD3pyonWO5JPRV
+        EemgaE357S4pX5D0tVZzeZJ6A== )
 .  86400  IN  DNSKEY  ( 256 3 13
         zKz+DCWkNA/vuheiVPcGqsH40U84KZAlrMRIyozj9WHzf8PsFp/oR8j8vmjjW
         P98cbte4d8NvlGLxzbUzo3+FA== ) ; Key ID = 31918
@@ -1332,10 +1347,10 @@ org.  86400  IN  RRSIG  ( DS 13 1 86400 20181128000000
 .  86400  IN  DNSKEY  ( 257 3 13
         yvX+VNTUjxZiGvtr060hVbrPV9H6rVusQtF9lIxCFzbZOJxMQBFmbqlc8Xclv
         Q+gDOXnFOTsgs/frMmxyGOtRg== ) ; Key ID = 47005
-.  86400  IN  RRSIG  ( DNSKEY 13 0 86400 20181128000000
-        20151103000000 47005 .
-        BHtoZKDyZrl15nQvbdcwB92zifXkT1uqnSIwc/BfvdK7MXHIzOPV8IOIcxIgv
-        Yvl+HBzaIjxvs3mDtoAMAdyPg== )
+.  86400  IN  RRSIG  ( DNSKEY 13 0 86400 20201202000000
+        20181128000000 47005 .
+        0EPW1ca+N/ZhZPKla77STG734cTeIOjUwq7eW0HsnOfudWmnCEVeco2wLLq9m
+        nBT1dtNjIczvLG9pQTnOKUsHQ== )
         </artwork>
       </figure>
     </section> <!-- _443._tcp.www.example.org CNAME -->
@@ -1343,48 +1358,48 @@ org.  86400  IN  RRSIG  ( DS 13 1 86400 20181128000000
       <figure>
         <artwork>
 example.net.  3600  IN  DNAME  example.com.
-example.net.  3600  IN  RRSIG  ( DNAME 13 2 3600 20181128000000
-        20151103000000 48085 example.net.
-        ilK2RCGi3KERRPB/5gaym2Hw+UCbCU1MFNODKK6qbQK7H0B9+4nPwKQ8Fasc6
-        AeXqDIsGqMVrdm/HUgHu5Bu3w== )
+example.net.  3600  IN  RRSIG  ( DNAME 13 2 3600 20201202000000
+        20181128000000 48085 example.net.
+        o3uV5k5Ewp5fdrOZt0n4QuH+/Hpku2Lo3CzGRt9/MS2zZt2Qb/AXz435UFQBx
+        OI/pDnjJcLSd/gBLtqR52WLMA== )
 ; _443._tcp.www.example.net.  3600  IN  CNAME  (
 ;         _443._tcp.www.example.com. )
 _443._tcp.www.example.com.  3600  IN  TLSA  ( 3 1 1 
-        c66bef6a5c1a3e78b82016e13f314f3cc5fa25b1e52aab9adb9ec5989b165
-        ada )
+        8bd1da95272f7fa4ffb24137fc0ed03aae67e5c4d8b3c50734e1050a7920b
+        922 )
 _443._tcp.www.example.com.  3600  IN  RRSIG  ( TLSA 13 5 3600
-        20181128000000 20151103000000 1870 example.com.
-        v8N91gZ/eFvT8KwKFqtTLbF/KYu6H5GalYPdAafE7bISOXVOhqI8GiTWyb4OE
-        9g/YJdwaGjyFVi9x5rsLmZv0Q== )
+        20201202000000 20181128000000 1870 example.com.
+        rqY69NnTf4CN3GBGQjKEJCLAMsRkUrXe0JW8IqDb5rQHHzxNqqPeEoi+2vI6S
+        z2BhaswpGLVVuoijuVdzxYjmw== )
 example.net.  3600  IN  DNSKEY  ( 257 3 13
         X9GHpJcS7bqKVEsLiVAbddHUHTZqqBbVa3mzIQmdp+5cTJk7qDazwH68Kts8d
         9MvN55HddWgsmeRhgzePz6hMg== ) ; Key ID = 48085
 example.net.  3600  IN  RRSIG  ( DNSKEY 13 2 3600
-        20181128000000 20151103000000 48085 example.net.
-        JYp2an1iOqVTByDgUKaDRSQaC7b4OdUn0I0AmWMjkpgq+O2BGTGg3cvw9ou6Q
-        WB80l37Ib3g0CPD/bz2lDz/fA== )
+        20201202000000 20181128000000 48085 example.net.
+        CkwqgEt1p97oMa3w5LctIjKIuG5XVSapKrfwuHhb5p04fWXRMNsXasG/kd2F/
+        wlmMWiq38gOQaYCLNm+cjQzpQ== )
 example.net.  172800  IN  DS  ( 48085 13 2 7c1998ce683df60e2fa41460c4
         53f88f463dac8cd5d074277b4a7c04502921be )
 example.net.  172800  IN  RRSIG  ( DS 13 2 172800
-        20181128000000 20151103000000 10713 net.
-        WZKTFvoTn4aJ9BReBRgkecgoyBB04vJIHrhEonJ3BOyUANbcWHzwdpTSseYe6
-        YxYJxo4ll+2CZDCqE9hIIRANA== )
+        20201202000000 20181128000000 10713 net.
+        w0JxDeiBJZNlpCdxKtRENlqfTpSxcs6Vftscsyfo/hyeTPYcIt4yItDkYsYK+
+        KQ6FYAVE4nisA3vDQoZVL4wow== )
 net.  172800  IN  DNSKEY  ( 256 3 13
         061EoQs4sBcDsPiz17vt4nFSGLmXAGguqLStOesmKNCimi4/lw/vtyfqALuLF
         JiFjtCK3HMPi8HQ1jbGEwbGCA== ) ; Key ID = 10713
 net.  172800  IN  DNSKEY  ( 257 3 13
         LkNCPE+v3S4MVnsOqZFhn8n2NSwtLYOZLZjjgVsAKgu4XZncaDgq1R/7ZXRO5
         oVx2zthxuu2i+mGbRrycAaCvA== ) ; Key ID = 485
-net.  172800  IN  RRSIG  ( DNSKEY 13 1 172800 20181128000000
-        20151103000000 485 net.
-        BFoCXuxLcLmYXJBUYi3zDbox52CuqfbJcLjusW5k+rsdZ0/WSIBcuuFpqK/FT
-        jHH/EjCziEACN1w3t1eBJBxyw== )
+net.  172800  IN  RRSIG  ( DNSKEY 13 1 172800 20201202000000
+        20181128000000 485 net.
+        031jXg06zSuDwI5zqYuYFJg1O5p+zy85csMXagvRxB9W2lL/wJRi6Gn9BcaCV
+        RnDId5WR+yCADhsbKfSrrd9vQ== )
 net.  86400  IN  DS  ( 485 13 2 ab25a2941aa7f1eb8688bb783b25587515a0c
         d8c247769b23adb13ca234d1c05 )
-net.  86400  IN  RRSIG  ( DS 13 1 86400 20181128000000
-        20151103000000 31918 .
-        secc/A3oEHoSMUWunDp3wsbNpcTM55ndU+F3mxC+oC7idlGW3hdAs+12kcZBv
-        q3ZDgdA5VOELlz/qVMzUQT0xw== )
+net.  86400  IN  RRSIG  ( DS 13 1 86400 20201202000000
+        20181128000000 31918 .
+        vOXoTjxggGTYKIwssQ3kpML0ag6D0Hcm+Syy7++4zT7gaFHfRH9a6uZekIWdb
+        oss8y7q4onW4rxKdtw2S28hwQ== )
 .  86400  IN  DNSKEY  ( 256 3 13
         zKz+DCWkNA/vuheiVPcGqsH40U84KZAlrMRIyozj9WHzf8PsFp/oR8j8vmjjW
         P98cbte4d8NvlGLxzbUzo3+FA== ) ; Key ID = 31918
@@ -1394,23 +1409,23 @@ net.  86400  IN  RRSIG  ( DS 13 1 86400 20181128000000
 .  86400  IN  DNSKEY  ( 257 3 13
         yvX+VNTUjxZiGvtr060hVbrPV9H6rVusQtF9lIxCFzbZOJxMQBFmbqlc8Xclv
         Q+gDOXnFOTsgs/frMmxyGOtRg== ) ; Key ID = 47005
-.  86400  IN  RRSIG  ( DNSKEY 13 0 86400 20181128000000
-        20151103000000 47005 .
-        BHtoZKDyZrl15nQvbdcwB92zifXkT1uqnSIwc/BfvdK7MXHIzOPV8IOIcxIgv
-        Yvl+HBzaIjxvs3mDtoAMAdyPg== )
+.  86400  IN  RRSIG  ( DNSKEY 13 0 86400 20201202000000
+        20181128000000 47005 .
+        0EPW1ca+N/ZhZPKla77STG734cTeIOjUwq7eW0HsnOfudWmnCEVeco2wLLq9m
+        nBT1dtNjIczvLG9pQTnOKUsHQ== )
 example.com.  3600  IN  DNSKEY  ( 257 3 13
         JnA1XgyJTZz+psWvbrfUWLV6ULqIJyUS2CQdhUH9VK35bslWeJpRzrlxCUs7s
         /TsSfZMaGWVvlsuieh5nHcXzA== ) ; Key ID = 1870
 example.com.  3600  IN  RRSIG  ( DNSKEY 13 2 3600
-        20181128000000 20151103000000 1870 example.com.
-        iSQmfIb8PdM5mEB1vNh31vMfSLqUjAJoFwW8EUvjXHtQhHe2jSml4OdojumlW
-        +YFx6XeWRx2t+jBTYmAVOsRRw== )
+        20201202000000 20181128000000 1870 example.com.
+        nYisnu/26Sw1qmGuREa9o/fLgYuA4oNPt4+6PMBZoN0MS8Gjtli9NVRYeSIzt
+        QHPGSpvRxTUC4tZi62z1UgGDw== )
 example.com.  172800  IN  DS  ( 1870 13 2 e9b533a049798e900b5c29c90cd
         25a986e8a44f319ac3cd302bafc08f5b81e16 )
 example.com.  172800  IN  RRSIG  ( DS 13 2 172800
-        20181128000000 20151103000000 34327 com.
-        UDG6IfSgVJlZfPbC20U+j41vrlDitlWGh662ILScnOZWlXamxh73qtXqCeuLa
-        Ve9fa5s1u2a4CSrZiFmdPUcRA== )
+        20201202000000 20181128000000 34327 com.
+        sEAKvX4H6pJfN8nKcclB1NRcRSPOztx8omr4fCSHu6lp+uESP/Le4iF2sKukO
+        J1hhWSB6jgubEVl17rGNOA/YQ== )
 com.  172800  IN  DNSKEY  ( 256 3 13
         7IIE5Dol8jSMUqHTvOOiZapdEbQ9wqRxFi/zQcSdufUKLhpByvLpzSAQTqCWj
         3URIZ8L3Fa2gBLMOZUzZ1GQCw== ) ; Key ID = 34327
@@ -1420,22 +1435,22 @@ com.  172800  IN  DNSKEY  ( 257 3 13
 com.  172800  IN  DNSKEY  ( 257 3 13
         szc7biLo5J4OHlkan1vZrF4aD4YYf+NHA/GAqdNslY9xxK9Izg68XHkqck4Rt
         DiVk37lNAQmgSlHbrGu0yOTkA== ) ; Key ID = 28809
-com.  172800  IN  RRSIG  ( DNSKEY 13 1 172800 20181128000000
-        20151103000000 18931 com.
-        yzAYyY7Sr/Rz5qwAd7cVCREHe2FordFSYkB5eonqQE3m6rUlRSYq9nrh4xWYK
-        u3JkwHpF5UQLRslLVrsuuZc8g== )
-com.  172800  IN  RRSIG  ( DNSKEY 13 1 172800 20181128000000
-        20151103000000 28809 com.
-        CYiMUA1mgF/i00FEHjPSBpuXYuZWo1qrqc0xgyMzAWZzR0z0zXlJGlExIZT93
-        yYTsCWWVKTWHzQG9rv2tFvr8w== )
+com.  172800  IN  RRSIG  ( DNSKEY 13 1 172800 20201202000000
+        20181128000000 18931 com.
+        LJ4p5ORS2ViILwTotSlWixElqRXHY5tOdIuHlPWTdBGPMq3y40QNr1V+ZOyA5
+        7LFdPKpcvb8BvhM+GqKWGBEsg== )
+com.  172800  IN  RRSIG  ( DNSKEY 13 1 172800 20201202000000
+        20181128000000 28809 com.
+        sO+4X2N21yS6x8+dBVBzbRo9+55MM8n7+RUvdBuxRFVh6JaBlqDOC5LLkl7Ev
+        mDXqz6KEhhQjT+aQWDt6WFHlA== )
 com.  86400  IN  DS  ( 18931 13 2 20f7a9db42d0e2042fbbb9f9ea015941202
         f9eabb94487e658c188e7bcb52115 )
 com.  86400  IN  DS  ( 28809 13 2 ad66b3276f796223aa45eda773e92c6d98e
         70643bbde681db342a9e5cf2bb380 )
-com.  86400  IN  RRSIG  ( DS 13 1 86400 20181128000000
-        20151103000000 31918 .
-        zCsvW1syx+DkEr9+y6Z+S5PP0VsQSOKMt4EGig1JafbPufQej7KlZopBdt1VZ
-        c4khYrs5OqhzgnZ45g1vlPObQ== )
+com.  86400  IN  RRSIG  ( DS 13 1 86400 20201202000000
+        20181128000000 31918 .
+        nDiDlBjXEE/6AudhC++Hui1ckPcuAnGbjEASNoxA3ZHjlXRzL050UzePko5Pb
+        vBKTf6pk8JRCqnfzlo2QY+WXA== )
         </artwork>
       </figure>
     </section> <!-- _443._tcp.www.example.net DNAME-->
@@ -1443,30 +1458,30 @@ com.  86400  IN  RRSIG  ( DS 13 1 86400 20181128000000
       <figure>
         <artwork>
 example.com.  3600  IN  SOA  ( sns.dns.icann.org. noc.dns.icann.org.
-        2017042720 7200 3600 1209600 3600)
-example.com.  3600  IN  RRSIG  ( SOA 13 2 3600 20181128000000
-        20151103000000 1870 example.com.
-        tWkHhuCyJuVQ6M+7Ql1A1N+NlJvL1K7KbvCLKKemqAEn/w/67iap58VmGOJ53
-        6Iwk8hA9kANMCtOcKS61CDr1g== )
+        2017042720 7200 3600 1209600 3600 )
+example.com.  3600  IN  RRSIG  ( SOA 13 2 3600 20201202000000
+        20181128000000 1870 example.com.
+        sr214XHDDSIcInHStplCFZQ0CI5pl5aIIrrFRkwyISWYbjp9KncxJlWc4nsvf
+        6npBwVo+MP4/dg9JLO35kVkUw== )
 smtp.example.com.  3600  IN  NSEC  ( www.example.com. A AAAA
         RRSIG NSEC )
 smtp.example.com.  3600  IN  RRSIG  ( NSEC 13 3 3600
-        20181128000000 20151103000000 1870 example.com.
-        cQRiiLFOHrUTN8WoJnNkrGFFCBrAde8LG8Wl1phMpgwb8r7PGIV5Hc6DIYJY3
-        zOAHSuPuaGvNvlHCAo1fKZAxQ== )
+        20201202000000 20181128000000 1870 example.com.
+        rH/K4wghCOm4jpEHwQKiyZzvFIa7qpFySuKIGGetW4SE4O2Mh5jPxcEzf78Hf
+        crlsQZmnAUlfmBNCygxAd7JNw== )
 example.com.  3600  IN  DNSKEY  ( 257 3 13
         JnA1XgyJTZz+psWvbrfUWLV6ULqIJyUS2CQdhUH9VK35bslWeJpRzrlxCUs7s
         /TsSfZMaGWVvlsuieh5nHcXzA== ) ; Key ID = 1870
 example.com.  3600  IN  RRSIG  ( DNSKEY 13 2 3600
-        20181128000000 20151103000000 1870 example.com.
-        iSQmfIb8PdM5mEB1vNh31vMfSLqUjAJoFwW8EUvjXHtQhHe2jSml4OdojumlW
-        +YFx6XeWRx2t+jBTYmAVOsRRw== )
+        20201202000000 20181128000000 1870 example.com.
+        nYisnu/26Sw1qmGuREa9o/fLgYuA4oNPt4+6PMBZoN0MS8Gjtli9NVRYeSIzt
+        QHPGSpvRxTUC4tZi62z1UgGDw== )
 example.com.  172800  IN  DS  ( 1870 13 2 e9b533a049798e900b5c29c90cd
         25a986e8a44f319ac3cd302bafc08f5b81e16 )
 example.com.  172800  IN  RRSIG  ( DS 13 2 172800
-        20181128000000 20151103000000 34327 com.
-        UDG6IfSgVJlZfPbC20U+j41vrlDitlWGh662ILScnOZWlXamxh73qtXqCeuLa
-        Ve9fa5s1u2a4CSrZiFmdPUcRA== )
+        20201202000000 20181128000000 34327 com.
+        sEAKvX4H6pJfN8nKcclB1NRcRSPOztx8omr4fCSHu6lp+uESP/Le4iF2sKukO
+        J1hhWSB6jgubEVl17rGNOA/YQ== )
 com.  172800  IN  DNSKEY  ( 256 3 13
         7IIE5Dol8jSMUqHTvOOiZapdEbQ9wqRxFi/zQcSdufUKLhpByvLpzSAQTqCWj
         3URIZ8L3Fa2gBLMOZUzZ1GQCw== ) ; Key ID = 34327
@@ -1476,22 +1491,22 @@ com.  172800  IN  DNSKEY  ( 257 3 13
 com.  172800  IN  DNSKEY  ( 257 3 13
         szc7biLo5J4OHlkan1vZrF4aD4YYf+NHA/GAqdNslY9xxK9Izg68XHkqck4Rt
         DiVk37lNAQmgSlHbrGu0yOTkA== ) ; Key ID = 28809
-com.  172800  IN  RRSIG  ( DNSKEY 13 1 172800 20181128000000
-        20151103000000 18931 com.
-        yzAYyY7Sr/Rz5qwAd7cVCREHe2FordFSYkB5eonqQE3m6rUlRSYq9nrh4xWYK
-        u3JkwHpF5UQLRslLVrsuuZc8g== )
-com.  172800  IN  RRSIG  ( DNSKEY 13 1 172800 20181128000000
-        20151103000000 28809 com.
-        CYiMUA1mgF/i00FEHjPSBpuXYuZWo1qrqc0xgyMzAWZzR0z0zXlJGlExIZT93
-        yYTsCWWVKTWHzQG9rv2tFvr8w== )
+com.  172800  IN  RRSIG  ( DNSKEY 13 1 172800 20201202000000
+        20181128000000 18931 com.
+        LJ4p5ORS2ViILwTotSlWixElqRXHY5tOdIuHlPWTdBGPMq3y40QNr1V+ZOyA5
+        7LFdPKpcvb8BvhM+GqKWGBEsg== )
+com.  172800  IN  RRSIG  ( DNSKEY 13 1 172800 20201202000000
+        20181128000000 28809 com.
+        sO+4X2N21yS6x8+dBVBzbRo9+55MM8n7+RUvdBuxRFVh6JaBlqDOC5LLkl7Ev
+        mDXqz6KEhhQjT+aQWDt6WFHlA== )
 com.  86400  IN  DS  ( 18931 13 2 20f7a9db42d0e2042fbbb9f9ea015941202
         f9eabb94487e658c188e7bcb52115 )
 com.  86400  IN  DS  ( 28809 13 2 ad66b3276f796223aa45eda773e92c6d98e
         70643bbde681db342a9e5cf2bb380 )
-com.  86400  IN  RRSIG  ( DS 13 1 86400 20181128000000
-        20151103000000 31918 .
-        zCsvW1syx+DkEr9+y6Z+S5PP0VsQSOKMt4EGig1JafbPufQej7KlZopBdt1VZ
-        c4khYrs5OqhzgnZ45g1vlPObQ== )
+com.  86400  IN  RRSIG  ( DS 13 1 86400 20201202000000
+        20181128000000 31918 .
+        nDiDlBjXEE/6AudhC++Hui1ckPcuAnGbjEASNoxA3ZHjlXRzL050UzePko5Pb
+        vBKTf6pk8JRCqnfzlo2QY+WXA== )
 .  86400  IN  DNSKEY  ( 256 3 13
         zKz+DCWkNA/vuheiVPcGqsH40U84KZAlrMRIyozj9WHzf8PsFp/oR8j8vmjjW
         P98cbte4d8NvlGLxzbUzo3+FA== ) ; Key ID = 31918
@@ -1501,43 +1516,43 @@ com.  86400  IN  RRSIG  ( DS 13 1 86400 20181128000000
 .  86400  IN  DNSKEY  ( 257 3 13
         yvX+VNTUjxZiGvtr060hVbrPV9H6rVusQtF9lIxCFzbZOJxMQBFmbqlc8Xclv
         Q+gDOXnFOTsgs/frMmxyGOtRg== ) ; Key ID = 47005
-.  86400  IN  RRSIG  ( DNSKEY 13 0 86400 20181128000000
-        20151103000000 47005 .
-        BHtoZKDyZrl15nQvbdcwB92zifXkT1uqnSIwc/BfvdK7MXHIzOPV8IOIcxIgv
-        Yvl+HBzaIjxvs3mDtoAMAdyPg== )
+.  86400  IN  RRSIG  ( DNSKEY 13 0 86400 20201202000000
+        20181128000000 47005 .
+        0EPW1ca+N/ZhZPKla77STG734cTeIOjUwq7eW0HsnOfudWmnCEVeco2wLLq9m
+        nBT1dtNjIczvLG9pQTnOKUsHQ== )
         </artwork>
       </figure>
     </section> <!-- _25._tcp.smtp.example.org NSEC3 Denial of Existence -->
     <section title="_25._tcp.smtp.example.org NSEC3 Denial of Existence">
       <figure>
         <artwork>
-example.org.  3600  IN  SOA  ( sns.dns.icann.org.  noc.dns.icann.org.
-        2017042720 7200 3600 1209600 3600)
-example.org.  3600  IN  RRSIG  ( SOA 13 2 3600 20181128000000
-        20151103000000 56566 example.org.
-        cdTd84awnFIxn4KKGbC0AmkOXmWxcd3KNaY8+sXcM2CrG+ER0boo00kYfoXRM
-        Mnsz5UZe0WkbJXQQaeaLG5Jxg== )
+example.org.  3600  IN  SOA  ( sns.dns.icann.org. noc.dns.icann.org.
+        2017042720 7200 3600 1209600 3600 )
+example.org.  3600  IN  RRSIG  ( SOA 13 2 3600 20201202000000
+        20181128000000 56566 example.org.
+        cpKzINSSU0Jk6Y/QrsYLgfXNUY4b/pXDWsXrzIHOT8udmQcJkIU+LtnO9+Qa3
+        2vJqiV6m65FvbBigJ612c3Wyw== )
 vkv62jbv85822q8rtmfnbhfnmnat9ve3.example.org.  3600  IN  NSEC3  (
         1 0 1 - 93u63bg57ppj6649al2n31l92iedkjd6 A AAAA RRSIG )
 vkv62jbv85822q8rtmfnbhfnmnat9ve3.example.org.  3600  IN  RRSIG  (
-        NSEC3 13 3 3600 20181128000000 20151103000000 56566
+        NSEC3 13 3 3600 20201202000000 20181128000000 56566
         example.org.
-        yeZcHjDgvIlKFL6UrDefZq/3HxUbMiQmiqipNf16Amc90e+bsKW80kc+nqQiD
-        z8EBwvL+PT8/z/Z/e8+j9PQjQ== )
+        wn3cePVdc5VPPniYzGp+1CBPOY2m83/A3cjnAb7FTZuwL45B25fwVUyjKQksh
+        gQeV5KgP1cdvPt1BEowKqK4Sw== )
 dlm7rss9pejqnh0ev6h7k1ikqqcl5mae.example.org.  3600  IN  NSEC3  (
         1 0 1 - t6lf7uuoi0qofq0nvdjroavo46pp20im RRSIG TLSA )
 dlm7rss9pejqnh0ev6h7k1ikqqcl5mae.example.org.  3600  IN  RRSIG  (
-        NSEC3 13 3 3600 20181128000000 20151103000000 56566
+        NSEC3 13 3 3600 20201202000000 20181128000000 56566
         example.org.
-        HM1LMR5mbbCsJzHcW7WdSgCjamjFZIQsBjV/zba4O4BRehs2F6wMCFmeKR1rz
-        CNiYORR9DKBV7ymxf9kQSde4Q== )
+        guUyy9LIZlYb0FZttAdYJGrFNKpKu91Tm+dPOz98rnpwIlwwvLifXIvIl90nE
+        X38cWzEQOpreJu3t4WAfPsxdg== )
 a73bi8coh6dvf1arqdeuogf95r0828mk.example.org.  3600  IN  NSEC3  (
         1 0 1 - c1p0lp7l1l8gdn0jl13pp1o41h35untj CNAME RRSIG )
 a73bi8coh6dvf1arqdeuogf95r0828mk.example.org.  3600  IN  RRSIG  (
-        NSEC3 13 3 3600 20181128000000 20151103000000 56566
+        NSEC3 13 3 3600 20201202000000 20181128000000 56566
         example.org.
-        HYLPyJ4Nf0NX1Ip0TGZjh9OIsjEZLL//x0PLNvV8gwwZjuvnlQ0SqoYKLWKPi
-        5MSzKL4+JCzUjff4+h6tPKSzg== )
+        ePBUuWdj8Bc+/41gHBm2Bx/IK/j/Q4W7A5uTgSj/0Sd57mP/NTWRZq3p8yBNe
+        FPC2mBJ2oWQFi6/V9dmyiBh2A== )
 example.org.  3600  IN  DNSKEY  ( 256 3 13
         NrbL6utGqIW1wrhhjeexdA6bMdD1lC1hj0Fnpevaa1AMyY2uy83TmoGnR996N
         UR5TlG4Zh+YPbbmUIixe4nS3w== ) ; Key ID = 56566
@@ -1545,15 +1560,15 @@ example.org.  3600  IN  DNSKEY  ( 257 3 13
         uspaqp17jsMTX6AWVgmbog/3Sttz+9ANFUWLn6qKUHr0BOqRuChQWj8jyYUUr
         Wy9txxesNQ9MkO4LUrFght1LQ== ) ; Key ID = 44384
 example.org.  3600  IN  RRSIG  ( DNSKEY 13 2 3600
-        20181128000000 20151103000000 44384 example.org.
-        0iz4rhb5BvPog73WqYjZfFXqnalGn2ACwe1Dm13VJaWHia08FL0tdlYSvFoBV
-        ghsXelOOL5CNXXxx88WkBn0ow== )
+        20201202000000 20181128000000 44384 example.org.
+        ttse9pYp9PSu0pJ+TOpIVFLWJ6NKOMWZX4Q/SlU6ZfaiKQc0Bg7Tut9+wPunk
+        6OPPvyHjVXMAsvk0tqV0B+/ag== )
 example.org.  86400  IN  DS  ( 44384 13 2 ec307e2efc8f0117ed96ab48a51
         3c8003e1d9121f1ff11a08b4cdd348d090aa6 )
-example.org.  86400  IN  RRSIG  ( DS 13 2 86400 20181128000000
-        20151103000000 9523 org.
-        79fPtEuK4zIc/s4RscLlQ4auq40IqS8P5Ilb1tfvSqqASmLkm+i9WvBQp1sSF
-        iLwqM5/XHcpvDGBO5Yirzm1gw== )
+example.org.  86400  IN  RRSIG  ( DS 13 2 86400 20201202000000
+        20181128000000 9523 org.
+        m86Xz0CEa2sWG40a0bS2kqLKPmIlyiVyDeoWXAq3djeGiPaikLuKORNzWXu62
+        clpAfvZHx59Ackst4X+zXYpUA== )
 org.  86400  IN  DNSKEY  ( 256 3 13
         fuLp60znhSSEr9HowILpTpyLKQdM6ixcgkTE0gqVdsLx+DSNHSc69o6fLWC0e
         HfWx7kzlBBoJB0vLrvsJtXJ6g== ) ; Key ID = 47417
@@ -1566,22 +1581,22 @@ org.  86400  IN  DNSKEY  ( 257 3 13
 org.  86400  IN  DNSKEY  ( 257 3 13
         0SZfoe8Yx+eoaGgyAGEeJax/ZBV1AuG+/smcOgRm+F6doNlgc3lddcM1MbTvJ
         HTjK6Fvy8W6yZ+cAptn8sQheg== ) ; Key ID = 12651
-org.  86400  IN  RRSIG  ( DNSKEY 13 1 86400 20181128000000
-        20151103000000 12651 org.
-        4LZLq/tp6NgDp0smMZTimmyglxf1jGlCTtfAqiN8UBpKkFCNNdxUdqhwHTrBk
-        9rxkmy9S2+0FVMX4W+kfdgadQ== )
-org.  86400  IN  RRSIG  ( DNSKEY 13 1 86400 20181128000000
-        20151103000000 49352 org.
-        +/npDnaC5OFeXaVosFmC1T+OWQG9F8vcoxyLLayu47zX1ZzpNC5E7OvsUyIQm
-        7Jy7uzWFyvyjpVkFpYwsTG4Fw== )
+org.  86400  IN  RRSIG  ( DNSKEY 13 1 86400 20201202000000
+        20181128000000 12651 org.
+        Gq9wf+z3pasXXUwE210jYc0LhJnMAhcwXydnvkHtCVY6/0jUafHO4RksN84Zt
+        us0pUgWngbT/OWXskdMYXZU4A== )
+org.  86400  IN  RRSIG  ( DNSKEY 13 1 86400 20201202000000
+        20181128000000 49352 org.
+        VGEkEMWBJ2IbOpm2Z56Qxu2NGPcVUDWCbYRyk+Qk1+HzGtyd2qPEKkpgMs/0p
+        vZEMj1YXD+dIqb2nUK9PGBAXw== )
 org.  86400  IN  DS  ( 12651 13 2 3979a51f98bbf219fcaf4a4176e766dfa8f
         9db5c24a75743eb1e704b97a9fabc )
 org.  86400  IN  DS  ( 49352 13 2 03d11a1aa114abbb8f708c3c0ff0db765fe
         f4a2f18920db5f58710dd767c293b )
-org.  86400  IN  RRSIG  ( DS 13 1 86400 20181128000000
-        20151103000000 31918 .
-        mOA+Y4fCWoWweQl+ipddwhnCK2wU3vx9FLyaPWo9lbfvzUZU7SPmy7FJkyygG
-        dYz9jTjAzl8ohbgacFcy44Acw== )
+org.  86400  IN  RRSIG  ( DS 13 1 86400 20201202000000
+        20181128000000 31918 .
+        adiFuP2UIulQw5Edsb/7WSPqr5nkRSTVXbZ2tkBeZRQcMjdCD3pyonWO5JPRV
+        EemgaE357S4pX5D0tVZzeZJ6A== )
 .  86400  IN  DNSKEY  ( 256 3 13
         zKz+DCWkNA/vuheiVPcGqsH40U84KZAlrMRIyozj9WHzf8PsFp/oR8j8vmjjW
         P98cbte4d8NvlGLxzbUzo3+FA== ) ; Key ID = 31918
@@ -1591,10 +1606,10 @@ org.  86400  IN  RRSIG  ( DS 13 1 86400 20181128000000
 .  86400  IN  DNSKEY  ( 257 3 13
         yvX+VNTUjxZiGvtr060hVbrPV9H6rVusQtF9lIxCFzbZOJxMQBFmbqlc8Xclv
         Q+gDOXnFOTsgs/frMmxyGOtRg== ) ; Key ID = 47005
-.  86400  IN  RRSIG  ( DNSKEY 13 0 86400 20181128000000
-        20151103000000 47005 .
-        BHtoZKDyZrl15nQvbdcwB92zifXkT1uqnSIwc/BfvdK7MXHIzOPV8IOIcxIgv
-        Yvl+HBzaIjxvs3mDtoAMAdyPg== )
+.  86400  IN  RRSIG  ( DNSKEY 13 0 86400 20201202000000
+        20181128000000 47005 .
+        0EPW1ca+N/ZhZPKla77STG734cTeIOjUwq7eW0HsnOfudWmnCEVeco2wLLq9m
+        nBT1dtNjIczvLG9pQTnOKUsHQ== )
         </artwork>
       </figure>
     </section> <!-- _25._tcp.smtp.example.org NSEC3 Denial of Existence -->
@@ -1602,40 +1617,40 @@ org.  86400  IN  RRSIG  ( DS 13 1 86400 20181128000000
       <figure>
         <artwork>
 example.  432000  IN  SOA  ( ns.ns-servers.example.
-        hostmaster.ns-servers.example. 2018042500 1800 900 604800
-        43200 )
-example.  432000  IN  RRSIG  ( SOA 13 1 432000 20181128000000
-        20151103000000 15903 example.
-        QvaC/JXrXdpmK9kFcZ6AUD5NcRn+7n6bWZdtExVwhwASoWsyI3XUebewHmOub
-        LjTaR7jWKBZVdusAyJy+GasFg== )
+        hostmaster.ns-servers.example.
+        2018042500 1800 900 604800 43200)
+example.  432000  IN  RRSIG  ( SOA 13 1 432000 20201202000000
+        20181128000000 15903 example.
+        Hx4gEL0q9Za/jAB0LZ8dduuwef9qPrSyEK3RoSevb1S9UkrLQj1cL08HkiDwz
+        mcduSc5oMky0toC/gjOoZClEA== )
 c1kgc91hrn9nqi2qjh1ms78ki8p7s75o.example.  43200  IN  NSEC3  (
         1 1 1 - shn05itmoa45mmnv74lc4p0nnfmimtjt NS SOA RRSIG DNSKEY
         NSEC3PARAM )
 c1kgc91hrn9nqi2qjh1ms78ki8p7s75o.example.  43200  IN  RRSIG  (
-        NSEC3 13 2 43200 20181128000000 20151103000000 15903
+        NSEC3 13 2 43200 20201202000000 20181128000000 15903
         example.
-        RGbtCZ2g1kkwHF1X6Hub2gIw5dA03xIYKIvrboJTqJx86jDG2tFFatdhJBh0J
-        NREMnviEADDyb09CuK0UpXtZA== )
+        pW16gQOLhLpKYgXpGt4XB4o92W/QoPYyG5CjQ+t+g7LBVcCiPQv8ars1j9UOg
+        RpXUsJhZBDax2dfDhK7zOk7ow== )
 shn05itmoa45mmnv74lc4p0nnfmimtjt.example.  43200  IN  NSEC3  (
         1 1 1 - a3ib1dvf1bdtfmd91usrdem5fiiepi6p NS DS RRSIG )
 shn05itmoa45mmnv74lc4p0nnfmimtjt.example.  43200  IN  RRSIG  (
-        NSEC3 13 2 43200 20181128000000 20151103000000 15903
+        NSEC3 13 2 43200 20201202000000 20181128000000 15903
         example.
-        x5SpB7Z4aqgtEloiNngcN03llqkcTwyiTa04oBVK7dW+3mH+svofr3r18lQLI
-        aZgr0gmNbgKuW6C8/i+lI5SlA== )
+        5Aq//A8bsWNwcXbT91pMX2Oqf8VpJQRjqH4D2yZElW00wKmt85mhgu2qYPrvH
+        QwGEB4STMz2Nefq01/GY6NHKg== )
 example.  432000  IN  DNSKEY  ( 257 3 13
         yrkqXSbVwXOoUxCjr/E9yg8XUzbZNlwPllVsoUPd73TLOnBQQ+03Qw4/k+Nme
         /66WIw+ZTlHYcTNalxiGYm0uQ== ) ; Key ID = 15903
 example.  432000  IN  RRSIG  ( DNSKEY 13 1 432000
-        20181128000000 20151103000000 15903 example.
-        URP73Z7USF7YvI3ff6cQSlo+pJrQwIx19SVbMTR8bT556Uf0PIbVDyPYbwfJ9
-        L/iXmh8E50FEdhUsr0z7o28sg== )
+        20201202000000 20181128000000 15903 example.
+        wwEo3ri6JBuCqx5b33w8axFWOhIen1l+/mm0Isyc9FciuLhBiP+IqSgt+Igc8
+        9nR8zRpJpo1D6XR/qJxZgnfaA== )
 example.  86400  IN  DS  ( 15903 13 2 7e0ebaf1cc0d309d4a73ca7d711719d
         d940f4da87b3d72865167650fc73ea577 )
-example.  86400  IN  RRSIG  ( DS 13 1 86400 20181128000000
-        20151103000000 31918 .
-        +6aZMKsYO4tV0xvZ/FKUdHNXXMUEHu3qltUs+GYnoCEsmNx14F3g8QoT34d5/
-        Oo2AfP+lHv76wc/bqVdz1fh9A== )
+example.  86400  IN  RRSIG  ( DS 13 1 86400 20201202000000
+        20181128000000 31918 .
+        B5vx4zZaS+bOYfz0PzpaPfk9VxxBvYbGjIvGhpUZV3diXzfCguXxN4JIT1Sz8
+        eJX6BYT5QPIrbG/N35U1sIskw== )
 .  86400  IN  DNSKEY  ( 256 3 13
         zKz+DCWkNA/vuheiVPcGqsH40U84KZAlrMRIyozj9WHzf8PsFp/oR8j8vmjjW
         P98cbte4d8NvlGLxzbUzo3+FA== ) ; Key ID = 31918
@@ -1645,10 +1660,10 @@ example.  86400  IN  RRSIG  ( DS 13 1 86400 20181128000000
 .  86400  IN  DNSKEY  ( 257 3 13
         yvX+VNTUjxZiGvtr060hVbrPV9H6rVusQtF9lIxCFzbZOJxMQBFmbqlc8Xclv
         Q+gDOXnFOTsgs/frMmxyGOtRg== ) ; Key ID = 47005
-.  86400  IN  RRSIG  ( DNSKEY 13 0 86400 20181128000000
-        20151103000000 47005 .
-        BHtoZKDyZrl15nQvbdcwB92zifXkT1uqnSIwc/BfvdK7MXHIzOPV8IOIcxIgv
-        Yvl+HBzaIjxvs3mDtoAMAdyPg== )
+.  86400  IN  RRSIG  ( DNSKEY 13 0 86400 20201202000000
+        20181128000000 47005 .
+        0EPW1ca+N/ZhZPKla77STG734cTeIOjUwq7eW0HsnOfudWmnCEVeco2wLLq9m
+        nBT1dtNjIczvLG9pQTnOKUsHQ== )
         </artwork>
       </figure>
     </section> <!-- _443._tcp.www.insecure.example NSEC3 opt-out insecure delegation -->
