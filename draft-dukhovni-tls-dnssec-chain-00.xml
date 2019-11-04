@@ -220,6 +220,20 @@
              anchor="auth_chain_data">
 
       <t>
+    The "extension_data" field of the client's "dnssec_chain" extension MUST
+    contain the server's 16-bit TCP port number in network (big-endian) byte
+    order:
+      </t>
+
+      <figure>
+        <artwork>
+     struct {
+         uint16 PortNumber;
+     } DnssecChainExtension;
+        </artwork>
+      </figure>
+
+      <t>
     The "extension_data" field of the server's "dnssec_chain" extension MUST
     contain a DNSSEC Authentication Chain encoded in the following form:
       </t>
@@ -800,8 +814,7 @@ RRSIG(. DNSKEY)
   <section title="IANA Considerations">
 
     <t>This extension requires the registration of a new
-      value in the TLS ExtensionsType registry.  The value
-      requested from IANA is 53, and the extension should
+      value in the TLS ExtensionsType registry.  The extension should
       be marked "Recommended" in accordance with "IANA Registry
       Updates for TLS and DTLS" <xref target="TLSIANA"/>.
     </t>
