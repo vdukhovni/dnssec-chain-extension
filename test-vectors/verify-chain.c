@@ -104,6 +104,9 @@ int main(int argc, const char **argv)
 		uint8_t buf[8192], *ptr = buf;
 		int buf_sz = sizeof(buf);
 
+		*ptr++ = 0;
+		*ptr++ = 0;
+
 		for (i = 0; i < chain_len; i++) {
 			getdns_dict  *rr;
 
