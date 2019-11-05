@@ -320,7 +320,7 @@
 
       <t>
     The order of returned RRsets is unspecified and a TLS client MUST NOT
-    assume any ordering of RRsets.
+    assume any ordering of RRsets other than that RRsigs follow each RRset.
       </t>
 
       <t>
