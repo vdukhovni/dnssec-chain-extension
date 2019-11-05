@@ -11,6 +11,7 @@
 <!ENTITY rfc5905 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5905.xml">
 <!ENTITY rfc6066 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6066.xml">
 <!ENTITY rfc6698 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6698.xml">
+<!ENTITY rfc6962 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6962.xml">
 <!ENTITY rfc7218 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7218.xml">
 <!ENTITY rfc7250 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7250.xml">
 <!ENTITY rfc7633 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7633.xml">
@@ -901,6 +902,27 @@ _dane443.node1.provider.example. IN TLSA 1 1 1 ...
       extension are described in <xref target="pinning"/>.
     </t>
 
+    <t>
+      Each zone in the DANE chain validation path for a domainname can
+      impersonate the server to any client.  A mitigation is for clients
+      to prefer or require TLSA usage 2, binding a WebPKI issuer as the
+      issuer of the server's end-entity certificate -- this allows the
+      client to benefit from certificate transparency (CT) <xref
+        target="RFC6962"/>.  A less practical / less likely mitigation
+      is for clients that can to separately lookup the DANE chain up to
+      the last zone delegation identified in the TLS DNSSEC chain
+      extension, and verify that they match.
+    </t>
+
+    <t>
+      The DNS community may wish to develop a DNSSEC equivalent to
+      PKIX's CT.  Because DNSSEC has strong name constraints, CT for
+      DNSSEC need only log changes in signed delegations (both, changes
+      to unsigned, as well as DS RRset changes), which are much less
+      frequent than WebPKI end-entity certificate issuance or TLSA RRset
+      signing.
+    </t>
+
   </section>
 
 
@@ -956,6 +978,7 @@ _dane443.node1.provider.example. IN TLSA 1 1 1 ...
   <references title="Informative References">
     &rfc5011;
     &rfc5905;
+    &rfc6962;
     &rfc7250;
     &rfc7901;
     <?rfc include="reference.I-D.barnes-dane-uks.xml"?>
