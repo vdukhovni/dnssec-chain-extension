@@ -3,6 +3,7 @@
 <!ENTITY rfc1035 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.1035.xml">
 <!ENTITY rfc2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
 <!ENTITY rfc2181 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2181.xml">
+<!ENTITY rfc4033 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4033.xml">
 <!ENTITY rfc4034 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4034.xml">
 <!ENTITY rfc4035 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4035.xml">
 <!ENTITY rfc5011 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5011.xml">
@@ -103,20 +104,17 @@
     </t>
   </section>
 
-
   <section title="Introduction">
     <t>
-      This document describes a new TLS <xref target="RFC5246"/>
-      <xref target="RFC8446"/> extension for transport of <xref
-      target="RFC4034">DNSSEC</xref> signed DNS Resource Records (RRs).
-      This allows TLS clients to perform DANE Authentication <xref
-      target="RFC6698"/> <xref target="RFC7671"/> of a TLS server
-      without the need to perform additional DNS record lookups. Retrieval
-      of the required DNS records may be unavailable to the client
-      (<xref target="HAMPERING"/>), or may incur undesirable additional
-      latency.  It further allows a TLS client to validate the server's
-      DANE (TLSA) records itself without requiring access to a validating
-      DNS resolver to which it must have a secure connection.
+      This document describes a new TLS <xref target="RFC5246"/> <xref
+      target="RFC8446"/> extension for in-band transport of the complete
+      set of <xref target="RFC4033">DNSSEC</xref> validated Resource
+      Records (RRs) that enable a TLS client to perform DANE
+      Authentication <xref target="RFC6698"/> <xref target="RFC7671"/>
+      of a TLS server without the need to perform out-of-band DNS
+      lookups. Retrieval of the required DNS records may be unavailable
+      to the client (<xref target="HAMPERING"/>), or may incur
+      undesirable additional latency.
     </t>
 
     <t>
@@ -940,6 +938,7 @@ _dane443.node1.provider.example. IN TLSA 1 1 1 ...
     &rfc1035;
     &rfc2119;
     &rfc2181;
+    &rfc4033;
     &rfc4034;
     &rfc4035;
     &rfc5155;
