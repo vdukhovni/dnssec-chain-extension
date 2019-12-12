@@ -151,7 +151,7 @@
     </t>
 
     <t>
-      This extension also mitigates againts an unknown key share (UKS) attack
+      This extension also mitigates against an unknown key share (UKS) attack
       <xref target="I-D.barnes-dane-uks" /> when using raw public keys, since
       the server commits to its DNS name (normally found in its certificate)
       via the content of the returned TLSA RRset.
@@ -776,7 +776,7 @@ _dane443.node1.provider.example. IN TLSA 1 1 1 ...
 
     <t>
      When a TLS server operator wishes to no longer deploy this extension,
-     it must properly decommission its use. If a non-zero pin lifetim is
+     it must properly decommission its use. If a non-zero pin lifetime is
      presently advertised, it must first be changed to 0.  The extension
      can be disabled once all previously advertised pin lifetimes have
      expired.  Removal of TLSA records or even DNSSEC signing of the zone
