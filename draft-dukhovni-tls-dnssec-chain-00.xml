@@ -146,10 +146,11 @@
 
     <t>
       As described in the DANE specification <xref target="RFC6698"/>
-      <xref target="RFC7671"/>, this
-      procedure applies to the DANE authentication of X.509
-      certificates or raw public keys <xref target="RFC7250"/>.
+      <xref target="RFC7671"/>, this extension also applies to the DANE
+      authentication of X.509 certificates or raw public keys <xref
+      target="RFC7250"/>.
     </t>
+
     <t>
       This extension also mitigates againts an unknown key share (UKS) attack
       <xref target="I-D.barnes-dane-uks" /> when using raw public keys, since
@@ -178,7 +179,7 @@
       MUST first check whether the requested TLSA RRset (based on the port
       number in this extension and hostname in the SNI extension) is associated
       with the server.  If the extension, the SNI hostname or the port number is
-      unsupported, the server's extended ServerHello message SHALL not include the
+      unsupported, the server's extended ServerHello message MUST NOT include the
       dnssec_chain extension.
     </t>
 
@@ -190,8 +191,8 @@
       the server MUST omit the extension rather than send an incomplete
       chain. Clients that are expecting this extension MUST interpret this
       as a downgrade attack and MUST abort the TLS session.  Therefore,
-      servers MUST send denial of existence proofs, unless for the
-      particular application protocol or service clients are expected
+      servers MUST send denial of existence proofs, unless, for the
+      particular application protocol or service, clients are expected
       to continue even in the absence of such a proof.  As with all TLS
       extensions, if the server does not support this extension it will
       not return any authentication chain.
@@ -202,7 +203,7 @@
     <section title="Protocol, TLS 1.3">
 
       <t>
-        In TLS 1.3, the server adds its dnssec_chain extension in the extension block
+        In TLS 1.3, the server adds its dnssec_chain extension to the extension block
         of the Certificate message containing the end entity certificate being
         validated, rather than to the extended ServerHello message.
       </t>
@@ -254,71 +255,28 @@
       </t>
 
       <t>
-    The AuthenticationChain is composed of a sequence of 
-    uncompressed wire format DNS Resource Record sets (RRsets) and
-    corresponding Resource Record signatures (RRSIGs).
-      </t>
-
-      <t>
-    This sequence of native DNS wire format records enables easier
-    generation of the data structure on the server and easier 
-    verification of the data on client by means of existing DNS library
-    functions.
-      </t>
-
-      <t>
-    Each RRset in the chain is composed of a sequence of wire format
-    DNS Resource Records. The format of the Resource Record is
-    described in <xref target="RFC1035"/>, Section
+    The AuthenticationChain is composed of a sequence of uncompressed
+    wire format DNS RRs (including all requisite RRSIG <xref
+    target="RFC4034"/> RRs) in no particular order.  The format of the
+    Resource Record is described in <xref target="RFC1035"/>, Section
     3.2.1.
       </t>
 
       <figure>
         <artwork>
-
-          RR(i) = owner | type | class | TTL | RDATA length | RDATA
-
-          where RR(i) denotes the ith RR.
+          RR = owner | type | class | TTL | RDATA length | RDATA
         </artwork>
       </figure>
 
       <t>
-    The Resource Records that make up a RRset all have the same owner,
-    type, class and TTL, but different RDATA as specified in
-    <xref target="RFC2181"/>, Section 5.
+    The order of returned RRs is unspecified and a TLS client MUST NOT
+    assume any ordering of RRs.
       </t>
 
       <t>
-    Each signed RRset in the sequence is followed by its associated
-    RRsig record set.  This RRset has the same owner and class as the
-    preceding RRset, but has type RRSIG.  The Type Covered 
-    field in the RDATA of the RRsigs identifies the type of the
-    preceding RRset as described in <xref target="RFC4034"/>>, Section 3.
-      </t>
-
-      <t>
-    The RRsig record wire format is described in
-    <xref target="RFC4034"/>, Section 3.1. The
-    signature portion of the RDATA, as described in the same
-    section, is the following:
-      </t>
-
-      <figure>
-        <artwork>
-
-          signature = sign(RRSIG_RDATA | RR(1) | RR(2)... )
-        </artwork>
-      </figure>
-
-      <t>
-    where RRSIG_RDATA is the wire format of the RRSIG RDATA
-    fields with the Signer's Name field in canonical form and
-    the signature field excluded.
-      </t>
-
-      <t>
-    The order of returned RRsets is unspecified and a TLS client MUST NOT
-    assume any ordering of RRsets.
+    Use of native DNS wire format records enables easier generation of
+    the data structure on the server and easier verification of the data
+    on client by means of existing DNS library functions.
       </t>
 
       <t>
@@ -330,49 +288,37 @@
 
     <t>
       The returned RRsets MUST contain either the requested TLSA RRset,
-      perhaps or the associated denial of existence proof. In either case, the
-      chain of RRsets MUST be accompanied with the full set of DNS records
-      needed to authenticate the TLSA record set or its denial of existence
-      up the DNS hierarchy up to either the Root Zone or another trust anchor
-      mutually configured by the TLS server and client.
+      or else the associated denial of existence proof. In either case,
+      the chain of RRs MUST be accompanied with the full set of DNS
+      records needed to authenticate the TLSA record set or its denial
+      of existence up the DNS hierarchy to either the Root Zone or
+      another trust anchor mutually configured by the TLS server and
+      client.
+    </t>
+
+    <t>When some subtree in the chain is subject to redirection via
+       DNAME records, the associated inferred CNAME records need not
+       be included, they can be inferred by the DNS validation code
+       in the client.  Any applicable ordinary CNAME records that are
+       not sythesized from DNAME records MUST be included along with
+       their RRSIGs.
     </t>
 
     <t>
-    The chain will contain a unique class 1 (IN) RRset whose owner is equal to
-    or is the closest ancestore of the requested TLSA RRset, and whose record
-    type is one of TLSA, SOA, CNAME or DNAME.  These four cases correspond to
-    either:
-      </t>
-
-      <t><list style="numbers">
-        <t>A signed TLSA RRset at the requested domain name.</t>
-        <t>An signed SOA record and signed NSEC or NSEC3 records from the
-           associated zone, which together authenticate the non-existence of
-           the requested TLSA RRset.</t>
-        <t>A signed CNAME from the requested name to another domain name,
-           ultimately leading to a TLSA RRset, or denial of existence.</t>
-        <t>A signed ancestor DNAME record that specifies a new subtree in
-           DNS at which the chain continues (by prepending the labels
-           intermediate betwen the requested name the owner of the DNAME
-           record).</t>
-      </list></t>
-
-    <t>The first two cases determine whether the TLSA RRset does or does
-       not exist. The last two just redirect the requested name to the
-       target of the alias (actual with CNAME, or implied with DNAME),
-       with the status determined there or after further alias indirection.
-       Clients MUST be prepared to encounter alias loops, and then conclude
-       that the requested TLSA RRset therefore does not exist.  In the
-       presence of a CNAME loop or other server-side DNS problem, servers
-       may be unable to construct the authentication chain and would then
-       have no choice but to omit the extension.
+       Clients MUST be prepared to encounter (validated) alias loops,
+       and then conclude that the requested TLSA RRset therefore does
+       not exist.  In case of a server-side DNS problem, servers may be
+       unable to construct the authentication chain and would then have
+       no choice but to omit the extension.
     </t>
 
     <t>
-      In the case of a denial of existence response, the response chain
-      should include all DNSSEC signed records from the root zone to the
-      proof of non-existence of a validable entry in the chain that disproves
-      the existence of a a secure delegation to - or of - the TLSA record.
+      In the case of a denial of existence response, the authentication
+      chain MUST include all DNSSEC signed records from the trust-anchor
+      zone to a proof of non-existence of either the (possibly
+      redirected via aliases) TLSA records or else of an insecure
+      delegation above or at the (possibly redirected) owner name of the
+      requested TLSA RRset.
     </t>
 
       <t>
@@ -431,7 +377,9 @@ RRSIG(. DNSKEY)
 
       <figure>
         <artwork>
-www.example.com. IN NSEC (example.com. DNSKEY SOA NS NSEC RRSIG)
+example.com. IN SOA
+RRSIG(example.com. SOA)
+www.example.com. IN NSEC example.com. A NSEC RRSIG
 RRSIG(www.example.com. NSEC)
 example.com. DNSKEY
 RRSIG(example.com. DNSKEY)
@@ -454,6 +402,8 @@ RRSIG(. DNSKEY)
 
       <figure>
         <artwork>
+com. IN SOA
+RRSIG(com. SOA)
 ; covers example.com
 onib9mgub9h0rml3cdf5bgrj59dkjhvj.com. NSEC3 (1 1 0 -
   onib9mgub9h0rml3cdf5bgrj59dkjhvl NS DS RRSIG)
