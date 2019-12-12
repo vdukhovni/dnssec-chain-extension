@@ -85,7 +85,7 @@
       the complete set of DNSSEC validated records needed to perform
       DANE authentication of a TLS server without the need to perform
       separate out-of-band DNS lookups.  When the requisite DNS records
-      do not exist, the extension can convey a validated denial of
+      do not exist, the extension conveys a validated denial of
       existence proof.
     </t>
   </abstract>
