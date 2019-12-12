@@ -144,10 +144,10 @@
     </t>
 
     <t>
-      As described in the DANE specification <xref target="RFC6698"/>
-      <xref target="RFC7671"/>, this extension also applies to the DANE
-      authentication of X.509 certificates or raw public keys <xref
-      target="RFC7250"/>.
+      This extension supports DANE authentication of either X.509
+      certificates or raw public keys as described in the DANE
+      specification <xref target="RFC6698"/> <xref target="RFC7671"/>
+      and <xref target="RFC7250"/>.
     </t>
 
     <t>
@@ -278,13 +278,6 @@
     on client by means of existing DNS library functions.
       </t>
 
-      <t>
-    Unsigned CNAMEs that are implied by associated DNAME records MUST not be
-    included, they can be inferred from the DNAME records.  Any NSEC or NSEC3
-    denial of existence records must be accompanied by the associated SOA
-    record.
-      </t>
-
     <t>
       The returned RRsets MUST contain either the requested TLSA RRset,
       or else the associated denial of existence proof. In either case,
@@ -305,10 +298,11 @@
 
     <t>
        Clients MUST be prepared to encounter (validated) alias loops,
-       and then conclude that the requested TLSA RRset therefore does
-       not exist.  In case of a server-side DNS problem, servers may be
-       unable to construct the authentication chain and would then have
-       no choice but to omit the extension.
+       and MAY then conclude that the requested TLSA RRset therefore
+       does not exist. Servers MUST NOT assume that clients will handle
+       CNAME alias loops gracefully.  In case of a server-side DNS
+       problem, servers may be unable to construct the authentication
+       chain and would then have no choice but to omit the extension.
     </t>
 
     <t>
@@ -325,13 +319,6 @@
         multiple branches of the DNS tree. In this case, the authentication
         chain structure needs to include DS and DNSKEY record sets that
         cover all the necessary branches.
-      </t>
-
-      <t>
-        If the TLSA record set was synthesized by a DNS wildcard, the
-        chain MUST include the signed NSEC or <xref target="RFC5155">
-        NSEC3</xref> records that prove that there was no explicit match
-        of the TLSA record name and no closer wildcard match.
       </t>
 
       <t>
@@ -444,9 +431,10 @@ RRSIG(. DNSKEY)
 
         <t>
         <list style="symbols">
-        <t>The TLSA record does not exist.</t>
+        <t>The TLSA record (after any DNSSEC validated alias redirection) does not exist.</t>
         <t>There is no signed delegation to a DNS zone which is either
-        an ancestor of, or the same as, the TLSA record name.</t>
+        an ancestor of, or the same as, the TLSA record name (after any
+        DNSSEC validated alias redirection).</t>
         </list>
         </t>
 
@@ -501,8 +489,8 @@ RRSIG(. DNSKEY)
       Then traversing the DNS tree upwards towards the trust anchor
       zone (normally the DNS root). For each zone cut, the DNSKEY and
       DS RRsets and their signatures are added. However, see
-      <xref target="auth_chain_data"/> for specific processing needed for
-      aliases and wildcards. If DNS response messages contain any
+      <xref target="auth_chain_data"/> for specific processing needed
+      for aliases. If DNS response messages contain any
       domain names utilizing name compression
       <xref target="RFC1035"/>, then they MUST be uncompressed prior to
       inclusion in the chain.
@@ -594,7 +582,7 @@ RRSIG(. DNSKEY)
     </t>
 
     <t>
-     However, in a mixed use deployment of WebPKI and DANE, there is the
+     However, in a mixed-use deployment of WebPKI and DANE, there is the
      possibility that the security of a TLS client is downgraded from
      DANE to WebPKI. This can happen when a TLS client connection is
      intercepted and redirected to a rogue TLS server presenting a TLS
@@ -816,7 +804,7 @@ _dane443.node1.provider.example. IN TLSA 1 1 1 ...
       across end-entity certificate updates, so long as the issuer
       certificate or public keys remains unchanged. This can be easier
       to implement, at the cost of greater reliance on the security
-      of the selected provider.
+      of the selected certification authority.
     </t>
 
     <t>
