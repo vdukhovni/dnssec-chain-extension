@@ -79,14 +79,14 @@
 
   <date year="2019"/>
   <area>Security</area>
-  <workgroup>TLS</workgroup>
   <abstract>
     <t>
-      This draft describes a new TLS extension for transport of a
-      DNS record set serialized with the DNSSEC signatures needed to
-      authenticate that record set. This allows TLS clients to perform
+      This draft describes a new TLS extension for in-band transport of
+      the complete set of DNSSEC validated records needed to perform
       DANE authentication of a TLS server without the need to perform
-      additional DNS record lookups.
+      separate out-of-band DNS lookups.  When the requisite DNS records
+      do not exist, the extension can convey a validated denial of
+      existence proof.
     </t>
   </abstract>
 </front>
