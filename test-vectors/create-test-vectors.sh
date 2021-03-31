@@ -7,6 +7,7 @@
 # 
 INCEPTION="20181128"
 EXPIRATION="20201202"
+VERIFY_TIME="20201001"
 
 ldns-signzone -i $INCEPTION -e $EXPIRATION -o . root K.+013+47005 K.+013+31918 K.+013+02635 && \
 	grep -v '	RRSIG	.* 2635 \. ' root.signed > root.signed.2 && \
@@ -88,7 +89,7 @@ ldns-signzone -i $INCEPTION -e $EXPIRATION -o example.net example.net Kexample.n
 	grep '^com\..*	DS' root.signed
 	grep '	DNSKEY' root.signed
 ) > 00-straight-www.example.com.chain
-./verify-chain root.ds 00-straight-www.example.com.chain www.example.com 443 > www.example.com.wireformat && echo "straight forward successful"
+./verify-chain -t $VERIFY_TIME root.ds 00-straight-www.example.com.chain www.example.com 443 > www.example.com.wireformat && echo "straight forward successful"
 
 
 (	grep '^\*\._tcp\..*	TLSA'  example.com.signed | sed 's/^\*/_25/g'
@@ -99,7 +100,7 @@ ldns-signzone -i $INCEPTION -e $EXPIRATION -o example.net example.net Kexample.n
 	grep '^com\..*	DS' root.signed
 	grep '	DNSKEY' root.signed
 ) > 10-wildcard-nsec-example.com.chain
-./verify-chain root.ds 10-wildcard-nsec-example.com.chain example.com 25 > /dev/null && echo "Wildcard case successful"
+./verify-chain -t $VERIFY_TIME root.ds 10-wildcard-nsec-example.com.chain example.com 25 > /dev/null && echo "Wildcard case successful"
 
 (	grep '^\*\._tcp\..*	TLSA'  example.org.signed | sed 's/^\*/_25/g'
 	grep '^dlm7rss9pejqnh0ev6h7k1ikqqcl5mae.example.org.' example.org.signed
@@ -109,7 +110,7 @@ ldns-signzone -i $INCEPTION -e $EXPIRATION -o example.net example.net Kexample.n
 	grep '^org\..*	DS' root.signed
 	grep '	DNSKEY' root.signed
 ) > 15-wildcard-nsec3-example.org.chain
-./verify-chain root.ds 15-wildcard-nsec3-example.org.chain example.org 25 > /dev/null && echo "NSEC3 wildcard case successful"
+./verify-chain -t $VERIFY_TIME root.ds 15-wildcard-nsec3-example.org.chain example.org 25 > /dev/null && echo "NSEC3 wildcard case successful"
 
 (	grep '^_443\._tcp\..*	CNAME'  example.org.signed
 	grep '^dane311\..*	TLSA'  example.org.signed
@@ -119,7 +120,7 @@ ldns-signzone -i $INCEPTION -e $EXPIRATION -o example.net example.net Kexample.n
 	grep '^org\..*	DS' root.signed
 	grep '	DNSKEY' root.signed
 ) > 20-cname-www.example.org.chain
-./verify-chain root.ds 20-cname-www.example.org.chain www.example.org 443 > /dev/null && echo "CNAME case successful"
+./verify-chain -t $VERIFY_TIME root.ds 20-cname-www.example.org.chain www.example.org 443 > /dev/null && echo "CNAME case successful"
 
 (	grep '^example\.net.*	DNAME'  example.net.signed
 	printf "_443._tcp.www.example.net.\t3600\tIN\tCNAME\t_443._tcp.www.example.com.\n"
@@ -138,7 +139,7 @@ ldns-signzone -i $INCEPTION -e $EXPIRATION -o example.net example.net Kexample.n
 	#grep '	DNSKEY' root.signed
 
 ) > 30-dname-www.example.net.chain
-./verify-chain root.ds 30-dname-www.example.net.chain www.example.net 443 > /dev/null && echo "DNAME case successful"
+./verify-chain -t $VERIFY_TIME root.ds 30-dname-www.example.net.chain www.example.net 443 > /dev/null && echo "DNAME case successful"
 
 (
 	grep '	SOA' example.com.signed # Minimum used as NX ttl 
@@ -149,7 +150,7 @@ ldns-signzone -i $INCEPTION -e $EXPIRATION -o example.net example.net Kexample.n
 	grep '^com\..*	DS' root.signed
 	grep '	DNSKEY' root.signed
 ) > 40-denial-nsec-example.com.chain
-./verify-chain root.ds 40-denial-nsec-example.com.chain smtp.example.com 25 > /dev/null && echo "NSEC denial of existance case successful"
+./verify-chain -t $VERIFY_TIME root.ds 40-denial-nsec-example.com.chain smtp.example.com 25 > /dev/null && echo "NSEC denial of existance case successful"
 
 (
 	grep '	SOA' example.org.signed # Minimum used as NX ttl 
@@ -162,7 +163,7 @@ ldns-signzone -i $INCEPTION -e $EXPIRATION -o example.net example.net Kexample.n
 	grep '^org\..*	DS' root.signed
 	grep '	DNSKEY' root.signed
 ) > 45-denial-nsec3-example.org.chain
-./verify-chain root.ds 45-denial-nsec3-example.org.chain smtp.example.org 25 > /dev/null && echo "NSEC3 denial of existance case successful"
+./verify-chain -t $VERIFY_TIME root.ds 45-denial-nsec3-example.org.chain smtp.example.org 25 > /dev/null && echo "NSEC3 denial of existance case successful"
 
 (
 	grep '	SOA' example.signed # Minimum used as NX ttl 
@@ -172,6 +173,6 @@ ldns-signzone -i $INCEPTION -e $EXPIRATION -o example.net example.net Kexample.n
 	grep '^example\..*	DS' root.signed
 	grep '	DNSKEY' root.signed
 ) > 50-insecure-nsec3-optout-example.chain
-./verify-chain root.ds 50-insecure-nsec3-optout-example.chain www.insecure.example 443 403 > /dev/null && echo "NSEC3 opt-out insecure delegation case successful"
+./verify-chain -t $VERIFY_TIME root.ds 50-insecure-nsec3-optout-example.chain www.insecure.example 443 403 > /dev/null && echo "NSEC3 opt-out insecure delegation case successful"
 
 

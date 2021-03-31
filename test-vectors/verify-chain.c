@@ -1,9 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+#include <unistd.h>
+#include <string.h>
 #include <getdns/getdns.h>
 #include <getdns/getdns_extra.h>
 
-int main(int argc, const char **argv)
+void print_usage(FILE *out, const char *progname)
+{
+	fprintf( out
+	       , "usage: %s [-t <verify date>] <trust anchor file> "
+	         "<chain file> <domain name> <port> [<expected dnssec status>]"
+	         "\n\twhere <verify date> is YYYYMMDD[hhmmss]\n"
+	       , progname);
+}
+
+int main(int argc, char **argv)
 {
 	FILE *ta_file = NULL;
 	getdns_list *tas = NULL;
@@ -19,16 +31,52 @@ int main(int argc, const char **argv)
 	char qname_str[1024];
 	getdns_bindata *qname;
 	getdns_return_t expected_dnssec_status = GETDNS_DNSSEC_SECURE;
+	time_t validation_time = time(NULL); /* now */
+	int opt;
+	struct tm tm;
+	const char *progname = argv[0];
 
-	if (argc == 6)
-		expected_dnssec_status = (getdns_return_t)atoi(argv[5]);
+	while ((opt = getopt(argc, argv, "ht:")) != -1) {
+		switch (opt) {
+		case 't':
+			memset(&tm, 0, sizeof(tm));
+			if (strlen(optarg) == 8
+			&&  sscanf(optarg, "%4d%2d%2d", &tm.tm_year
+			                              , &tm.tm_mon
+			                              , &tm.tm_mday)) {
+				tm.tm_year -= 1900;
+				tm.tm_mon -= 1;
+				validation_time = mktime(&tm);
 
-	if (argc != 5 && argc != 6)
-		fprintf(stderr, "usage: %s <trust anchor file> <chain file>"
-				" <domain name> <port> [<expected dnssec status>]\n", argv[0]);
+			} else if (strlen(optarg) == 14
+			&&  sscanf(optarg, "%4d%2d%2d%2d%2d%2d"
+			                 , &tm.tm_year, &tm.tm_mon, &tm.tm_mday
+			                 , &tm.tm_hour, &tm.tm_min, &tm.tm_sec)) {
+				tm.tm_year -= 1900;
+				tm.tm_mon -= 1;
+				validation_time = mktime(&tm);
+
+			} else
+				validation_time = (time_t)atol(optarg);
+			break;
+		case 'h':
+			print_usage(stdout, progname);
+			exit(EXIT_SUCCESS);
+		default:
+			print_usage(stderr, progname);
+			exit(EXIT_FAILURE);
+		}
+	}
+	argc -= optind;
+	argv += optind;
+	if (argc == 5)
+		expected_dnssec_status = (getdns_return_t)atoi(argv[4]);
+
+	if (argc != 4 && argc != 5)
+		print_usage(stderr, progname);
 
 	else if (snprintf( qname_str, sizeof(qname_str), "_%s._tcp.%s."
-	                 , argv[4], argv[3]) < 0)
+	                 , argv[3], argv[2]) < 0)
 		fprintf(stderr, "Problem with snprinf\n");
 
 	else if (!(support = getdns_list_create()) ||
@@ -39,10 +87,10 @@ int main(int argc, const char **argv)
 	else if (!(request = getdns_dict_create()))
 		fprintf(stderr, "Error creating dict\n");
 
-	else if (!(ta_file = fopen(argv[1], "r")))
+	else if (!(ta_file = fopen(argv[0], "r")))
 		perror("Error opening trust anchor file");
 
-	else if (!(chain_file = fopen(argv[2], "r")))
+	else if (!(chain_file = fopen(argv[1], "r")))
 		perror("Error opening chain file");
 
 	else if ((r = getdns_str2bindata(qname_str, &qname)))
@@ -95,8 +143,8 @@ int main(int argc, const char **argv)
 	else if ((r = getdns_list_set_dict(to_validate, 0, request)))
 		fprintf(stderr, "Error setting request");
 
-	else if ((dnssec_status = getdns_validate_dnssec(
-	    to_validate, support, tas)) != expected_dnssec_status) {
+	else if ((dnssec_status = getdns_validate_dnssec2(to_validate, support,
+	    tas, validation_time, 3600)) != expected_dnssec_status) {
 		fprintf(stderr, "Chain did not validate");
 		r = dnssec_status;
 
