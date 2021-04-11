@@ -101,7 +101,7 @@ performs the appropriate DNS queries, builds the authentication
 chain, and returns it to the client. The server will typically use a
 previously cached authentication chain, but it will need to rebuild
 it periodically as described in (#sec_caching). The client then
-authenticates the chain using a pre-configured DNSSEC trust anchor. 
+authenticates the chain using a pre-configured DNSSEC trust anchor.
 
 In the absense of TLSA records, this extension conveys the
 required authenticated denial of existence. Such proofs are needed to
@@ -134,7 +134,7 @@ applications on the wider internet. One application of TLS well
 suited for the TLS DNSSEC Chain extension is DNS over TLS [@!RFC7858].
 In fact, one of the authentication methods for DNS over TLS *is* the
 mechanism described in this document, as specified in Section 8.2.2
-of [@!RFC8310]. 
+of [@!RFC8310].
 
 The need for the mechanism when DANE authenticating DNS over TLS
 resolver is obvious, since DNS may not be available to perform the
@@ -164,7 +164,7 @@ The key words "**MUST**", "**MUST NOT**", "**REQUIRED**",
 "**OPTIONAL**" in this document are to be interpreted as described in
 BCP 14 [@!RFC2119] [@!RFC8174] when, and only when, they appear in
 all capitals, as shown here.
-   
+
 # DNSSEC Authentication Chain Extension
 
 ## Protocol, TLS 1.2
@@ -794,7 +794,7 @@ X6KjBtpdvp/aXabmL95YgBjT8WJ7pqOfrqhpcmOBZa6Cg6O1l4qbIFH/Gj9hQB5I
 ## \_443.\_tcp.www.example.com {#tv-straight}
 
 ```
-_443._tcp.www.example.com.  3600  IN  TLSA  ( 3 1 1 
+_443._tcp.www.example.com.  3600  IN  TLSA  ( 3 1 1
         8bd1da95272f7fa4ffb24137fc0ed03aae67e5c4d8b3c50734e1050a7920b
         922 )
 _443._tcp.www.example.com.  3600  IN  RRSIG  ( TLSA 13 5 3600
@@ -962,7 +962,7 @@ extension represention this with an ExtSupportLifetime value of 0 is:
 ## \_25.\_tcp.example.com NSEC wildcard {#tv-wildcard-nsec}
 
 ```
-_25._tcp.example.com.  3600  IN  TLSA  ( 3 1 1 
+_25._tcp.example.com.  3600  IN  TLSA  ( 3 1 1
         8bd1da95272f7fa4ffb24137fc0ed03aae67e5c4d8b3c50734e1050a7920b
         922 )
 _25._tcp.example.com.  3600  IN  RRSIG  ( TLSA 13 3 3600
@@ -1031,7 +1031,7 @@ com.  86400  IN  RRSIG  ( DS 13 1 86400 20201202000000
 ## \_25.\_tcp.example.org NSEC3 wildcard {#tv-wildcard-nsec3}
 
 ```
-_25._tcp.example.org.  3600  IN  TLSA  ( 3 1 1 
+_25._tcp.example.org.  3600  IN  TLSA  ( 3 1 1
         8bd1da95272f7fa4ffb24137fc0ed03aae67e5c4d8b3c50734e1050a7920b
         922 )
 _25._tcp.example.org.  3600  IN  RRSIG  ( TLSA 13 3 3600
@@ -1113,7 +1113,7 @@ _443._tcp.www.example.org.  3600  IN  RRSIG  ( CNAME 13 5 3600
         20201202000000 20181128000000 56566 example.org.
         R0dUe6Rt4G+2ablrQH9Zw8j9NhBLMgNYTI5+H7nO8SNz5Nm8w0NZrXv3Qp7gx
         Qb/a90O696120NsYaZX2+ebBA== )
-dane311.example.org.  3600  IN  TLSA  ( 3 1 1 
+dane311.example.org.  3600  IN  TLSA  ( 3 1 1
         8bd1da95272f7fa4ffb24137fc0ed03aae67e5c4d8b3c50734e1050a7920b
         922 )
 dane311.example.org.  3600  IN  RRSIG  ( TLSA 13 3 3600
@@ -1189,7 +1189,7 @@ example.net.  3600  IN  RRSIG  ( DNAME 13 2 3600 20201202000000
         OI/pDnjJcLSd/gBLtqR52WLMA== )
 ; _443._tcp.www.example.net.  3600  IN  CNAME  (
 ;         _443._tcp.www.example.com. )
-_443._tcp.www.example.com.  3600  IN  TLSA  ( 3 1 1 
+_443._tcp.www.example.com.  3600  IN  TLSA  ( 3 1 1
         8bd1da95272f7fa4ffb24137fc0ed03aae67e5c4d8b3c50734e1050a7920b
         922 )
 _443._tcp.www.example.com.  3600  IN  RRSIG  ( TLSA 13 5 3600
