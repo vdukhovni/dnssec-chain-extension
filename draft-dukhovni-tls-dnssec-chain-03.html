@@ -11,11 +11,15 @@
 <meta content="Paul Wouters" name="author">
 <meta content="Melinda Shore" name="author">
 <meta content="
-       This draft describes a new TLS extension for in-band transport of the
-complete set of DNSSEC validated records needed to perform DANE
-authentication of a TLS server without the need to perform separate
-out-of-band DNS lookups.  When the requisite DNS records do not
-exist, the extension conveys a validated denial of existence proof. 
+       This document describes an experimental TLS extension for in-band
+transport of the complete set of DNSSEC validated records needed to
+perform DANE authentication of a TLS server without the need to
+perform separate out-of-band DNS lookups.  When the requisite DNS
+records do not exist, the extension conveys a validated denial of
+existence proof. 
+       This experimental extension is developed outside the IETF and is
+published here to guide implementation of the extension and to ensure
+interoperability among implementations. 
     " name="description">
 <meta content="xml2rfc 3.4.0" name="generator">
 <meta content="draft-dukhovni-tls-dnssec-chain-03" name="ietf.draft">
@@ -1167,7 +1171,7 @@ dt+dd:empty::before{
 </tr></thead>
 <tfoot><tr>
 <td class="left">Dukhovni, et al.</td>
-<td class="center">Expires 4 October 2021</td>
+<td class="center">Expires 13 October 2021</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1180,12 +1184,12 @@ dt+dd:empty::before{
 <dd class="internet-draft">draft-dukhovni-tls-dnssec-chain-03</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2021-04-02" class="published">2 April 2021</time>
+<time datetime="2021-04-11" class="published">11 April 2021</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Experimental</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2021-10-04">4 October 2021</time></dd>
+<dd class="expires"><time datetime="2021-10-13">13 October 2021</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1214,11 +1218,15 @@ dt+dd:empty::before{
 <h1 id="title">TLS DNSSEC Chain Extension</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">This draft describes a new TLS extension for in-band transport of the
-complete set of DNSSEC validated records needed to perform DANE
-authentication of a TLS server without the need to perform separate
-out-of-band DNS lookups.  When the requisite DNS records do not
-exist, the extension conveys a validated denial of existence proof.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">This document describes an experimental TLS extension for in-band
+transport of the complete set of DNSSEC validated records needed to
+perform DANE authentication of a TLS server without the need to
+perform separate out-of-band DNS lookups.  When the requisite DNS
+records do not exist, the extension conveys a validated denial of
+existence proof.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-2">This experimental extension is developed outside the IETF and is
+published here to guide implementation of the extension and to ensure
+interoperability among implementations.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
 </section>
 <div id="status-of-memo">
 <section id="section-boilerplate.1">
@@ -1239,7 +1247,7 @@ exist, the extension conveys a validated denial of existence proof.<a href="#sec
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 4 October 2021.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 13 October 2021.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1264,140 +1272,132 @@ exist, the extension conveys a validated denial of existence proof.<a href="#sec
         <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
 <a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
         </h2>
-<nav class="toc"><ul class="ulEmpty toc compact">
-<li class="ulEmpty toc compact" id="section-toc.1-1.1">
-            <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="xref">1</a>.  <a href="#name-requirements-notation" class="xref">Requirements Notation</a><a href="#section-toc.1-1.1.1" class="pilcrow">¶</a></p>
+<nav class="toc"><ul class="ulEmpty compact toc">
+<li class="ulEmpty compact toc" id="section-toc.1-1.1">
+            <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="xref">1</a>.  <a href="#name-introduction" class="xref">Introduction</a><a href="#section-toc.1-1.1.1" class="pilcrow">¶</a></p>
+<ul class="ulEmpty compact toc">
+<li class="ulEmpty compact toc" id="section-toc.1-1.1.2.1">
+                <p id="section-toc.1-1.1.2.1.1" class="keepWithNext"><a href="#section-1.1" class="xref">1.1</a>.  <a href="#name-scope-of-the-experiment" class="xref">Scope of the experiment</a><a href="#section-toc.1-1.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="ulEmpty toc compact" id="section-toc.1-1.2">
-            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="xref">2</a>.  <a href="#name-introduction" class="xref">Introduction</a><a href="#section-toc.1-1.2.1" class="pilcrow">¶</a></p>
+              <li class="ulEmpty compact toc" id="section-toc.1-1.1.2.2">
+                <p id="section-toc.1-1.1.2.2.1" class="keepWithNext"><a href="#section-1.2" class="xref">1.2</a>.  <a href="#name-requirements-notation" class="xref">Requirements Notation</a><a href="#section-toc.1-1.1.2.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="ulEmpty toc compact" id="section-toc.1-1.3">
-            <p id="section-toc.1-1.3.1"><a href="#section-3" class="xref">3</a>.  <a href="#name-dnssec-authentication-chain" class="xref">DNSSEC Authentication Chain Extension</a><a href="#section-toc.1-1.3.1" class="pilcrow">¶</a></p>
-<ul class="ulEmpty toc compact">
-<li class="ulEmpty toc compact" id="section-toc.1-1.3.2.1">
-                <p id="section-toc.1-1.3.2.1.1" class="keepWithNext"><a href="#section-3.1" class="xref">3.1</a>.  <a href="#name-protocol-tls-12" class="xref">Protocol, TLS 1.2</a><a href="#section-toc.1-1.3.2.1.1" class="pilcrow">¶</a></p>
+            </ul>
 </li>
-              <li class="ulEmpty toc compact" id="section-toc.1-1.3.2.2">
-                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="xref">3.2</a>.  <a href="#name-protocol-tls-13" class="xref">Protocol, TLS 1.3</a><a href="#section-toc.1-1.3.2.2.1" class="pilcrow">¶</a></p>
+          <li class="ulEmpty compact toc" id="section-toc.1-1.2">
+            <p id="section-toc.1-1.2.1"><a href="#section-2" class="xref">2</a>.  <a href="#name-dnssec-authentication-chain" class="xref">DNSSEC Authentication Chain Extension</a><a href="#section-toc.1-1.2.1" class="pilcrow">¶</a></p>
+<ul class="ulEmpty compact toc">
+<li class="ulEmpty compact toc" id="section-toc.1-1.2.2.1">
+                <p id="section-toc.1-1.2.2.1.1"><a href="#section-2.1" class="xref">2.1</a>.  <a href="#name-protocol-tls-12" class="xref">Protocol, TLS 1.2</a><a href="#section-toc.1-1.2.2.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="ulEmpty toc compact" id="section-toc.1-1.3.2.3">
-                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="xref">3.3</a>.  <a href="#name-dnssec-authentication-chain-" class="xref">DNSSEC Authentication Chain Data</a><a href="#section-toc.1-1.3.2.3.1" class="pilcrow">¶</a></p>
-<ul class="ulEmpty toc compact">
-<li class="ulEmpty toc compact" id="section-toc.1-1.3.2.3.2.1">
-                    <p id="section-toc.1-1.3.2.3.2.1.1"><a href="#section-3.3.1" class="xref">3.3.1</a>.  <a href="#name-authenticated-denial-of-exi" class="xref">Authenticated Denial of Existence</a><a href="#section-toc.1-1.3.2.3.2.1.1" class="pilcrow">¶</a></p>
+              <li class="ulEmpty compact toc" id="section-toc.1-1.2.2.2">
+                <p id="section-toc.1-1.2.2.2.1"><a href="#section-2.2" class="xref">2.2</a>.  <a href="#name-protocol-tls-13" class="xref">Protocol, TLS 1.3</a><a href="#section-toc.1-1.2.2.2.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="ulEmpty compact toc" id="section-toc.1-1.2.2.3">
+                <p id="section-toc.1-1.2.2.3.1"><a href="#section-2.3" class="xref">2.3</a>.  <a href="#name-dnssec-authentication-chain-" class="xref">DNSSEC Authentication Chain Data</a><a href="#section-toc.1-1.2.2.3.1" class="pilcrow">¶</a></p>
+<ul class="ulEmpty compact toc">
+<li class="ulEmpty compact toc" id="section-toc.1-1.2.2.3.2.1">
+                    <p id="section-toc.1-1.2.2.3.2.1.1"><a href="#section-2.3.1" class="xref">2.3.1</a>.  <a href="#name-authenticated-denial-of-exi" class="xref">Authenticated Denial of Existence</a><a href="#section-toc.1-1.2.2.3.2.1.1" class="pilcrow">¶</a></p>
 </li>
                 </ul>
 </li>
             </ul>
 </li>
-          <li class="ulEmpty toc compact" id="section-toc.1-1.4">
-            <p id="section-toc.1-1.4.1"><a href="#section-4" class="xref">4</a>.  <a href="#name-construction-of-serialized-" class="xref">Construction of Serialized Authentication Chains</a><a href="#section-toc.1-1.4.1" class="pilcrow">¶</a></p>
+          <li class="ulEmpty compact toc" id="section-toc.1-1.3">
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="xref">3</a>.  <a href="#name-construction-of-serialized-" class="xref">Construction of Serialized Authentication Chains</a><a href="#section-toc.1-1.3.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="ulEmpty toc compact" id="section-toc.1-1.5">
-            <p id="section-toc.1-1.5.1"><a href="#section-5" class="xref">5</a>.  <a href="#name-caching-and-regeneration-of" class="xref">Caching and Regeneration of the Authentication Chain</a><a href="#section-toc.1-1.5.1" class="pilcrow">¶</a></p>
+          <li class="ulEmpty compact toc" id="section-toc.1-1.4">
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="xref">4</a>.  <a href="#name-caching-and-regeneration-of" class="xref">Caching and Regeneration of the Authentication Chain</a><a href="#section-toc.1-1.4.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="ulEmpty toc compact" id="section-toc.1-1.6">
-            <p id="section-toc.1-1.6.1"><a href="#section-6" class="xref">6</a>.  <a href="#name-verification" class="xref">Verification"</a><a href="#section-toc.1-1.6.1" class="pilcrow">¶</a></p>
+          <li class="ulEmpty compact toc" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="xref">5</a>.  <a href="#name-verification" class="xref">Verification"</a><a href="#section-toc.1-1.5.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="ulEmpty toc compact" id="section-toc.1-1.7">
-            <p id="section-toc.1-1.7.1"><a href="#section-7" class="xref">7</a>.  <a href="#name-extension-pinning" class="xref">Extension pinning"</a><a href="#section-toc.1-1.7.1" class="pilcrow">¶</a></p>
+          <li class="ulEmpty compact toc" id="section-toc.1-1.6">
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="xref">6</a>.  <a href="#name-extension-pinning" class="xref">Extension Pinning</a><a href="#section-toc.1-1.6.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="ulEmpty toc compact" id="section-toc.1-1.8">
-            <p id="section-toc.1-1.8.1"><a href="#section-8" class="xref">8</a>.  <a href="#name-trust-anchor-maintenance" class="xref">Trust Anchor Maintenance"</a><a href="#section-toc.1-1.8.1" class="pilcrow">¶</a></p>
+          <li class="ulEmpty compact toc" id="section-toc.1-1.7">
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="xref">7</a>.  <a href="#name-trust-anchor-maintenance" class="xref">Trust Anchor Maintenance"</a><a href="#section-toc.1-1.7.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="ulEmpty toc compact" id="section-toc.1-1.9">
-            <p id="section-toc.1-1.9.1"><a href="#section-9" class="xref">9</a>.  <a href="#name-virtual-hosting" class="xref">Virtual Hosting"</a><a href="#section-toc.1-1.9.1" class="pilcrow">¶</a></p>
+          <li class="ulEmpty compact toc" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="xref">8</a>.  <a href="#name-virtual-hosting" class="xref">Virtual Hosting"</a><a href="#section-toc.1-1.8.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="ulEmpty toc compact" id="section-toc.1-1.10">
-            <p id="section-toc.1-1.10.1"><a href="#section-10" class="xref">10</a>. <a href="#name-operational-considerations" class="xref">Operational Considerations</a><a href="#section-toc.1-1.10.1" class="pilcrow">¶</a></p>
+          <li class="ulEmpty compact toc" id="section-toc.1-1.9">
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="xref">9</a>.  <a href="#name-operational-considerations" class="xref">Operational Considerations</a><a href="#section-toc.1-1.9.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="ulEmpty toc compact" id="section-toc.1-1.11">
-            <p id="section-toc.1-1.11.1"><a href="#section-11" class="xref">11</a>. <a href="#name-security-considerations" class="xref">Security Considerations</a><a href="#section-toc.1-1.11.1" class="pilcrow">¶</a></p>
+          <li class="ulEmpty compact toc" id="section-toc.1-1.10">
+            <p id="section-toc.1-1.10.1"><a href="#section-10" class="xref">10</a>. <a href="#name-security-considerations" class="xref">Security Considerations</a><a href="#section-toc.1-1.10.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="ulEmpty toc compact" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#section-12" class="xref">12</a>. <a href="#name-iana-considerations" class="xref">IANA Considerations</a><a href="#section-toc.1-1.12.1" class="pilcrow">¶</a></p>
+          <li class="ulEmpty compact toc" id="section-toc.1-1.11">
+            <p id="section-toc.1-1.11.1"><a href="#section-11" class="xref">11</a>. <a href="#name-iana-considerations" class="xref">IANA Considerations</a><a href="#section-toc.1-1.11.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="ulEmpty toc compact" id="section-toc.1-1.13">
-            <p id="section-toc.1-1.13.1"><a href="#section-13" class="xref">13</a>. <a href="#name-acknowledgments" class="xref">Acknowledgments</a><a href="#section-toc.1-1.13.1" class="pilcrow">¶</a></p>
+          <li class="ulEmpty compact toc" id="section-toc.1-1.12">
+            <p id="section-toc.1-1.12.1"><a href="#section-12" class="xref">12</a>. <a href="#name-acknowledgments" class="xref">Acknowledgments</a><a href="#section-toc.1-1.12.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="ulEmpty toc compact" id="section-toc.1-1.14">
-            <p id="section-toc.1-1.14.1"><a href="#section-14" class="xref">14</a>. <a href="#name-normative-references" class="xref">Normative References</a><a href="#section-toc.1-1.14.1" class="pilcrow">¶</a></p>
+          <li class="ulEmpty compact toc" id="section-toc.1-1.13">
+            <p id="section-toc.1-1.13.1"><a href="#section-13" class="xref">13</a>. <a href="#name-normative-references" class="xref">Normative References</a><a href="#section-toc.1-1.13.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="ulEmpty toc compact" id="section-toc.1-1.15">
-            <p id="section-toc.1-1.15.1"><a href="#section-15" class="xref">15</a>. <a href="#name-informative-references" class="xref">Informative References</a><a href="#section-toc.1-1.15.1" class="pilcrow">¶</a></p>
+          <li class="ulEmpty compact toc" id="section-toc.1-1.14">
+            <p id="section-toc.1-1.14.1"><a href="#section-14" class="xref">14</a>. <a href="#name-informative-references" class="xref">Informative References</a><a href="#section-toc.1-1.14.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="ulEmpty toc compact" id="section-toc.1-1.16">
-            <p id="section-toc.1-1.16.1"><a href="#section-appendix.a" class="xref">Appendix A</a>.  <a href="#name-test-vectors" class="xref">Test Vectors</a><a href="#section-toc.1-1.16.1" class="pilcrow">¶</a></p>
-<ul class="ulEmpty toc compact">
-<li class="ulEmpty toc compact" id="section-toc.1-1.16.2.1">
-                <p id="section-toc.1-1.16.2.1.1"><a href="#section-a.1" class="xref">A.1</a>.  <a href="#name-_443_tcpwwwexamplecom" class="xref">_443._tcp.www.example.com</a><a href="#section-toc.1-1.16.2.1.1" class="pilcrow">¶</a></p>
+          <li class="ulEmpty compact toc" id="section-toc.1-1.15">
+            <p id="section-toc.1-1.15.1"><a href="#section-appendix.a" class="xref">Appendix A</a>.  <a href="#name-test-vectors" class="xref">Test Vectors</a><a href="#section-toc.1-1.15.1" class="pilcrow">¶</a></p>
+<ul class="ulEmpty compact toc">
+<li class="ulEmpty compact toc" id="section-toc.1-1.15.2.1">
+                <p id="section-toc.1-1.15.2.1.1"><a href="#section-a.1" class="xref">A.1</a>.  <a href="#name-_443_tcpwwwexamplecom" class="xref">_443._tcp.www.example.com</a><a href="#section-toc.1-1.15.2.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="ulEmpty toc compact" id="section-toc.1-1.16.2.2">
-                <p id="section-toc.1-1.16.2.2.1"><a href="#section-a.2" class="xref">A.2</a>.  <a href="#name-_25_tcpexamplecom-nsec-wild" class="xref">_25._tcp.example.com NSEC wildcard</a><a href="#section-toc.1-1.16.2.2.1" class="pilcrow">¶</a></p>
+              <li class="ulEmpty compact toc" id="section-toc.1-1.15.2.2">
+                <p id="section-toc.1-1.15.2.2.1"><a href="#section-a.2" class="xref">A.2</a>.  <a href="#name-_25_tcpexamplecom-nsec-wild" class="xref">_25._tcp.example.com NSEC wildcard</a><a href="#section-toc.1-1.15.2.2.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="ulEmpty toc compact" id="section-toc.1-1.16.2.3">
-                <p id="section-toc.1-1.16.2.3.1"><a href="#section-a.3" class="xref">A.3</a>.  <a href="#name-_25_tcpexampleorg-nsec3-wil" class="xref">_25._tcp.example.org NSEC3 wildcard</a><a href="#section-toc.1-1.16.2.3.1" class="pilcrow">¶</a></p>
+              <li class="ulEmpty compact toc" id="section-toc.1-1.15.2.3">
+                <p id="section-toc.1-1.15.2.3.1"><a href="#section-a.3" class="xref">A.3</a>.  <a href="#name-_25_tcpexampleorg-nsec3-wil" class="xref">_25._tcp.example.org NSEC3 wildcard</a><a href="#section-toc.1-1.15.2.3.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="ulEmpty toc compact" id="section-toc.1-1.16.2.4">
-                <p id="section-toc.1-1.16.2.4.1"><a href="#section-a.4" class="xref">A.4</a>.  <a href="#name-_443_tcpwwwexampleorg-cname" class="xref">_443._tcp.www.example.org CNAME</a><a href="#section-toc.1-1.16.2.4.1" class="pilcrow">¶</a></p>
+              <li class="ulEmpty compact toc" id="section-toc.1-1.15.2.4">
+                <p id="section-toc.1-1.15.2.4.1"><a href="#section-a.4" class="xref">A.4</a>.  <a href="#name-_443_tcpwwwexampleorg-cname" class="xref">_443._tcp.www.example.org CNAME</a><a href="#section-toc.1-1.15.2.4.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="ulEmpty toc compact" id="section-toc.1-1.16.2.5">
-                <p id="section-toc.1-1.16.2.5.1"><a href="#section-a.5" class="xref">A.5</a>.  <a href="#name-_443_tcpwwwexamplenet-dname" class="xref">_443._tcp.www.example.net DNAME</a><a href="#section-toc.1-1.16.2.5.1" class="pilcrow">¶</a></p>
+              <li class="ulEmpty compact toc" id="section-toc.1-1.15.2.5">
+                <p id="section-toc.1-1.15.2.5.1"><a href="#section-a.5" class="xref">A.5</a>.  <a href="#name-_443_tcpwwwexamplenet-dname" class="xref">_443._tcp.www.example.net DNAME</a><a href="#section-toc.1-1.15.2.5.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="ulEmpty toc compact" id="section-toc.1-1.16.2.6">
-                <p id="section-toc.1-1.16.2.6.1"><a href="#section-a.6" class="xref">A.6</a>.  <a href="#name-_25_tcpsmtpexamplecom-nsec-" class="xref">_25._tcp.smtp.example.com NSEC Denial of Existence</a><a href="#section-toc.1-1.16.2.6.1" class="pilcrow">¶</a></p>
+              <li class="ulEmpty compact toc" id="section-toc.1-1.15.2.6">
+                <p id="section-toc.1-1.15.2.6.1"><a href="#section-a.6" class="xref">A.6</a>.  <a href="#name-_25_tcpsmtpexamplecom-nsec-" class="xref">_25._tcp.smtp.example.com NSEC Denial of Existence</a><a href="#section-toc.1-1.15.2.6.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="ulEmpty toc compact" id="section-toc.1-1.16.2.7">
-                <p id="section-toc.1-1.16.2.7.1"><a href="#section-a.7" class="xref">A.7</a>.  <a href="#name-_25_tcpsmtpexampleorg-nsec3" class="xref">_25._tcp.smtp.example.org NSEC3 Denial of Existence</a><a href="#section-toc.1-1.16.2.7.1" class="pilcrow">¶</a></p>
+              <li class="ulEmpty compact toc" id="section-toc.1-1.15.2.7">
+                <p id="section-toc.1-1.15.2.7.1"><a href="#section-a.7" class="xref">A.7</a>.  <a href="#name-_25_tcpsmtpexampleorg-nsec3" class="xref">_25._tcp.smtp.example.org NSEC3 Denial of Existence</a><a href="#section-toc.1-1.15.2.7.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="ulEmpty toc compact" id="section-toc.1-1.16.2.8">
-                <p id="section-toc.1-1.16.2.8.1"><a href="#section-a.8" class="xref">A.8</a>.  <a href="#name-_443_tcpwwwinsecureexample-" class="xref">_443._tcp.www.insecure.example NSEC3 opt-out insecure delegation</a><a href="#section-toc.1-1.16.2.8.1" class="pilcrow">¶</a></p>
+              <li class="ulEmpty compact toc" id="section-toc.1-1.15.2.8">
+                <p id="section-toc.1-1.15.2.8.1"><a href="#section-a.8" class="xref">A.8</a>.  <a href="#name-_443_tcpwwwinsecureexample-" class="xref">_443._tcp.www.insecure.example NSEC3 opt-out insecure delegation</a><a href="#section-toc.1-1.15.2.8.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
-          <li class="ulEmpty toc compact" id="section-toc.1-1.17">
-            <p id="section-toc.1-1.17.1"><a href="#section-appendix.b" class="xref"></a><a href="#name-authors-addresses" class="xref">Authors' Addresses</a><a href="#section-toc.1-1.17.1" class="pilcrow">¶</a></p>
+          <li class="ulEmpty compact toc" id="section-toc.1-1.16">
+            <p id="section-toc.1-1.16.1"><a href="#section-appendix.b" class="xref"></a><a href="#name-authors-addresses" class="xref">Authors' Addresses</a><a href="#section-toc.1-1.16.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </nav>
 </section>
 </div>
-<div id="requirements-notation">
-<section id="section-1">
-      <h2 id="name-requirements-notation">
-<a href="#section-1" class="section-number selfRef">1. </a><a href="#name-requirements-notation" class="section-name selfRef">Requirements Notation</a>
-      </h2>
-<p id="section-1-1">The key words "<span class="bcp14">MUST</span>", "<span class="bcp14">MUST NOT</span>", "<span class="bcp14">REQUIRED</span>",
-"<span class="bcp14">SHALL</span>", "<span class="bcp14">SHALL NOT</span>", "<span class="bcp14">SHOULD</span>", "<span class="bcp14">SHOULD NOT</span>",
-"<span class="bcp14">RECOMMENDED</span>", "<span class="bcp14">NOT RECOMMENDED</span>", "<span class="bcp14">MAY</span>", and
-"<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as described in
-BCP 14 <span>[<a href="#RFC2119" class="xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="xref">RFC8174</a>]</span> when, and only when, they appear in
-all capitals, as shown here.<a href="#section-1-1" class="pilcrow">¶</a></p>
-</section>
-</div>
 <div id="introduction">
-<section id="section-2">
+<section id="section-1">
       <h2 id="name-introduction">
-<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
+<a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-2-1">This document describes a new TLS <span>[<a href="#RFC5246" class="xref">RFC5246</a>]</span><span>[<a href="#RFC8446" class="xref">RFC8446</a>]</span> extension for
-in-band transport of the complete set of DNSSEC <span>[<a href="#RFC4033" class="xref">RFC4033</a>]</span> validated
-Resource Records (RRs) that enable a TLS client to perform DANE
-Authentication <span>[<a href="#RFC6698" class="xref">RFC6698</a>]</span><span>[<a href="#RFC7671" class="xref">RFC7671</a>]</span> of a TLS server without the need
-to perform out-of-band DNS lookups.  Retrieval of the required DNS
-records may be unavailable to the client <span>[<a href="#HAMPERING" class="xref">HAMPERING</a>]</span>, or may incur
-undesirable additional latency.<a href="#section-2-1" class="pilcrow">¶</a></p>
-<p id="section-2-2">The extension described here allows a TLS client to request that the
+<p id="section-1-1">This document describes an experimental TLS <span>[<a href="#RFC5246" class="xref">RFC5246</a>]</span><span>[<a href="#RFC8446" class="xref">RFC8446</a>]</span>
+extension for in-band transport of the complete set of DNSSEC
+<span>[<a href="#RFC4033" class="xref">RFC4033</a>]</span> validated Resource Records (RRs) that enable a TLS client
+to perform DANE Authentication <span>[<a href="#RFC6698" class="xref">RFC6698</a>]</span><span>[<a href="#RFC7671" class="xref">RFC7671</a>]</span> of a TLS server
+without the need to perform out-of-band DNS lookups.  Retrieval of
+the required DNS records may be unavailable to the client
+<span>[<a href="#HAMPERING" class="xref">HAMPERING</a>]</span>, or may incur undesirable additional latency.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">The extension described here allows a TLS client to request that the
 TLS server return the DNSSEC authentication chain corresponding to
 its DNSSEC-validated DANE TLSA Resource Record set (RRset), or
 authenticated denial of existence of such an RRset (as described in
-<a href="#denial_of_existence" class="xref">Section 3.3.1</a>). If the server supports this extension it
+<a href="#denial_of_existence" class="xref">Section 2.3.1</a>). If the server supports this extension it
 performs the appropriate DNS queries, builds the authentication
 chain, and returns it to the client. The server will typically use a
 previously cached authentication chain, but it will need to rebuild
-it periodically as described in <a href="#sec_caching" class="xref">Section 5</a>. The client then
-authenticates the chain using a pre-configured DNSSEC trust anchor.<a href="#section-2-2" class="pilcrow">¶</a></p>
-<p id="section-2-3">In the absense of TLSA records, this extension conveys the
+it periodically as described in <a href="#sec_caching" class="xref">Section 4</a>. The client then
+authenticates the chain using a pre-configured DNSSEC trust anchor.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">In the absense of TLSA records, this extension conveys the
 required authenticated denial of existence. Such proofs are needed to
 securely signal that specified TLSA records are not available so that
 TLS clients can safely fall back to WebPKI based authentication if
@@ -1406,42 +1406,88 @@ downgrade from opportunistic authenticated TLS (when DANE TLSA
 records are present) to unauthenticated opportunistic TLS (in the
 absence of DANE). Denial of existence records are also used by the
 TLS client to clear no longer relevant extension pins, as described
-in <a href="#pinning" class="xref">Section 7</a>.<a href="#section-2-3" class="pilcrow">¶</a></p>
-<p id="section-2-4">This extension supports DANE authentication of either X.509
+in <a href="#pinning" class="xref">Section 6</a>.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">This extension supports DANE authentication of either X.509
 certificates or raw public keys as described in the DANE
-specification <span>[<a href="#RFC6698" class="xref">RFC6698</a>]</span><span>[<a href="#RFC7671" class="xref">RFC7671</a>]</span> and <span>[<a href="#RFC7250" class="xref">RFC7250</a>]</span>.<a href="#section-2-4" class="pilcrow">¶</a></p>
-<p id="section-2-5">This extension also mitigates against an unknown key share (UKS)
+specification <span>[<a href="#RFC6698" class="xref">RFC6698</a>]</span><span>[<a href="#RFC7671" class="xref">RFC7671</a>]</span> and <span>[<a href="#RFC7250" class="xref">RFC7250</a>]</span>.<a href="#section-1-4" class="pilcrow">¶</a></p>
+<p id="section-1-5">This extension also mitigates against an unknown key share (UKS)
 attack <span>[<a href="#I-D.barnes-dane-uks" class="xref">I-D.barnes-dane-uks</a>]</span> when using raw public keys, since the
 server commits to its DNS name (normally found in its certificate)
-via the content of the returned TLSA RRset.<a href="#section-2-5" class="pilcrow">¶</a></p>
+via the content of the returned TLSA RRset.<a href="#section-1-5" class="pilcrow">¶</a></p>
+<p id="section-1-6">This experimental extension is developed outside the IETF and is
+published here to guide implementation of the extension and to ensure
+interoperability among implementations.<a href="#section-1-6" class="pilcrow">¶</a></p>
+<div id="scope-of-the-experiment">
+<section id="section-1.1">
+        <h3 id="name-scope-of-the-experiment">
+<a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-scope-of-the-experiment" class="section-name selfRef">Scope of the experiment</a>
+        </h3>
+<p id="section-1.1-1">The mechanism described in this document, is intended to be done with
+applications on the wider internet. One application of TLS well
+suited for the TLS DNSSEC Chain extension is DNS over TLS <span>[<a href="#RFC7858" class="xref">RFC7858</a>]</span>.
+In fact, one of the authentication methods for DNS over TLS <em>is</em> the
+mechanism described in this document, as specified in Section 8.2.2
+of <span>[<a href="#RFC8310" class="xref">RFC8310</a>]</span>.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
+<p id="section-1.1-2">The need for the mechanism when DANE authenticating DNS over TLS
+resolver is obvious, since DNS may not be available to perform the
+required DNS lookups.  Other applications of TLS would benefit from
+using this mechanism as well. The client sides of those applications
+would not be required to be used on end-points with a working DNSSEC
+resolver in order for them to use DANE authentication of the TLS
+service. Therefore we invite other TLS services to try out this
+mechanism as well.<a href="#section-1.1-2" class="pilcrow">¶</a></p>
+<p id="section-1.1-3">In the TLS working group, concerns have been raised that the pinning
+technique, as described in <a href="#pinning" class="xref">Section 6</a> would complicate deployability
+of the TLS DNSSEC Chain extension.  The goal of the experiment is to
+study these complications in real world deployments.  This experiment
+hopefully will give the TLS working group some insight into whether
+or not this is a problem.<a href="#section-1.1-3" class="pilcrow">¶</a></p>
+<p id="section-1.1-4">If the experiment is successful, it is expected that the findings of
+the experiment will result in an updated document for standards track
+approval.<a href="#section-1.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="requirements-notation">
+<section id="section-1.2">
+        <h3 id="name-requirements-notation">
+<a href="#section-1.2" class="section-number selfRef">1.2. </a><a href="#name-requirements-notation" class="section-name selfRef">Requirements Notation</a>
+        </h3>
+<p id="section-1.2-1">The key words "<span class="bcp14">MUST</span>", "<span class="bcp14">MUST NOT</span>", "<span class="bcp14">REQUIRED</span>",
+"<span class="bcp14">SHALL</span>", "<span class="bcp14">SHALL NOT</span>", "<span class="bcp14">SHOULD</span>", "<span class="bcp14">SHOULD NOT</span>",
+"<span class="bcp14">RECOMMENDED</span>", "<span class="bcp14">NOT RECOMMENDED</span>", "<span class="bcp14">MAY</span>", and
+"<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as described in
+BCP 14 <span>[<a href="#RFC2119" class="xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="xref">RFC8174</a>]</span> when, and only when, they appear in
+all capitals, as shown here.<a href="#section-1.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="dnssec-authentication-chain-extension">
-<section id="section-3">
+<section id="section-2">
       <h2 id="name-dnssec-authentication-chain">
-<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-dnssec-authentication-chain" class="section-name selfRef">DNSSEC Authentication Chain Extension</a>
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-dnssec-authentication-chain" class="section-name selfRef">DNSSEC Authentication Chain Extension</a>
       </h2>
 <div id="protocol-tls-1-2">
-<section id="section-3.1">
+<section id="section-2.1">
         <h3 id="name-protocol-tls-12">
-<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-protocol-tls-12" class="section-name selfRef">Protocol, TLS 1.2</a>
+<a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-protocol-tls-12" class="section-name selfRef">Protocol, TLS 1.2</a>
         </h3>
-<p id="section-3.1-1">A client MAY include an extension of type <code>dnssec_chain</code> in the
+<p id="section-2.1-1">A client MAY include an extension of type <code>dnssec_chain</code> in the
 (extended) ClientHello.  The <code>extension_data</code> field of this extension
 consists of the server's 16-bit TCP port number in network
 (big-endian) byte order. Clients sending this extension MUST also
 send the Server Name Identification (SNI, <span>[<a href="#RFC6066" class="xref">RFC6066</a>]</span>)
 extension. Together, these make it possible for the server to
 determine which authenticated TLSA RRset chain needs to be used for
-the <code>dnssec_chain</code> extension.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.1-2">When a server that implements (and is configured to enable the use
+the <code>dnssec_chain</code> extension.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
+<p id="section-2.1-2">When a server that implements (and is configured to enable the use
 of) this extension receives a <code>dnssec_chain</code> extension in the
 ClientHello, it MUST first check whether the requested TLSA RRset
 (based on the port number in this extension and hostname in the SNI
 extension) is associated with the server.  If the extension, the SNI
 hostname or the port number is unsupported, the server's extended
-ServerHello message MUST NOT include the <code>dnssec_chain</code> extension.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
-<p id="section-3.1-3">Otherwise, the server's extended ServerHello message MUST contain a
+ServerHello message MUST NOT include the <code>dnssec_chain</code> extension.<a href="#section-2.1-2" class="pilcrow">¶</a></p>
+<p id="section-2.1-3">Otherwise, the server's extended ServerHello message MUST contain a
 serialized authentication chain using the format described below. If
 the server does not have access to the requested DNS chain - for
 example due to a misconfiguration or expired chain - the server MUST
@@ -1452,101 +1498,101 @@ denial of existence proofs, unless, for the particular application
 protocol or service, clients are expected to continue even in the
 absence of such a proof.  As with all TLS extensions, if the server
 does not support this extension it will not return any authentication
-chain.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
+chain.<a href="#section-2.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="protocol-tls-1-3">
-<section id="section-3.2">
+<section id="section-2.2">
         <h3 id="name-protocol-tls-13">
-<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-protocol-tls-13" class="section-name selfRef">Protocol, TLS 1.3</a>
+<a href="#section-2.2" class="section-number selfRef">2.2. </a><a href="#name-protocol-tls-13" class="section-name selfRef">Protocol, TLS 1.3</a>
         </h3>
-<p id="section-3.2-1">In TLS 1.3, the server adds its <code>dnssec_chain</code> extension to the
+<p id="section-2.2-1">In TLS 1.3 <span>[<a href="#RFC8446" class="xref">RFC8446</a>]</span>, the server adds its <code>dnssec_chain</code> extension to the
 extension block of the Certificate message containing the end entity
 certificate being validated, rather than to the extended ServerHello
-message.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
-<p id="section-3.2-2">The extension protocol behavior otherwise follows that specified for
-TLS version 1.2.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
+message.<a href="#section-2.2-1" class="pilcrow">¶</a></p>
+<p id="section-2.2-2">The extension protocol behavior otherwise follows that specified for
+TLS version 1.2 <span>[<a href="#RFC5246" class="xref">RFC5246</a>]</span>.<a href="#section-2.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="auth_chain_data">
-<section id="section-3.3">
+<section id="section-2.3">
         <h3 id="name-dnssec-authentication-chain-">
-<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-dnssec-authentication-chain-" class="section-name selfRef">DNSSEC Authentication Chain Data</a>
+<a href="#section-2.3" class="section-number selfRef">2.3. </a><a href="#name-dnssec-authentication-chain-" class="section-name selfRef">DNSSEC Authentication Chain Data</a>
         </h3>
-<p id="section-3.3-1">The <code>extension_data</code> field of the client's <code>dnssec_chain</code> extension
+<p id="section-2.3-1">The <code>extension_data</code> field of the client's <code>dnssec_chain</code> extension
 MUST contain the server's 16-bit TCP port number in network
-(big-endian) byte order:<a href="#section-3.3-1" class="pilcrow">¶</a></p>
-<div class="artwork art-text alignLeft" id="section-3.3-2">
+(big-endian) byte order:<a href="#section-2.3-1" class="pilcrow">¶</a></p>
+<div class="artwork art-text alignLeft" id="section-2.3-2">
 <pre>    struct {
         uint16 PortNumber;
     } DnssecChainExtension;
-</pre><a href="#section-3.3-2" class="pilcrow">¶</a>
+</pre><a href="#section-2.3-2" class="pilcrow">¶</a>
 </div>
-<p id="section-3.3-3">The <code>extension_data</code> field of the server's <code>dnssec_chain</code> extension
+<p id="section-2.3-3">The <code>extension_data</code> field of the server's <code>dnssec_chain</code> extension
 MUST contain a DNSSEC Authentication Chain encoded in the following
-form:<a href="#section-3.3-3" class="pilcrow">¶</a></p>
-<div class="artwork art-text alignLeft" id="section-3.3-4">
+form:<a href="#section-2.3-3" class="pilcrow">¶</a></p>
+<div class="artwork art-text alignLeft" id="section-2.3-4">
 <pre>    struct {
         uint16 ExtSupportLifetime;
         opaque AuthenticationChain&amp;lt;1..2^16-1&amp;gt;
     } DnssecChainExtension;
-</pre><a href="#section-3.3-4" class="pilcrow">¶</a>
+</pre><a href="#section-2.3-4" class="pilcrow">¶</a>
 </div>
-<p id="section-3.3-5">The ExtSupportLifetime value is the number of hours for which the TLS
+<p id="section-2.3-5">The ExtSupportLifetime value is the number of hours for which the TLS
 server has committed itself to serving this extension. A value of
 zero prohibits the client from unilaterally requiring ongoing use of
 the extension based on prior observation of its use (extension
-pinning).  This is further described in <a href="#pinning" class="xref">Section 7</a>.<a href="#section-3.3-5" class="pilcrow">¶</a></p>
-<p id="section-3.3-6">The AuthenticationChain is composed of a sequence of uncompressed
+pinning).  This is further described in <a href="#pinning" class="xref">Section 6</a>.<a href="#section-2.3-5" class="pilcrow">¶</a></p>
+<p id="section-2.3-6">The AuthenticationChain is composed of a sequence of uncompressed
 wire format DNS RRs (including all requisite RRSIG <span>[<a href="#RFC4034" class="xref">RFC4034</a>]</span> RRs)
 in no particular order.  The format of the Resource Record is
-described in <span>[<a href="#RFC1035" class="xref">RFC1035</a>]</span>, Section 3.2.1.<a href="#section-3.3-6" class="pilcrow">¶</a></p>
-<div class="artwork art-text alignLeft" id="section-3.3-7">
-<pre>    RR = owner | type | class | TTL | RDATA length | RDATA
-</pre><a href="#section-3.3-7" class="pilcrow">¶</a>
+described in <span>[<a href="#RFC1035" class="xref">RFC1035</a>]</span>, Section 3.2.1.<a href="#section-2.3-6" class="pilcrow">¶</a></p>
+<div class="artwork art-text alignLeft" id="section-2.3-7">
+<pre>    RR = { owner, type, class, TTL, RDATA length, RDATA }
+</pre><a href="#section-2.3-7" class="pilcrow">¶</a>
 </div>
-<p id="section-3.3-8">The order of returned RRs is unspecified and a TLS client MUST NOT
-assume any ordering of RRs.<a href="#section-3.3-8" class="pilcrow">¶</a></p>
-<p id="section-3.3-9">Use of native DNS wire format records enables easier generation of
+<p id="section-2.3-8">The order of returned RRs is unspecified and a TLS client MUST NOT
+assume any ordering of RRs.<a href="#section-2.3-8" class="pilcrow">¶</a></p>
+<p id="section-2.3-9">Use of native DNS wire format records enables easier generation of
 the data structure on the server and easier verification of the data
-on client by means of existing DNS library functions.<a href="#section-3.3-9" class="pilcrow">¶</a></p>
-<p id="section-3.3-10">The returned RRsets MUST contain either the requested TLSA RRset, or
+on client by means of existing DNS library functions.<a href="#section-2.3-9" class="pilcrow">¶</a></p>
+<p id="section-2.3-10">The returned RRsets MUST contain either the requested TLSA RRset, or
 else the associated denial of existence proof. In either case, the
 chain of RRs MUST be accompanied with the full set of DNS records
 needed to authenticate the TLSA record set or its denial of existence
 up the DNS hierarchy to either the Root Zone or another trust anchor
-mutually configured by the TLS server and client.<a href="#section-3.3-10" class="pilcrow">¶</a></p>
-<p id="section-3.3-11">When some subtree in the chain is subject to redirection via DNAME
+mutually configured by the TLS server and client.<a href="#section-2.3-10" class="pilcrow">¶</a></p>
+<p id="section-2.3-11">When some subtree in the chain is subject to redirection via DNAME
 records, the associated inferred CNAME records need not be included,
 they can be inferred by the DNS validation code in the client.  Any
 applicable ordinary CNAME records that are not sythesized from DNAME
-records MUST be included along with their RRSIGs.<a href="#section-3.3-11" class="pilcrow">¶</a></p>
-<p id="section-3.3-12">Clients MUST be prepared to encounter (validated) alias loops, and
+records MUST be included along with their RRSIGs.<a href="#section-2.3-11" class="pilcrow">¶</a></p>
+<p id="section-2.3-12">Clients MUST be prepared to encounter (validated) alias loops, and
 MAY then conclude that the requested TLSA RRset therefore does not
 exist. Servers MUST NOT assume that clients will handle CNAME alias
 loops gracefully.  In case of a server-side DNS problem, servers may
 be unable to construct the authentication chain and would then have
-no choice but to omit the extension.<a href="#section-3.3-12" class="pilcrow">¶</a></p>
-<p id="section-3.3-13">In the case of a denial of existence response, the authentication
+no choice but to omit the extension.<a href="#section-2.3-12" class="pilcrow">¶</a></p>
+<p id="section-2.3-13">In the case of a denial of existence response, the authentication
 chain MUST include all DNSSEC signed records from the trust-anchor
 zone to a proof of non-existence of either the (possibly redirected
 via aliases) TLSA records or else of an insecure delegation above or
-at the (possibly redirected) owner name of the requested TLSA RRset.<a href="#section-3.3-13" class="pilcrow">¶</a></p>
-<p id="section-3.3-14">Names that are aliased via CNAME and/or DNAME records may involve
+at the (possibly redirected) owner name of the requested TLSA RRset.<a href="#section-2.3-13" class="pilcrow">¶</a></p>
+<p id="section-2.3-14">Names that are aliased via CNAME and/or DNAME records may involve
 multiple branches of the DNS tree. In this case, the authentication
 chain structure needs to include DS and DNSKEY record sets that cover
-all the necessary branches.<a href="#section-3.3-14" class="pilcrow">¶</a></p>
-<p id="section-3.3-15">The topmost DNSKEY RRset in the authentication chain corresponds to
+all the necessary branches.<a href="#section-2.3-14" class="pilcrow">¶</a></p>
+<p id="section-2.3-15">The topmost DNSKEY RRset in the authentication chain corresponds to
 the trust anchor (typically the DNS root). This trust anchor is also
 preconfigured in the TLS client, but including it in the response
 from the server permits TLS clients to use the automated trust anchor
 rollover mechanism defined in <span>[<a href="#RFC5011" class="xref">RFC5011</a>]</span> to update their configured
-trust anchor.<a href="#section-3.3-15" class="pilcrow">¶</a></p>
-<p id="section-3.3-16">The following is an example of the records in the AuthenticationChain
+trust anchor.<a href="#section-2.3-15" class="pilcrow">¶</a></p>
+<p id="section-2.3-16">The following is an example of the records in the AuthenticationChain
 structure for the HTTPS server at <code>www.example.com</code>, where there are
 zone cuts at <code>com.</code> and <code>example.com.</code> (record data are omitted here
-for brevity):<a href="#section-3.3-16" class="pilcrow">¶</a></p>
-<div class="artwork art-text alignLeft" id="section-3.3-17">
+for brevity):<a href="#section-2.3-16" class="pilcrow">¶</a></p>
+<div class="artwork art-text alignLeft" id="section-2.3-17">
 <pre>_443._tcp.www.example.com. TLSA
 RRSIG(_443._tcp.www.example.com. TLSA)
 example.com. DNSKEY
@@ -1559,13 +1605,13 @@ com. DS
 RRSIG(com. DS)
 . DNSKEY
 RRSIG(. DNSKEY)
-</pre><a href="#section-3.3-17" class="pilcrow">¶</a>
+</pre><a href="#section-2.3-17" class="pilcrow">¶</a>
 </div>
-<p id="section-3.3-18">The following is an example of denial of existence for a TLSA RRset
+<p id="section-2.3-18">The following is an example of denial of existence for a TLSA RRset
 at <code>_443._tcp.www.example.com</code>. The NSEC record in this example
 asserts the non-existence of both the requested RRset and any
-potentially relevant wildcard records.<a href="#section-3.3-18" class="pilcrow">¶</a></p>
-<div class="artwork art-text alignLeft" id="section-3.3-19">
+potentially relevant wildcard records.<a href="#section-2.3-18" class="pilcrow">¶</a></p>
+<div class="artwork art-text alignLeft" id="section-2.3-19">
 <pre>example.com. IN SOA
 RRSIG(example.com. SOA)
 www.example.com. IN NSEC example.com. A NSEC RRSIG
@@ -1580,12 +1626,12 @@ com. DS
 RRSIG(com. DS)
 . DNSKEY
 RRSIG(. DNSKEY)
-</pre><a href="#section-3.3-19" class="pilcrow">¶</a>
+</pre><a href="#section-2.3-19" class="pilcrow">¶</a>
 </div>
-<p id="section-3.3-20">The following is an example of (hypothetical) insecure delegation of
+<p id="section-2.3-20">The following is an example of (hypothetical) insecure delegation of
 <code>example.com</code> from the <code>.com</code> zone. This example shows NSEC3 records
-with opt-out.<a href="#section-3.3-20" class="pilcrow">¶</a></p>
-<div class="artwork art-text alignLeft" id="section-3.3-21">
+with opt-out.<a href="#section-2.3-20" class="pilcrow">¶</a></p>
+<div class="artwork art-text alignLeft" id="section-2.3-21">
 <pre>com. IN SOA
 RRSIG(com. SOA)
 ; covers example.com
@@ -1607,30 +1653,30 @@ com. DS
 RRSIG(com. DS)
 . DNSKEY
 RRSIG(. DNSKEY)
-</pre><a href="#section-3.3-21" class="pilcrow">¶</a>
+</pre><a href="#section-2.3-21" class="pilcrow">¶</a>
 </div>
 <div id="denial_of_existence">
-<section id="section-3.3.1">
+<section id="section-2.3.1">
           <h4 id="name-authenticated-denial-of-exi">
-<a href="#section-3.3.1" class="section-number selfRef">3.3.1. </a><a href="#name-authenticated-denial-of-exi" class="section-name selfRef">Authenticated Denial of Existence</a>
+<a href="#section-2.3.1" class="section-number selfRef">2.3.1. </a><a href="#name-authenticated-denial-of-exi" class="section-name selfRef">Authenticated Denial of Existence</a>
           </h4>
-<p id="section-3.3.1-1">TLS servers supporting this extension that do not have a signed TLSA
+<p id="section-2.3.1-1">TLS servers supporting this extension that do not have a signed TLSA
 record MUST instead return a DNSSEC chain that provides authenticated
 denial of existence. A TLS client receiving proof of authenticated
 denial of existence MUST use an alternative method to verify the TLS
 server identity or close the connection. Such an alternative could be
-the classic WebPKI model of preinstalled root CA's.<a href="#section-3.3.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.3.1-2">Authenticated denial chains include NSEC or NSEC3 records that
-demonstrate one of the following facts:<a href="#section-3.3.1-2" class="pilcrow">¶</a></p>
+the classic WebPKI model of preinstalled root CA's.<a href="#section-2.3.1-1" class="pilcrow">¶</a></p>
+<p id="section-2.3.1-2">Authenticated denial chains include NSEC or NSEC3 records that
+demonstrate one of the following facts:<a href="#section-2.3.1-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.3.1-3.1">
-              <p id="section-3.3.1-3.1.1">The TLSA record (after any DNSSEC validated alias redirection)
-does not exist.<a href="#section-3.3.1-3.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-2.3.1-3.1">
+              <p id="section-2.3.1-3.1.1">The TLSA record (after any DNSSEC validated alias redirection)
+does not exist.<a href="#section-2.3.1-3.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.3.1-3.2">
-              <p id="section-3.3.1-3.2.1">There is no signed delegation to a DNS zone which is either an
+            <li class="normal" id="section-2.3.1-3.2">
+              <p id="section-2.3.1-3.2.1">There is no signed delegation to a DNS zone which is either an
 ancestor of, or the same as, the TLSA record name (after any
-DNSSEC validated alias redirection).<a href="#section-3.3.1-3.2.1" class="pilcrow">¶</a></p>
+DNSSEC validated alias redirection).<a href="#section-2.3.1-3.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </section>
@@ -1640,51 +1686,51 @@ DNSSEC validated alias redirection).<a href="#section-3.3.1-3.2.1" class="pilcro
 </section>
 </div>
 <div id="construction">
-<section id="section-4">
+<section id="section-3">
       <h2 id="name-construction-of-serialized-">
-<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-construction-of-serialized-" class="section-name selfRef">Construction of Serialized Authentication Chains</a>
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-construction-of-serialized-" class="section-name selfRef">Construction of Serialized Authentication Chains</a>
       </h2>
-<p id="section-4-1">This section describes a possible procedure for the server to use to
-build the serialized DNSSEC chain.<a href="#section-4-1" class="pilcrow">¶</a></p>
-<p id="section-4-2">When the goal is to perform DANE authentication <span>[<a href="#RFC6698" class="xref">RFC6698</a>]</span><span>[<a href="#RFC7671" class="xref">RFC7671</a>]</span>
+<p id="section-3-1">This section describes a possible procedure for the server to use to
+build the serialized DNSSEC chain.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-2">When the goal is to perform DANE authentication <span>[<a href="#RFC6698" class="xref">RFC6698</a>]</span><span>[<a href="#RFC7671" class="xref">RFC7671</a>]</span>
 of the server, the DNS record set to be serialized is a TLSA record
 set corresponding to the server's domain name, protocol, and port
-number.<a href="#section-4-2" class="pilcrow">¶</a></p>
-<p id="section-4-3">The domain name of the server MUST be that included in the TLS
+number.<a href="#section-3-2" class="pilcrow">¶</a></p>
+<p id="section-3-3">The domain name of the server MUST be that included in the TLS
 <code>server_name</code> (SNI) extension <span>[<a href="#RFC6066" class="xref">RFC6066</a>]</span>. If the server
 does not recognize the SNI name as one if its own names, but wishes
 to proceed with the handshake rather than to abort the connection,
-the server MUST NOT send a <code>dnssec_chain</code> extension to the client.<a href="#section-4-3" class="pilcrow">¶</a></p>
-<p id="section-4-4">The name in client's SNI extension MUST NOT be CNAME-expanded by the
+the server MUST NOT send a <code>dnssec_chain</code> extension to the client.<a href="#section-3-3" class="pilcrow">¶</a></p>
+<p id="section-3-4">The name in client's SNI extension MUST NOT be CNAME-expanded by the
 server. The TLSA base domain (Section 3 of <span>[<a href="#RFC6698" class="xref">RFC6698</a>]</span>) SHALL be the
 hostname from the client's SNI extension and the guidance in Section
-7 of <span>[<a href="#RFC7671" class="xref">RFC7671</a>]</span> does not apply.  See <a href="#virtual" class="xref">Section 9</a> for further
-discussion.<a href="#section-4-4" class="pilcrow">¶</a></p>
-<p id="section-4-5">The TLSA record to be queried is constructed by prepending the _port and
+7 of <span>[<a href="#RFC7671" class="xref">RFC7671</a>]</span> does not apply.  See <a href="#virtual" class="xref">Section 8</a> for further
+discussion.<a href="#section-3-4" class="pilcrow">¶</a></p>
+<p id="section-3-5">The TLSA record to be queried is constructed by prepending the _port and
 _transport labels to the domain name as described in <span>[<a href="#RFC6698" class="xref">RFC6698</a>]</span>, where "port"
 is the port number taken from the client's <code>dnssec_chain</code> extension.  The
 transport is "tcp" for TLS servers, and "udp" for DTLS servers.  The port
 number label is the left-most label, followed by the transport, followed by the
-server domain name (from SNI).<a href="#section-4-5" class="pilcrow">¶</a></p>
-<p id="section-4-6">The components of the authentication chain are typically built by
+server domain name (from SNI).<a href="#section-3-5" class="pilcrow">¶</a></p>
+<p id="section-3-6">The components of the authentication chain are typically built by
 starting at the target record set and its corresponding RRSIG.  Then
 traversing the DNS tree upwards towards the trust anchor zone
 (normally the DNS root). For each zone cut, the DNSKEY and DS RRsets
-and their signatures are added. However, see <a href="#auth_chain_data" class="xref">Section 3.3</a> for
+and their signatures are added. However, see <a href="#auth_chain_data" class="xref">Section 2.3</a> for
 specific processing needed for aliases. If DNS response messages
 contain any domain names utilizing name compression <span>[<a href="#RFC1035" class="xref">RFC1035</a>]</span>, then
-they MUST be uncompressed prior to inclusion in the chain.<a href="#section-4-6" class="pilcrow">¶</a></p>
-<p id="section-4-7">Implementations of EDNS Chain Query Requests as specified in
+they MUST be uncompressed prior to inclusion in the chain.<a href="#section-3-6" class="pilcrow">¶</a></p>
+<p id="section-3-7">Implementations of EDNS Chain Query Requests as specified in
 <span>[<a href="#RFC7901" class="xref">RFC7901</a>]</span> may offer an easier way to obtain all of the chain data
-in one transaction with an upstream DNSSEC aware recursive server.<a href="#section-4-7" class="pilcrow">¶</a></p>
+in one transaction with an upstream DNSSEC aware recursive server.<a href="#section-3-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec_caching">
-<section id="section-5">
+<section id="section-4">
       <h2 id="name-caching-and-regeneration-of">
-<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-caching-and-regeneration-of" class="section-name selfRef">Caching and Regeneration of the Authentication Chain</a>
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-caching-and-regeneration-of" class="section-name selfRef">Caching and Regeneration of the Authentication Chain</a>
       </h2>
-<p id="section-5-1">DNS records have Time To Live (TTL) parameters, and DNSSEC signatures
+<p id="section-4-1">DNS records have Time To Live (TTL) parameters, and DNSSEC signatures
 have validity periods (specifically signature expiration times).
 After the TLS server constructs the serialized authentication chain,
 it SHOULD cache and reuse it in multiple TLS connection handshakes.
@@ -1694,55 +1740,55 @@ track these parameters and requery component records in the chain
 correspondingly. Alternatively, it could be configured to rebuild the
 entire chain at some predefined periodic interval that does not
 exceed the DNS TTLs or signature validity periods of the component
-records in the chain.<a href="#section-5-1" class="pilcrow">¶</a></p>
+records in the chain.<a href="#section-4-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec_verification">
-<section id="section-6">
+<section id="section-5">
       <h2 id="name-verification">
-<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-verification" class="section-name selfRef">Verification"</a>
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-verification" class="section-name selfRef">Verification"</a>
       </h2>
-<p id="section-6-1">A TLS client performing DANE based verification might not need to use
+<p id="section-5-1">A TLS client performing DANE based verification might not need to use
 this extension.  For example, the TLS client could perform native DNS
 lookups and perform DANE verification without this extension. Or it
 could fetch authentication chains via another protocol. If the TLS
 client already possesses a valid TLSA record, it MAY omit using this
 extension. However, if it includes this extension, it MUST use the
 TLS server reply to update the extension pinning status of the TLS
-server's extension lifetime. See <a href="#pinning" class="xref">Section 7</a>.<a href="#section-6-1" class="pilcrow">¶</a></p>
-<p id="section-6-2">A TLS client making use of this specification, and which receives a
+server's extension lifetime. See <a href="#pinning" class="xref">Section 6</a>.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-2">A TLS client making use of this specification, and which receives a
 valid DNSSEC authentication chain extension from a server, MUST use
 this information to perform DANE authentication of the server.  In
 order to perform the validation, it uses the mechanism specified by
 the DNSSEC protocol <span>[<a href="#RFC4035" class="xref">RFC4035</a>]</span><span>[<a href="#RFC5155" class="xref">RFC5155</a>]</span>.  This mechanism is
-sometimes implemented in a DNSSEC validation engine or library.<a href="#section-6-2" class="pilcrow">¶</a></p>
-<p id="section-6-3">If the authentication chain validates, the client then performs DANE
+sometimes implemented in a DNSSEC validation engine or library.<a href="#section-5-2" class="pilcrow">¶</a></p>
+<p id="section-5-3">If the authentication chain validates, the client then performs DANE
 authentication of the server according to the DANE TLS protocol
-[@!RFC6698;RFC7671].<a href="#section-6-3" class="pilcrow">¶</a></p>
-<p id="section-6-4">Clients MAY cache the server's validated TLSA RRset to ammortize the
+[@!RFC6698;RFC7671].<a href="#section-5-3" class="pilcrow">¶</a></p>
+<p id="section-5-4">Clients MAY cache the server's validated TLSA RRset to ammortize the
 cost of receiving and validating the chain over multiple connections.
 The period of such caching MUST NOT exceed the TTL associated with
 those records. A client that possesses a validated and unexpired TLSA
 RRset or the full chain in its cache does not need to send the
 <code>dnssec_chain</code> extension for subsequent connections to the same TLS
 server. It can use the cached information to perform DANE
-authentication.<a href="#section-6-4" class="pilcrow">¶</a></p>
-<p id="section-6-5">Note that when a client and server perform TLS session resumption the
+authentication.<a href="#section-5-4" class="pilcrow">¶</a></p>
+<p id="section-5-5">Note that when a client and server perform TLS session resumption the
 server sends no <code>dnssec_chain</code>. This is particularly clear with TLS
 1.3, where the certificate message to which the chain might be
-attached is also not sent on resumption.<a href="#section-6-5" class="pilcrow">¶</a></p>
+attached is also not sent on resumption.<a href="#section-5-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="pinning">
-<section id="section-7">
+<section id="section-6">
       <h2 id="name-extension-pinning">
-<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-extension-pinning" class="section-name selfRef">Extension pinning"</a>
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-extension-pinning" class="section-name selfRef">Extension Pinning</a>
       </h2>
-<p id="section-7-1">TLS applications can be designed to unconditionally mandate this
+<p id="section-6-1">TLS applications can be designed to unconditionally mandate this
 extension. Such TLS clients requesting this extension would abort a
 connection to a TLS server that does not respond with a validatable
-extension reply.<a href="#section-7-1" class="pilcrow">¶</a></p>
-<p id="section-7-2">However, in a mixed-use deployment of WebPKI and DANE, there is the
+extension reply.<a href="#section-6-1" class="pilcrow">¶</a></p>
+<p id="section-6-2">However, in a mixed-use deployment of WebPKI and DANE, there is the
 possibility that the security of a TLS client is downgraded from DANE
 to WebPKI. This can happen when a TLS client connection is
 intercepted and redirected to a rogue TLS server presenting a TLS
@@ -1751,8 +1797,8 @@ one that does not match the legitimate server's TLSA records. By
 omitting this extension, such a rogue TLS server could downgrade the
 TLS client to validate the mis-issued certificate using only the
 WebPKI and not via DANE, provided the TLS client is also not able to
-fetch the TLSA records directly from DNS.<a href="#section-7-2" class="pilcrow">¶</a></p>
-<p id="section-7-3">The ExtSupportLifetime element of the extension provides a
+fetch the TLSA records directly from DNS.<a href="#section-6-2" class="pilcrow">¶</a></p>
+<p id="section-6-3">The ExtSupportLifetime element of the extension provides a
 counter-measure against such downgrade attacks. It's value represents
 the number of hours that the TLS server (or cluster of servers
 serving the same Server Name) commit to serving this extension in the
@@ -1760,18 +1806,18 @@ future.  This is referred to as the "pinning time" or "extension pin"
 of the extension.  A non-zero extenion pin value received MUST ONLY
 be used if the extention also contains a valid TLSA authentication
 chain that matches the server's certificate chain (the server passes
-DANE authentication based on the enclosed TLSA RRset).<a href="#section-7-3" class="pilcrow">¶</a></p>
-<p id="section-7-4">Any existing extension pin for the server instance (name and port)
+DANE authentication based on the enclosed TLSA RRset).<a href="#section-6-3" class="pilcrow">¶</a></p>
+<p id="section-6-4">Any existing extension pin for the server instance (name and port)
 MUST be cleared on receipt of a valid denial of existence for the
 associated TLSA RRset. The same also applies if the client obtained
 the denial of existence proof via another method, such as through
 direct DNS queries.  Based on the TLS client's local policy, it MAY
 then terminate the connection or MAY continue using WebPKI based
-server authentication.<a href="#section-7-4" class="pilcrow">¶</a></p>
-<p id="section-7-5">Extension pins MUST also be cleared upon the completion of a DANE
+server authentication.<a href="#section-6-4" class="pilcrow">¶</a></p>
+<p id="section-6-5">Extension pins MUST also be cleared upon the completion of a DANE
 authenticated handshake with a server that returns a <code>dnssec_chain</code>
-extension with a zero ExtSupportLifetime.<a href="#section-7-5" class="pilcrow">¶</a></p>
-<p id="section-7-6">Upon completion of a full validated hanshake with a server that
+extension with a zero ExtSupportLifetime.<a href="#section-6-5" class="pilcrow">¶</a></p>
+<p id="section-6-6">Upon completion of a full validated hanshake with a server that
 returns a <code>dnssec_chain</code> extension with a non-zero ExtSupport lifetime,
 the client MUST update any existing pin lifetime for the service
 (name and port) to a value that is no longer than that indicated by
@@ -1779,13 +1825,13 @@ the server. The client MAY, subject to local policy, create a
 previously non-existent pin, again for a lifetime that is not longer
 than that indicated by the server.  The extension support lifetime is
 not constrained by any DNS TTLs or RRSIG expirations in the returned
-chain.<a href="#section-7-6" class="pilcrow">¶</a></p>
-<p id="section-7-7">Clients MAY implement support for a subset of DANE certificate
+chain.<a href="#section-6-6" class="pilcrow">¶</a></p>
+<p id="section-6-7">Clients MAY implement support for a subset of DANE certificate
 usages.  For example, clients may support only DANE-EE(3) and
 DANE-TA(2) <span>[<a href="#RFC7218" class="xref">RFC7218</a>]</span>, only PKIX-EE(1) and PKIX-TA(0)
 or all four.  Clients that implement DANE-EE(3) and DANE-TA(2) MUST
-implement the relevant updates in <span>[<a href="#RFC7671" class="xref">RFC7671</a>]</span>.<a href="#section-7-7" class="pilcrow">¶</a></p>
-<p id="section-7-8">For a non-zero saved value of the ExtSupportLifetime element of the
+implement the relevant updates in <span>[<a href="#RFC7671" class="xref">RFC7671</a>]</span>.<a href="#section-6-7" class="pilcrow">¶</a></p>
+<p id="section-6-8">For a non-zero saved value of the ExtSupportLifetime element of the
 extension, TLS clients MUST mandate ("pin") the use of this extension
 by the corresponding TLS servers for the time period specified by the
 pinning value. If during this time, the TLS client does not have a
@@ -1796,22 +1842,22 @@ connection or delay communication with the server via the TLS session
 until it is able to obtain valid TLSA records (or non-existence
 proof) out of band, such as via direct DNS lookups.  If attempts to
 obtain the TLSA RRset out of band fail, the client MUST abort the TLS
-session.<a href="#section-7-8" class="pilcrow">¶</a></p>
-<p id="section-7-9">Note that requiring the extension is NOT the same as requiring the
+session.<a href="#section-6-8" class="pilcrow">¶</a></p>
+<p id="section-6-9">Note that requiring the extension is NOT the same as requiring the
 use of DANE TLSA records or even DNSSEC. A DNS zone operator may at
 any time delete the TLSA records, or even remove the DS records to
 disable the secure delegation of the server's DNS zone. The TLS
 server will, when it updates its cached TLSA authentication chain,
 replace the chain with the corresponding denial of existence chain.
-The server's only obligation is continued support for this extension.<a href="#section-7-9" class="pilcrow">¶</a></p>
+The server's only obligation is continued support for this extension.<a href="#section-6-9" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec_trustmaint">
-<section id="section-8">
+<section id="section-7">
       <h2 id="name-trust-anchor-maintenance">
-<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-trust-anchor-maintenance" class="section-name selfRef">Trust Anchor Maintenance"</a>
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-trust-anchor-maintenance" class="section-name selfRef">Trust Anchor Maintenance"</a>
       </h2>
-<p id="section-8-1">The trust anchor may change periodically, e.g. when the operator of
+<p id="section-7-1">The trust anchor may change periodically, e.g. when the operator of
 the trust anchor zone performs a DNSSEC key rollover. TLS clients
 using this specification MUST implement a mechanism to keep their
 trust anchors up to date. They could use the method defined in
@@ -1823,58 +1869,58 @@ keep the root trust anchor up to date. In such cases, the TLS client
 application could simply reference that as its trust anchor,
 periodically checking whether it has changed. Some applications may
 prefer to implement trust anchor updates as part of their automated
-software updates.<a href="#section-8-1" class="pilcrow">¶</a></p>
+software updates.<a href="#section-7-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="virtual">
-<section id="section-9">
+<section id="section-8">
       <h2 id="name-virtual-hosting">
-<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-virtual-hosting" class="section-name selfRef">Virtual Hosting"</a>
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-virtual-hosting" class="section-name selfRef">Virtual Hosting"</a>
       </h2>
-<p id="section-9-1">Delivery of application services is often provided by a third party
+<p id="section-8-1">Delivery of application services is often provided by a third party
 on behalf of the domain owner (hosting customer). Since the domain
 owner may want to be able to move the service between providers,
 non-zero support lifetimes for this extension should only be enabled
-by mutual agreement between the provider and domain owner.<a href="#section-9-1" class="pilcrow">¶</a></p>
-<p id="section-9-2">When CNAME records are employed to redirect network connections to
-the provider's network, as mentioned in <a href="#construction" class="xref">Section 4</a> the server
+by mutual agreement between the provider and domain owner.<a href="#section-8-1" class="pilcrow">¶</a></p>
+<p id="section-8-2">When CNAME records are employed to redirect network connections to
+the provider's network, as mentioned in <a href="#construction" class="xref">Section 3</a> the server
 uses the client's SNI hostname as the TLSA base domain without CNAME
 expansion. When the certificate chain for the service is managed by
 the provider, it is impractical to coordinate certificate changes by
 the provider with updates in the hosting customer's DNS. Therefore,
 the TLSA RRset for the hosted domain is best configured as a CNAME
 from the customer's domain to a TLSA RRset that is managed by the
-provider as part of delivering the hosted service.  For example:<a href="#section-9-2" class="pilcrow">¶</a></p>
-<div class="artwork art-text alignLeft" id="section-9-3">
+provider as part of delivering the hosted service.  For example:<a href="#section-8-2" class="pilcrow">¶</a></p>
+<div class="artwork art-text alignLeft" id="section-8-3">
 <pre>; Customer DNS
 www.example.com. IN CNAME node1.provider.example.
 _443._tcp.www.example.com. IN CNAME _dane443.node1.provider.example.
 ; Provider DNS
 node1.provider.example. IN A 192.0.2.1
 _dane443.node1.provider.example. IN TLSA 1 1 1 ...
-</pre><a href="#section-9-3" class="pilcrow">¶</a>
+</pre><a href="#section-8-3" class="pilcrow">¶</a>
 </div>
-<p id="section-9-4">Clients that obtain TLSA records directly from DNS, bypassing this
+<p id="section-8-4">Clients that obtain TLSA records directly from DNS, bypassing this
 extension, may however perform CNAME-expansion as in Section 7 of
 <span>[<a href="#RFC7671" class="xref">RFC7671</a>]</span>, and if TLSA records are associated with the
 fully-expanded name, may use that name as the TLSA base domain and
-SNI name for the TLS handshake.<a href="#section-9-4" class="pilcrow">¶</a></p>
-<p id="section-9-5">To avoid confusion, it is RECOMMENDED that server operators not
+SNI name for the TLS handshake.<a href="#section-8-4" class="pilcrow">¶</a></p>
+<p id="section-8-5">To avoid confusion, it is RECOMMENDED that server operators not
 publish TLSA RRs (_port._tcp. + base domain) based on the expanded
 CNAMEs used to locate their network addresses.  Instead, the server
 operator SHOULD publish TLSA RRs at an alternative DNS node (as in
 the example above), to which the hosting customer will publish a
 CNAME alias.  This results in all clients (whether they obtain TLSA
 records from DNS directly, or employ this extension) seeing the same
-TLSA records and sending the same SNI name.<a href="#section-9-5" class="pilcrow">¶</a></p>
+TLSA records and sending the same SNI name.<a href="#section-8-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="operational-considerations">
-<section id="section-10">
+<section id="section-9">
       <h2 id="name-operational-considerations">
-<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-operational-considerations" class="section-name selfRef">Operational Considerations</a>
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-operational-considerations" class="section-name selfRef">Operational Considerations</a>
       </h2>
-<p id="section-10-1">When DANE is being introduced incrementally into an existing PKIX
+<p id="section-9-1">When DANE is being introduced incrementally into an existing PKIX
 environment, there may be scenarios in which DANE authentication for
 a server fails but PKIX succeeds, or vice versa.  What happens here
 depends on TLS client policy. If DANE authentication fails, the
@@ -1887,22 +1933,22 @@ certificate for the former, and a short certificate chain from the
 DANE trust anchor to the EE certificate for the latter. If the TLS
 server supports both DANE and traditional PKIX, and wants to allow
 efficient PKIX fallback within the same handshake, they should always
-provide the full X.509 certificate chain.<a href="#section-10-1" class="pilcrow">¶</a></p>
-<p id="section-10-2">When a TLS server operator wishes to no longer deploy this extension,
+provide the full X.509 certificate chain.<a href="#section-9-1" class="pilcrow">¶</a></p>
+<p id="section-9-2">When a TLS server operator wishes to no longer deploy this extension,
 it must properly decommission its use. If a non-zero pin lifetime is
 presently advertised, it must first be changed to 0.  The extension
 can be disabled once all previously advertised pin lifetimes have
 expired.  Removal of TLSA records or even DNSSEC signing of the zone
 can be done at any time, but the server MUST still be able to return
 the associated denial of existence proofs to any clients that have
-unexpired pins.<a href="#section-10-2" class="pilcrow">¶</a></p>
-<p id="section-10-3">TLS clients MAY reduce the received extension pin value to a maximum
+unexpired pins.<a href="#section-9-2" class="pilcrow">¶</a></p>
+<p id="section-9-3">TLS clients MAY reduce the received extension pin value to a maximum
 set by local policy.  This can mitigate a theoretical yet unlikely
 attack where a compromised TLS server is modified to advertise a pin
 value set to the maximum of 7 years. Care should be taken not to set
 a local maximum that is too short as that would reduce the downgrade
-attack protection that the extension pin offers.<a href="#section-10-3" class="pilcrow">¶</a></p>
-<p id="section-10-4">If the hosting provider intends to use end-entity TLSA records
+attack protection that the extension pin offers.<a href="#section-9-3" class="pilcrow">¶</a></p>
+<p id="section-9-4">If the hosting provider intends to use end-entity TLSA records
 (certificate usage PKIX-EE(1) or DANE-EE(3)) then the simplest
 approach is to use the same key-pair for all the certificates at a
 given hosting node, and publish "1 1 1" or "3 1 1" RRs matching the
@@ -1911,47 +1957,47 @@ multiple certificate updates, there will be times when multiple "1 1
 1" (or "3 1 1") records will be required to match all the extant
 certificates.  Multiple TLSA records are in any case needed a few
 TTLs before certificate updates as explained in Section 8 of
-<span>[<a href="#RFC7671" class="xref">RFC7671</a>]</span>.<a href="#section-10-4" class="pilcrow">¶</a></p>
-<p id="section-10-5">If the hosting provider intends to use trust-anchor TLSA records
+<span>[<a href="#RFC7671" class="xref">RFC7671</a>]</span>.<a href="#section-9-4" class="pilcrow">¶</a></p>
+<p id="section-9-5">If the hosting provider intends to use trust-anchor TLSA records
 (certificate usage PKIX-TA(0) or DANE-TA(2)) then the same TLSA
 record can match all end-entity certificates issues by the
 certification authority in question, and continues to work across
 end-entity certificate updates, so long as the issuer certificate or
 public keys remains unchanged. This can be easier to implement, at
 the cost of greater reliance on the security of the selected
-certification authority.<a href="#section-10-5" class="pilcrow">¶</a></p>
-<p id="section-10-6">The provider can of course publish separate TLSA records for each
+certification authority.<a href="#section-9-5" class="pilcrow">¶</a></p>
+<p id="section-9-6">The provider can of course publish separate TLSA records for each
 customer, which increases the number of such RRsets that need to be
-managed, but makes each one independent of the rest.<a href="#section-10-6" class="pilcrow">¶</a></p>
+managed, but makes each one independent of the rest.<a href="#section-9-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="security-considerations">
-<section id="section-11">
+<section id="section-10">
       <h2 id="name-security-considerations">
-<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-11-1">The security considerations of the normatively referenced RFCs all
+<p id="section-10-1">The security considerations of the normatively referenced RFCs all
 pertain to this extension. Since the server is delivering a chain of
 DNS records and signatures to the client, it MUST rebuild the chain
 in accordance with TTL and signature expiration of the chain
-components as described in <a href="#sec_caching" class="xref">Section 5</a>.  TLS clients
+components as described in <a href="#sec_caching" class="xref">Section 4</a>.  TLS clients
 need roughly accurate time in order to properly authenticate these
 signatures. This could be achieved by running a time synchronization
 protocol like NTP <span>[<a href="#RFC5905" class="xref">RFC5905</a>]</span> or SNTP <span>[<a href="#RFC5905" class="xref">RFC5905</a>]</span>, which are already widely used today. TLS clients
 MUST support a mechanism to track and roll over the trust anchor key,
 or be able to avail themselves of a service that does this, as
-described in <a href="#sec_trustmaint" class="xref">Section 8</a>.  Security
+described in <a href="#sec_trustmaint" class="xref">Section 7</a>.  Security
 considerations related to mandating the use of this extension are
-described in <a href="#pinning" class="xref">Section 7</a>.<a href="#section-11-1" class="pilcrow">¶</a></p>
+described in <a href="#pinning" class="xref">Section 6</a>.<a href="#section-10-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana_requests">
-<section id="section-12">
+<section id="section-11">
       <h2 id="name-iana-considerations">
-<a href="#section-12" class="section-number selfRef">12. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
-<p id="section-12-1">This document defines one new entry in the TLS ExtensionsType Values
-registry:<a href="#section-12-1" class="pilcrow">¶</a></p>
+<p id="section-11-1">This document defines one new entry in the TLS ExtensionType Values
+registry:<a href="#section-11-1" class="pilcrow">¶</a></p>
 <table class="center" id="table-1">
         <caption><a href="#table-1" class="selfRef">Table 1</a></caption>
 <thead>
@@ -1976,22 +2022,22 @@ registry:<a href="#section-12-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="acknowledgments">
-<section id="section-13">
+<section id="section-12">
       <h2 id="name-acknowledgments">
-<a href="#section-13" class="section-number selfRef">13. </a><a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
+<a href="#section-12" class="section-number selfRef">12. </a><a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
-<p id="section-13-1">Many thanks to Adam Langley for laying the groundwork for this
+<p id="section-12-1">Many thanks to Adam Langley for laying the groundwork for this
 extension in <span>[<a href="#I-D.agl-dane-serializechain" class="xref">I-D.agl-dane-serializechain</a>]</span>. The original idea is his
 but our acknowledgment in no way implies his endorsement.  This
 document also benefited from discussions with and review from the
 following people: Daniel Kahn Gillmor, Jeff Hodges, Allison Mankin,
 Patrick McManus, Rick van Rein, Ilari Liusvaara, Eric Rescorla, Gowri
-Visweswaran, Duane Wessels, Nico Williams, and Richard Barnes.<a href="#section-13-1" class="pilcrow">¶</a></p>
+Visweswaran, Duane Wessels, Nico Williams, and Richard Barnes.<a href="#section-12-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<section id="section-14">
+<section id="section-13">
       <h2 id="name-normative-references">
-<a href="#section-14" class="section-number selfRef">14. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+<a href="#section-13" class="section-number selfRef">13. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
       </h2>
 <dl class="references">
 <dt id="RFC1035">[RFC1035]</dt>
@@ -2038,9 +2084,17 @@ Visweswaran, Duane Wessels, Nico Williams, and Richard Barnes.<a href="#section-
       <dd>
 <span class="refAuthor">Dukhovni, V.</span><span class="refAuthor"> and W. Hardaker</span>, <span class="refTitle">"The DNS-Based Authentication of Named Entities (DANE) Protocol: Updates and Operational Guidance"</span>, <span class="seriesInfo">RFC 7671</span>, <span class="seriesInfo">DOI 10.17487/RFC7671</span>, <time datetime="2015-10" class="refDate">October 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7671">https://www.rfc-editor.org/info/rfc7671</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC7858">[RFC7858]</dt>
+      <dd>
+<span class="refAuthor">Hu, Z.</span><span class="refAuthor">, Zhu, L.</span><span class="refAuthor">, Heidemann, J.</span><span class="refAuthor">, Mankin, A.</span><span class="refAuthor">, Wessels, D.</span><span class="refAuthor">, and P. Hoffman</span>, <span class="refTitle">"Specification for DNS over Transport Layer Security (TLS)"</span>, <span class="seriesInfo">RFC 7858</span>, <span class="seriesInfo">DOI 10.17487/RFC7858</span>, <time datetime="2016-05" class="refDate">May 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7858">https://www.rfc-editor.org/info/rfc7858</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC8174">[RFC8174]</dt>
       <dd>
 <span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8310">[RFC8310]</dt>
+      <dd>
+<span class="refAuthor">Dickinson, S.</span><span class="refAuthor">, Gillmor, D.</span><span class="refAuthor">, and T. Reddy</span>, <span class="refTitle">"Usage Profiles for DNS over TLS and DNS over DTLS"</span>, <span class="seriesInfo">RFC 8310</span>, <span class="seriesInfo">DOI 10.17487/RFC8310</span>, <time datetime="2018-03" class="refDate">March 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8310">https://www.rfc-editor.org/info/rfc8310</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8446">[RFC8446]</dt>
     <dd>
@@ -2048,9 +2102,9 @@ Visweswaran, Duane Wessels, Nico Williams, and Richard Barnes.<a href="#section-
 <dd class="break"></dd>
 </dl>
 </section>
-<section id="section-15">
+<section id="section-14">
       <h2 id="name-informative-references">
-<a href="#section-15" class="section-number selfRef">15. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+<a href="#section-14" class="section-number selfRef">14. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
       </h2>
 <dl class="references">
 <dt id="HAMPERING">[HAMPERING]</dt>

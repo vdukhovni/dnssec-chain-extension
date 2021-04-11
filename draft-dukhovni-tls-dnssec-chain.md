@@ -131,7 +131,7 @@ interoperability among implementations.
 
 The mechanism described in this document, is intended to be done with
 applications on the wider internet. One application of TLS well
-suited for the TLS DNSSEC Chain extension is DNS over TLS [@!7858].
+suited for the TLS DNSSEC Chain extension is DNS over TLS [@!RFC7858].
 In fact, one of the authentication methods for DNS over TLS *is* the
 mechanism described in this document, as specified in Section 8.2.2
 of [@!RFC8310]. 
