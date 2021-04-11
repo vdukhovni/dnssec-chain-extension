@@ -70,31 +70,27 @@ organization = "Fastly"
 
 .# Abstract
 
-This draft describes a new TLS extension for in-band transport of the
-complete set of DNSSEC validated records needed to perform DANE
-authentication of a TLS server without the need to perform separate
-out-of-band DNS lookups.  When the requisite DNS records do not
-exist, the extension conveys a validated denial of existence proof.
+This document describes an experimental TLS extension for in-band
+transport of the complete set of DNSSEC validated records needed to
+perform DANE authentication of a TLS server without the need to
+perform separate out-of-band DNS lookups.  When the requisite DNS
+records do not exist, the extension conveys a validated denial of
+existence proof.
+
+This experimental extension is developed outside the IETF and is
+published here to guide implementation of the extension and to ensure
+interoperability among implementations.
 
 {mainmatter}
 
-# Requirements Notation
-
-The key words "**MUST**", "**MUST NOT**", "**REQUIRED**",
-"**SHALL**", "**SHALL NOT**", "**SHOULD**", "**SHOULD NOT**",
-"**RECOMMENDED**", "**NOT RECOMMENDED**", "**MAY**", and
-"**OPTIONAL**" in this document are to be interpreted as described in
-BCP 14 [@!RFC2119] [@!RFC8174] when, and only when, they appear in
-all capitals, as shown here.
-
 # Introduction
-This document describes a new TLS [@!RFC5246;@!RFC8446] extension for
-in-band transport of the complete set of DNSSEC [@!RFC4033] validated
-Resource Records (RRs) that enable a TLS client to perform DANE
-Authentication [@!RFC6698;@!RFC7671] of a TLS server without the need
-to perform out-of-band DNS lookups.  Retrieval of the required DNS
-records may be unavailable to the client [@HAMPERING], or may incur
-undesirable additional latency.
+This document describes an experimental TLS [@!RFC5246;@!RFC8446]
+extension for in-band transport of the complete set of DNSSEC
+[@!RFC4033] validated Resource Records (RRs) that enable a TLS client
+to perform DANE Authentication [@!RFC6698;@!RFC7671] of a TLS server
+without the need to perform out-of-band DNS lookups.  Retrieval of
+the required DNS records may be unavailable to the client
+[@HAMPERING], or may incur undesirable additional latency.
 
 The extension described here allows a TLS client to request that the
 TLS server return the DNSSEC authentication chain corresponding to
@@ -126,6 +122,48 @@ This extension also mitigates against an unknown key share (UKS)
 attack [@I-D.barnes-dane-uks] when using raw public keys, since the
 server commits to its DNS name (normally found in its certificate)
 via the content of the returned TLSA RRset.
+
+This experimental extension is developed outside the IETF and is
+published here to guide implementation of the extension and to ensure
+interoperability among implementations.
+
+## Scope of the experiment
+
+The mechanism described in this document, is intended to be done with
+applications on the wider internet. One application of TLS well
+suited for the TLS DNSSEC Chain extension is DNS over TLS [@!7858].
+In fact, one of the authentication methods for DNS over TLS *is* the
+mechanism described in this document, as specified in Section 8.2.2
+of [@!RFC8310]. 
+
+The need for the mechanism when DANE authenticating DNS over TLS
+resolver is obvious, since DNS may not be available to perform the
+required DNS lookups.  Other applications of TLS would benefit from
+using this mechanism as well. The client sides of those applications
+would not be required to be used on end-points with a working DNSSEC
+resolver in order for them to use DANE authentication of the TLS
+service. Therefore we invite other TLS services to try out this
+mechanism as well.
+
+In the TLS working group, concerns have been raised that the pinning
+technique, as described in (#pinning) would complicate deployability
+of the TLS DNSSEC Chain extension.  The goal of the experiment is to
+study these complications in real world deployments.  This experiment
+hopefully will give the TLS working group some insight into whether
+or not this is a problem.
+
+If the experiment is successful, it is expected that the findings of
+the experiment will result in an updated document for standards track
+approval.
+
+## Requirements Notation
+
+The key words "**MUST**", "**MUST NOT**", "**REQUIRED**",
+"**SHALL**", "**SHALL NOT**", "**SHOULD**", "**SHOULD NOT**",
+"**RECOMMENDED**", "**NOT RECOMMENDED**", "**MAY**", and
+"**OPTIONAL**" in this document are to be interpreted as described in
+BCP 14 [@!RFC2119] [@!RFC8174] when, and only when, they appear in
+all capitals, as shown here.
    
 # DNSSEC Authentication Chain Extension
 
@@ -163,13 +201,13 @@ chain.
 
 ## Protocol, TLS 1.3
 
-In TLS 1.3, the server adds its `dnssec_chain` extension to the
+In TLS 1.3 [@!RFC8446], the server adds its `dnssec_chain` extension to the
 extension block of the Certificate message containing the end entity
 certificate being validated, rather than to the extended ServerHello
 message.
 
 The extension protocol behavior otherwise follows that specified for
-TLS version 1.2.
+TLS version 1.2 [@!RFC5246].
 
 ## DNSSEC Authentication Chain Data {#auth_chain_data}
 
@@ -206,7 +244,7 @@ in no particular order.  The format of the Resource Record is
 described in [@!RFC1035], Section 3.2.1.
 
 ```
-    RR = owner | type | class | TTL | RDATA length | RDATA
+    RR = { owner, type, class, TTL, RDATA length, RDATA }
 ```
 
 The order of returned RRs is unspecified and a TLS client MUST NOT
@@ -436,7 +474,7 @@ server sends no `dnssec_chain`. This is particularly clear with TLS
 1.3, where the certificate message to which the chain might be
 attached is also not sent on resumption.
 
-# Extension pinning" {#pinning}
+# Extension Pinning {#pinning}
 
 TLS applications can be designed to unconditionally mandate this
 extension. Such TLS clients requesting this extension would abort a
@@ -646,7 +684,7 @@ described in (#pinning).
 
 # IANA Considerations {#iana_requests}
 
-This document defines one new entry in the TLS ExtensionsType Values
+This document defines one new entry in the TLS ExtensionType Values
 registry:
 
 Value | Extension Name | TLS 1.3 | Recommended | Reference
