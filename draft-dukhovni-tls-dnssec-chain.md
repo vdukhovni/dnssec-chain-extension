@@ -103,7 +103,7 @@ previously cached authentication chain, but it will need to rebuild
 it periodically as described in (#sec_caching). The client then
 authenticates the chain using a pre-configured DNSSEC trust anchor.
 
-In the absense of TLSA records, this extension conveys the
+In the absence of TLSA records, this extension conveys the
 required authenticated denial of existence. Such proofs are needed to
 securely signal that specified TLSA records are not available so that
 TLS clients can safely fall back to WebPKI based authentication if
@@ -264,7 +264,7 @@ mutually configured by the TLS server and client.
 When some subtree in the chain is subject to redirection via DNAME
 records, the associated inferred CNAME records need not be included,
 they can be inferred by the DNS validation code in the client.  Any
-applicable ordinary CNAME records that are not sythesized from DNAME
+applicable ordinary CNAME records that are not synthesized from DNAME
 records MUST be included along with their RRSIGs.
 
 Clients MUST be prepared to encounter (validated) alias loops, and
@@ -460,7 +460,7 @@ If the authentication chain validates, the client then performs DANE
 authentication of the server according to the DANE TLS protocol
 [@!RFC6698;RFC7671].
 
-Clients MAY cache the server's validated TLSA RRset to ammortize the
+Clients MAY cache the server's validated TLSA RRset to amortize the
 cost of receiving and validating the chain over multiple connections.
 The period of such caching MUST NOT exceed the TTL associated with
 those records. A client that possesses a validated and unexpired TLSA
@@ -497,8 +497,8 @@ counter-measure against such downgrade attacks. It's value represents
 the number of hours that the TLS server (or cluster of servers
 serving the same Server Name) commit to serving this extension in the
 future.  This is referred to as the "pinning time" or "extension pin"
-of the extension.  A non-zero extenion pin value received MUST ONLY
-be used if the extention also contains a valid TLSA authentication
+of the extension.  A non-zero extension pin value received MUST ONLY
+be used if the extension also contains a valid TLSA authentication
 chain that matches the server's certificate chain (the server passes
 DANE authentication based on the enclosed TLSA RRset).
 
@@ -514,7 +514,7 @@ Extension pins MUST also be cleared upon the completion of a DANE
 authenticated handshake with a server that returns a `dnssec_chain`
 extension with a zero ExtSupportLifetime.
 
-Upon completion of a full validated hanshake with a server that
+Upon completion of a full validated handshake with a server that
 returns a `dnssec_chain` extension with a non-zero ExtSupport lifetime,
 the client MUST update any existing pin lifetime for the service
 (name and port) to a value that is no longer than that indicated by
