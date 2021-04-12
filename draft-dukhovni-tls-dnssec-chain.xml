@@ -26,7 +26,7 @@
 <author initials="M." surname="Shore" fullname="Melinda Shore"><organization>Fastly</organization><address><postal><street></street>
 </postal><email>mshore@fastly.com</email>
 </address></author>
-<date year="2021" month="April" day="11"></date>
+<date year="2021" month="April" day="12"></date>
 <area>Security</area>
 <workgroup></workgroup>
 
@@ -49,10 +49,10 @@ interoperability among implementations.</t>
 <section anchor="introduction"><name>Introduction</name>
 <t>This document describes an experimental TLS <xref target="RFC5246"></xref><xref target="RFC8446"></xref>
 extension for in-band transport of the complete set of DNSSEC
-<xref target="RFC4033"></xref> validated Resource Records (RRs) that enable a TLS client
-to perform DANE Authentication <xref target="RFC6698"></xref><xref target="RFC7671"></xref> of a TLS server
-without the need to perform out-of-band DNS lookups.  Retrieval of
-the required DNS records may be unavailable to the client
+<xref target="RFC4033"></xref><xref target="RFC4034"></xref><xref target="RFC4035"></xref> validated Resource Records (RRs) that
+enable a TLS client to perform DANE Authentication <xref target="RFC6698"></xref><xref target="RFC7671"></xref>
+of a TLS server without the need to perform out-of-band DNS lookups.
+Retrieval of the required DNS records may be unavailable to the client
 <xref target="HAMPERING"></xref>, or may incur undesirable additional latency.</t>
 <t>The extension described here allows a TLS client to request that the
 TLS server return the DNSSEC authentication chain corresponding to
@@ -64,7 +64,7 @@ chain, and returns it to the client. The server will typically use a
 previously cached authentication chain, but it will need to rebuild
 it periodically as described in <xref target="sec_caching"></xref>. The client then
 authenticates the chain using a pre-configured DNSSEC trust anchor.</t>
-<t>In the absense of TLSA records, this extension conveys the
+<t>In the absence of TLSA records, this extension conveys the
 required authenticated denial of existence. Such proofs are needed to
 securely signal that specified TLSA records are not available so that
 TLS clients can safely fall back to WebPKI based authentication if
@@ -151,6 +151,28 @@ protocol or service, clients are expected to continue even in the
 absence of such a proof.  As with all TLS extensions, if the server
 does not support this extension it will not return any authentication
 chain.</t>
+<t>The set of supported combinations of port number and SNI name may be
+configured explicitly by server administrators, or could be inferred
+from the available certificates combined with a list of supported ports.
+It is important to note that the client's notional port number may be
+different from the actual port on which the server is receiving
+connections.</t>
+<t>Differences between the client's notional port number and the actual
+port at the server could be a result of intermediate systems performing
+network address translation, or perhaps a result of a redirect via HTTPS
+or SVCB records (both defined in <xref target="I-D.ietf-dnsop-svcb-https"></xref>).</t>
+<t>Though a DNS zone the HTTPS or SVCB records may be signed, a client
+using this protocol is likely to not have direct access to a validating
+resolver, and so cannot check the authenticity of the target port number
+or hostname.  In order to avoid downgrade attacks via forged DNS
+records, the SNI name and port number in the client extension MUST NOT
+be based on insecure information taken from an HTTPS or SVCB record.
+The client MUST instead send the original name and port it would have
+used in the absence of such records, (it SHOULD use the HTTPS or SVCB
+records to select the target transport endpoint).  Servers supporting
+this extension that are targets of HTTPS or SVCB records MUST be
+prepared to process client extensions based on the client's logical
+service endpoint, prior to HTTPS or SVCB indirection.</t>
 </section>
 
 <section anchor="protocol-tls-1-3"><name>Protocol, TLS 1.3</name>
@@ -206,14 +228,11 @@ mutually configured by the TLS server and client.</t>
 <t>When some subtree in the chain is subject to redirection via DNAME
 records, the associated inferred CNAME records need not be included,
 they can be inferred by the DNS validation code in the client.  Any
-applicable ordinary CNAME records that are not sythesized from DNAME
+applicable ordinary CNAME records that are not synthesized from DNAME
 records MUST be included along with their RRSIGs.</t>
-<t>Clients MUST be prepared to encounter (validated) alias loops, and
-MAY then conclude that the requested TLSA RRset therefore does not
-exist. Servers MUST NOT assume that clients will handle CNAME alias
-loops gracefully.  In case of a server-side DNS problem, servers may
-be unable to construct the authentication chain and would then have
-no choice but to omit the extension.</t>
+<t>In case of a server-side DNS problem, servers may be unable to construct
+the authentication chain and would then have no choice but to omit the
+extension.</t>
 <t>In the case of a denial of existence response, the authentication
 chain MUST include all DNSSEC signed records from the trust-anchor
 zone to a proof of non-existence of either the (possibly redirected
@@ -223,12 +242,18 @@ at the (possibly redirected) owner name of the requested TLSA RRset.</t>
 multiple branches of the DNS tree. In this case, the authentication
 chain structure needs to include DS and DNSKEY record sets that cover
 all the necessary branches.</t>
-<t>The topmost DNSKEY RRset in the authentication chain corresponds to
-the trust anchor (typically the DNS root). This trust anchor is also
-preconfigured in the TLS client, but including it in the response
-from the server permits TLS clients to use the automated trust anchor
-rollover mechanism defined in <xref target="RFC5011"></xref> to update their configured
-trust anchor.</t>
+<t>The returned chain should also include the DNSKEY RRSets of all relevant
+trust anchors (typically just the root DNS zone).  Though the same trust
+anchors are presumably also preconfigured in the TLS client, including
+them in the response from the server permits TLS clients to use the
+automated trust anchor rollover mechanism defined in <xref target="RFC5011"></xref> to
+update their configured trust anchors.</t>
+<t>Barring prior knowledge of particular trust anchors that the server
+shares with its clients, the chain constructed by the server MUST be
+extended as close as possible to the root zone.  Truncation of the chain
+at some intermediate trust anchor is generally only appropriate inside
+private networks where all clients and the server are expected to be
+configured with DNS trust anchors for one or more non-root domains.</t>
 <t>The following is an example of the records in the AuthenticationChain
 structure for the HTTPS server at <tt>www.example.com</tt>, where there are
 zone cuts at <tt>com.</tt> and <tt>example.com.</tt> (record data are omitted here
@@ -252,9 +277,7 @@ at <tt>_443._tcp.www.example.com</tt>. The NSEC record in this example
 asserts the non-existence of both the requested RRset and any
 potentially relevant wildcard records.</t>
 
-<artwork>example.com. IN SOA
-RRSIG(example.com. SOA)
-www.example.com. IN NSEC example.com. A NSEC RRSIG
+<artwork>www.example.com. IN NSEC example.com. A NSEC RRSIG
 RRSIG(www.example.com. NSEC)
 example.com. DNSKEY
 RRSIG(example.com. DNSKEY)
@@ -271,9 +294,7 @@ RRSIG(. DNSKEY)
 <tt>example.com</tt> from the <tt>.com</tt> zone. This example shows NSEC3 records
 with opt-out.</t>
 
-<artwork>com. IN SOA
-RRSIG(com. SOA)
-; covers example.com
+<artwork>; covers example.com
 onib9mgub9h0rml3cdf5bgrj59dkjhvj.com. NSEC3 (1 1 0 -
   onib9mgub9h0rml3cdf5bgrj59dkjhvl NS DS RRSIG)
 RRSIG(onib9mgub9h0rml3cdf5bgrj59dkjhvj.com. NSEC3)
@@ -334,11 +355,12 @@ server. The TLSA base domain (Section 3 of <xref target="RFC6698"></xref>) SHALL
 hostname from the client's SNI extension and the guidance in Section
 7 of <xref target="RFC7671"></xref> does not apply.  See <xref target="virtual"></xref> for further
 discussion.</t>
-<t>The TLSA record to be queried is constructed by prepending the _port and
-_transport labels to the domain name as described in <xref target="RFC6698"></xref>, where &quot;port&quot;
-is the port number taken from the client's <tt>dnssec_chain</tt> extension.  The
-transport is &quot;tcp&quot; for TLS servers, and &quot;udp&quot; for DTLS servers.  The port
-number label is the left-most label, followed by the transport, followed by the
+<t>The TLSA record to be queried is constructed by prepending
+underscore-prefixed port number and transport name labels to the domain
+name as described in <xref target="RFC6698"></xref>.  The port number is taken from the
+client's <tt>dnssec_chain</tt> extension.  The transport name is &quot;tcp&quot; for TLS
+servers, and &quot;udp&quot; for DTLS servers.  The port number label is the
+left-most label, followed by the transport name label, followed by the
 server domain name (from SNI).</t>
 <t>The components of the authentication chain are typically built by
 starting at the target record set and its corresponding RRSIG.  Then
@@ -385,7 +407,7 @@ sometimes implemented in a DNSSEC validation engine or library.</t>
 <t>If the authentication chain validates, the client then performs DANE
 authentication of the server according to the DANE TLS protocol
 [@!RFC6698;RFC7671].</t>
-<t>Clients MAY cache the server's validated TLSA RRset to ammortize the
+<t>Clients MAY cache the server's validated TLSA RRset to amortize the
 cost of receiving and validating the chain over multiple connections.
 The period of such caching MUST NOT exceed the TTL associated with
 those records. A client that possesses a validated and unexpired TLSA
@@ -419,8 +441,8 @@ counter-measure against such downgrade attacks. It's value represents
 the number of hours that the TLS server (or cluster of servers
 serving the same Server Name) commit to serving this extension in the
 future.  This is referred to as the &quot;pinning time&quot; or &quot;extension pin&quot;
-of the extension.  A non-zero extenion pin value received MUST ONLY
-be used if the extention also contains a valid TLSA authentication
+of the extension.  A non-zero extension pin value received MUST ONLY
+be used if the extension also contains a valid TLSA authentication
 chain that matches the server's certificate chain (the server passes
 DANE authentication based on the enclosed TLSA RRset).</t>
 <t>Any existing extension pin for the server instance (name and port)
@@ -433,15 +455,20 @@ server authentication.</t>
 <t>Extension pins MUST also be cleared upon the completion of a DANE
 authenticated handshake with a server that returns a <tt>dnssec_chain</tt>
 extension with a zero ExtSupportLifetime.</t>
-<t>Upon completion of a full validated hanshake with a server that
+<t>Upon completion of a full validated handshake with a server that
 returns a <tt>dnssec_chain</tt> extension with a non-zero ExtSupport lifetime,
 the client MUST update any existing pin lifetime for the service
 (name and port) to a value that is no longer than that indicated by
 the server. The client MAY, subject to local policy, create a
 previously non-existent pin, again for a lifetime that is not longer
-than that indicated by the server.  The extension support lifetime is
-not constrained by any DNS TTLs or RRSIG expirations in the returned
-chain.</t>
+than that indicated by the server.</t>
+<t>The extension support lifetime is not constrained by any DNS TTLs or
+RRSIG expirations in the returned chain.  The extension support lifetime
+is the time for which the TLS server is committing itself to serve the
+extension; it is not a validity time for the returned chain data.
+During this period the DNSSEC chain may be updated.  Therefore, the
+ExtSupportLifetime value is not constrained by any DNS TTLs or RRSIG
+expirations in the returned chain.</t>
 <t>Clients MAY implement support for a subset of DANE certificate
 usages.  For example, clients may support only DANE-EE(3) and
 DANE-TA(2) <xref target="RFC7218"></xref>, only PKIX-EE(1) and PKIX-TA(0)
@@ -629,6 +656,7 @@ Visweswaran, Duane Wessels, Nico Williams, and Richard Barnes.</t>
 
 <back>
 <references><name>Normative References</name>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-dnsop-svcb-https.xml"/>
 <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.1035.xml"/>
 <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
 <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.4033.xml"/>
@@ -739,7 +767,7 @@ X6KjBtpdvp/aXabmL95YgBjT8WJ7pqOfrqhpcmOBZa6Cg6O1l4qbIFH/Gj9hQB5I
 
 <section anchor="tv-straight"><name>_443._tcp.www.example.com</name>
 
-<artwork>_443._tcp.www.example.com.  3600  IN  TLSA  ( 3 1 1 
+<artwork>_443._tcp.www.example.com.  3600  IN  TLSA  ( 3 1 1
         8bd1da95272f7fa4ffb24137fc0ed03aae67e5c4d8b3c50734e1050a7920b
         922 )
 _443._tcp.www.example.com.  3600  IN  RRSIG  ( TLSA 13 5 3600
@@ -904,7 +932,7 @@ extension represention this with an ExtSupportLifetime value of 0 is:</t>
 
 <section anchor="tv-wildcard-nsec"><name>_25._tcp.example.com NSEC wildcard</name>
 
-<artwork>_25._tcp.example.com.  3600  IN  TLSA  ( 3 1 1 
+<artwork>_25._tcp.example.com.  3600  IN  TLSA  ( 3 1 1
         8bd1da95272f7fa4ffb24137fc0ed03aae67e5c4d8b3c50734e1050a7920b
         922 )
 _25._tcp.example.com.  3600  IN  RRSIG  ( TLSA 13 3 3600
@@ -973,7 +1001,7 @@ com.  86400  IN  RRSIG  ( DS 13 1 86400 20201202000000
 
 <section anchor="tv-wildcard-nsec3"><name>_25._tcp.example.org NSEC3 wildcard</name>
 
-<artwork>_25._tcp.example.org.  3600  IN  TLSA  ( 3 1 1 
+<artwork>_25._tcp.example.org.  3600  IN  TLSA  ( 3 1 1
         8bd1da95272f7fa4ffb24137fc0ed03aae67e5c4d8b3c50734e1050a7920b
         922 )
 _25._tcp.example.org.  3600  IN  RRSIG  ( TLSA 13 3 3600
@@ -1055,7 +1083,7 @@ _443._tcp.www.example.org.  3600  IN  RRSIG  ( CNAME 13 5 3600
         20201202000000 20181128000000 56566 example.org.
         R0dUe6Rt4G+2ablrQH9Zw8j9NhBLMgNYTI5+H7nO8SNz5Nm8w0NZrXv3Qp7gx
         Qb/a90O696120NsYaZX2+ebBA== )
-dane311.example.org.  3600  IN  TLSA  ( 3 1 1 
+dane311.example.org.  3600  IN  TLSA  ( 3 1 1
         8bd1da95272f7fa4ffb24137fc0ed03aae67e5c4d8b3c50734e1050a7920b
         922 )
 dane311.example.org.  3600  IN  RRSIG  ( TLSA 13 3 3600
@@ -1131,7 +1159,7 @@ example.net.  3600  IN  RRSIG  ( DNAME 13 2 3600 20201202000000
         OI/pDnjJcLSd/gBLtqR52WLMA== )
 ; _443._tcp.www.example.net.  3600  IN  CNAME  (
 ;         _443._tcp.www.example.com. )
-_443._tcp.www.example.com.  3600  IN  TLSA  ( 3 1 1 
+_443._tcp.www.example.com.  3600  IN  TLSA  ( 3 1 1
         8bd1da95272f7fa4ffb24137fc0ed03aae67e5c4d8b3c50734e1050a7920b
         922 )
 _443._tcp.www.example.com.  3600  IN  RRSIG  ( TLSA 13 5 3600
@@ -1223,13 +1251,7 @@ com.  86400  IN  RRSIG  ( DS 13 1 86400 20201202000000
 
 <section anchor="tv-denial-nsec"><name>_25._tcp.smtp.example.com NSEC Denial of Existence</name>
 
-<artwork>example.com.  3600  IN  SOA  ( sns.dns.icann.org. noc.dns.icann.org.
-        2017042720 7200 3600 1209600 3600 )
-example.com.  3600  IN  RRSIG  ( SOA 13 2 3600 20201202000000
-        20181128000000 1870 example.com.
-        sr214XHDDSIcInHStplCFZQ0CI5pl5aIIrrFRkwyISWYbjp9KncxJlWc4nsvf
-        6npBwVo+MP4/dg9JLO35kVkUw== )
-smtp.example.com.  3600  IN  NSEC  ( www.example.com. A AAAA
+<artwork>smtp.example.com.  3600  IN  NSEC  ( www.example.com. A AAAA
         RRSIG NSEC )
 smtp.example.com.  3600  IN  RRSIG  ( NSEC 13 3 3600
         20201202000000 20181128000000 1870 example.com.
@@ -1291,13 +1313,7 @@ com.  86400  IN  RRSIG  ( DS 13 1 86400 20201202000000
 
 <section anchor="tv-denial-nsec3"><name>_25._tcp.smtp.example.org NSEC3 Denial of Existence</name>
 
-<artwork>example.org.  3600  IN  SOA  ( sns.dns.icann.org. noc.dns.icann.org.
-        2017042720 7200 3600 1209600 3600 )
-example.org.  3600  IN  RRSIG  ( SOA 13 2 3600 20201202000000
-        20181128000000 56566 example.org.
-        cpKzINSSU0Jk6Y/QrsYLgfXNUY4b/pXDWsXrzIHOT8udmQcJkIU+LtnO9+Qa3
-        2vJqiV6m65FvbBigJ612c3Wyw== )
-vkv62jbv85822q8rtmfnbhfnmnat9ve3.example.org.  3600  IN  NSEC3  (
+<artwork>vkv62jbv85822q8rtmfnbhfnmnat9ve3.example.org.  3600  IN  NSEC3  (
         1 0 1 - 93u63bg57ppj6649al2n31l92iedkjd6 A AAAA RRSIG )
 vkv62jbv85822q8rtmfnbhfnmnat9ve3.example.org.  3600  IN  RRSIG  (
         NSEC3 13 3 3600 20201202000000 20181128000000 56566
@@ -1380,14 +1396,7 @@ org.  86400  IN  RRSIG  ( DS 13 1 86400 20201202000000
 
 <section anchor="tv-insecure-nsec3-optout"><name>_443._tcp.www.insecure.example NSEC3 opt-out insecure delegation</name>
 
-<artwork>example.  432000  IN  SOA  ( ns.ns-servers.example.
-        hostmaster.ns-servers.example.
-        2018042500 1800 900 604800 43200)
-example.  432000  IN  RRSIG  ( SOA 13 1 432000 20201202000000
-        20181128000000 15903 example.
-        Hx4gEL0q9Za/jAB0LZ8dduuwef9qPrSyEK3RoSevb1S9UkrLQj1cL08HkiDwz
-        mcduSc5oMky0toC/gjOoZClEA== )
-c1kgc91hrn9nqi2qjh1ms78ki8p7s75o.example.  43200  IN  NSEC3  (
+<artwork>c1kgc91hrn9nqi2qjh1ms78ki8p7s75o.example.  43200  IN  NSEC3  (
         1 1 1 - shn05itmoa45mmnv74lc4p0nnfmimtjt NS SOA RRSIG DNSKEY
         NSEC3PARAM )
 c1kgc91hrn9nqi2qjh1ms78ki8p7s75o.example.  43200  IN  RRSIG  (

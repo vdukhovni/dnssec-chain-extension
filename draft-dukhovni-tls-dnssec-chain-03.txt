@@ -5,14 +5,14 @@
 Network Working Group                                        V. Dukhovni
 Internet-Draft                                                 Two Sigma
 Intended status: Experimental                                   S. Huque
-Expires: 13 October 2021                                      Salesforce
+Expires: 14 October 2021                                      Salesforce
                                                                W. Toorop
                                                               NLnet Labs
                                                               P. Wouters
                                                                  Red Hat
                                                                 M. Shore
                                                                   Fastly
-                                                           11 April 2021
+                                                           12 April 2021
 
 
                        TLS DNSSEC Chain Extension
@@ -46,14 +46,14 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 13 October 2021.
+   This Internet-Draft will expire on 14 October 2021.
 
 
 
 
 
 
-Dukhovni, et al.         Expires 13 October 2021                [Page 1]
+Dukhovni, et al.         Expires 14 October 2021                [Page 1]
 
 Internet-Draft              tls-dnssec-chain                  April 2021
 
@@ -76,22 +76,22 @@ Table of Contents
      1.2.  Requirements Notation . . . . . . . . . . . . . . . . . .   4
    2.  DNSSEC Authentication Chain Extension . . . . . . . . . . . .   4
      2.1.  Protocol, TLS 1.2 . . . . . . . . . . . . . . . . . . . .   5
-     2.2.  Protocol, TLS 1.3 . . . . . . . . . . . . . . . . . . . .   5
-     2.3.  DNSSEC Authentication Chain Data  . . . . . . . . . . . .   5
+     2.2.  Protocol, TLS 1.3 . . . . . . . . . . . . . . . . . . . .   6
+     2.3.  DNSSEC Authentication Chain Data  . . . . . . . . . . . .   6
        2.3.1.  Authenticated Denial of Existence . . . . . . . . . .   9
    3.  Construction of Serialized Authentication Chains  . . . . . .   9
    4.  Caching and Regeneration of the Authentication Chain  . . . .  10
-   5.  Verification" . . . . . . . . . . . . . . . . . . . . . . . .  10
+   5.  Verification" . . . . . . . . . . . . . . . . . . . . . . . .  11
    6.  Extension Pinning . . . . . . . . . . . . . . . . . . . . . .  11
    7.  Trust Anchor Maintenance" . . . . . . . . . . . . . . . . . .  13
-   8.  Virtual Hosting"  . . . . . . . . . . . . . . . . . . . . . .  13
+   8.  Virtual Hosting"  . . . . . . . . . . . . . . . . . . . . . .  14
    9.  Operational Considerations  . . . . . . . . . . . . . . . . .  14
-   10. Security Considerations . . . . . . . . . . . . . . . . . . .  15
-   11. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  15
+   10. Security Considerations . . . . . . . . . . . . . . . . . . .  16
+   11. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  16
    12. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  16
    13. Normative References  . . . . . . . . . . . . . . . . . . . .  16
-   14. Informative References  . . . . . . . . . . . . . . . . . . .  17
-   Appendix A.  Test Vectors . . . . . . . . . . . . . . . . . . . .  18
+   14. Informative References  . . . . . . . . . . . . . . . . . . .  18
+   Appendix A.  Test Vectors . . . . . . . . . . . . . . . . . . . .  19
      A.1.  _443._tcp.www.example.com . . . . . . . . . . . . . . . .  20
      A.2.  _25._tcp.example.com NSEC wildcard  . . . . . . . . . . .  24
      A.3.  _25._tcp.example.org NSEC3 wildcard . . . . . . . . . . .  25
@@ -100,8 +100,8 @@ Table of Contents
      A.6.  _25._tcp.smtp.example.com NSEC Denial of Existence  . . .  30
      A.7.  _25._tcp.smtp.example.org NSEC3 Denial of Existence . . .  32
      A.8.  _443._tcp.www.insecure.example NSEC3 opt-out insecure
-           delegation  . . . . . . . . . . . . . . . . . . . . . . .  34
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  35
+           delegation  . . . . . . . . . . . . . . . . . . . . . . .  33
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  34
 
 
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Dukhovni, et al.         Expires 13 October 2021                [Page 2]
+Dukhovni, et al.         Expires 14 October 2021                [Page 2]
 
 Internet-Draft              tls-dnssec-chain                  April 2021
 
@@ -118,11 +118,11 @@ Internet-Draft              tls-dnssec-chain                  April 2021
 
    This document describes an experimental TLS [RFC5246][RFC8446]
    extension for in-band transport of the complete set of DNSSEC
-   [RFC4033] validated Resource Records (RRs) that enable a TLS client
-   to perform DANE Authentication [RFC6698][RFC7671] of a TLS server
-   without the need to perform out-of-band DNS lookups.  Retrieval of
-   the required DNS records may be unavailable to the client
-   [HAMPERING], or may incur undesirable additional latency.
+   [RFC4033][RFC4034][RFC4035] validated Resource Records (RRs) that
+   enable a TLS client to perform DANE Authentication [RFC6698][RFC7671]
+   of a TLS server without the need to perform out-of-band DNS lookups.
+   Retrieval of the required DNS records may be unavailable to the
+   client [HAMPERING], or may incur undesirable additional latency.
 
    The extension described here allows a TLS client to request that the
    TLS server return the DNSSEC authentication chain corresponding to
@@ -135,7 +135,7 @@ Internet-Draft              tls-dnssec-chain                  April 2021
    periodically as described in Section 4.  The client then
    authenticates the chain using a pre-configured DNSSEC trust anchor.
 
-   In the absense of TLSA records, this extension conveys the required
+   In the absence of TLSA records, this extension conveys the required
    authenticated denial of existence.  Such proofs are needed to
    securely signal that specified TLSA records are not available so that
    TLS clients can safely fall back to WebPKI based authentication if
@@ -165,7 +165,7 @@ Internet-Draft              tls-dnssec-chain                  April 2021
 
 
 
-Dukhovni, et al.         Expires 13 October 2021                [Page 3]
+Dukhovni, et al.         Expires 14 October 2021                [Page 3]
 
 Internet-Draft              tls-dnssec-chain                  April 2021
 
@@ -221,7 +221,7 @@ Internet-Draft              tls-dnssec-chain                  April 2021
 
 
 
-Dukhovni, et al.         Expires 13 October 2021                [Page 4]
+Dukhovni, et al.         Expires 14 October 2021                [Page 4]
 
 Internet-Draft              tls-dnssec-chain                  April 2021
 
@@ -258,6 +258,41 @@ Internet-Draft              tls-dnssec-chain                  April 2021
    does not support this extension it will not return any authentication
    chain.
 
+   The set of supported combinations of port number and SNI name may be
+   configured explicitly by server administrators, or could be inferred
+   from the available certificates combined with a list of supported
+   ports.  It is important to note that the client's notional port
+   number may be different from the actual port on which the server is
+   receiving connections.
+
+   Differences between the client's notional port number and the actual
+   port at the server could be a result of intermediate systems
+   performing network address translation, or perhaps a result of a
+   redirect via HTTPS or SVCB records (both defined in
+   [I-D.ietf-dnsop-svcb-https]).
+
+   Though a DNS zone the HTTPS or SVCB records may be signed, a client
+   using this protocol is likely to not have direct access to a
+   validating resolver, and so cannot check the authenticity of the
+
+
+
+Dukhovni, et al.         Expires 14 October 2021                [Page 5]
+
+Internet-Draft              tls-dnssec-chain                  April 2021
+
+
+   target port number or hostname.  In order to avoid downgrade attacks
+   via forged DNS records, the SNI name and port number in the client
+   extension MUST NOT be based on insecure information taken from an
+   HTTPS or SVCB record.  The client MUST instead send the original name
+   and port it would have used in the absence of such records, (it
+   SHOULD use the HTTPS or SVCB records to select the target transport
+   endpoint).  Servers supporting this extension that are targets of
+   HTTPS or SVCB records MUST be prepared to process client extensions
+   based on the client's logical service endpoint, prior to HTTPS or
+   SVCB indirection.
+
 2.2.  Protocol, TLS 1.3
 
    In TLS 1.3 [RFC8446], the server adds its "dnssec_chain" extension to
@@ -273,14 +308,6 @@ Internet-Draft              tls-dnssec-chain                  April 2021
    The "extension_data" field of the client's "dnssec_chain" extension
    MUST contain the server's 16-bit TCP port number in network (big-
    endian) byte order:
-
-
-
-
-Dukhovni, et al.         Expires 13 October 2021                [Page 5]
-
-Internet-Draft              tls-dnssec-chain                  April 2021
-
 
        struct {
            uint16 PortNumber;
@@ -300,6 +327,16 @@ Internet-Draft              tls-dnssec-chain                  April 2021
    zero prohibits the client from unilaterally requiring ongoing use of
    the extension based on prior observation of its use (extension
    pinning).  This is further described in Section 6.
+
+
+
+
+
+
+Dukhovni, et al.         Expires 14 October 2021                [Page 6]
+
+Internet-Draft              tls-dnssec-chain                  April 2021
+
 
    The AuthenticationChain is composed of a sequence of uncompressed
    wire format DNS RRs (including all requisite RRSIG [RFC4034] RRs) in
@@ -325,25 +362,12 @@ Internet-Draft              tls-dnssec-chain                  April 2021
    When some subtree in the chain is subject to redirection via DNAME
    records, the associated inferred CNAME records need not be included,
    they can be inferred by the DNS validation code in the client.  Any
-   applicable ordinary CNAME records that are not sythesized from DNAME
+   applicable ordinary CNAME records that are not synthesized from DNAME
    records MUST be included along with their RRSIGs.
 
-
-
-
-
-
-Dukhovni, et al.         Expires 13 October 2021                [Page 6]
-
-Internet-Draft              tls-dnssec-chain                  April 2021
-
-
-   Clients MUST be prepared to encounter (validated) alias loops, and
-   MAY then conclude that the requested TLSA RRset therefore does not
-   exist.  Servers MUST NOT assume that clients will handle CNAME alias
-   loops gracefully.  In case of a server-side DNS problem, servers may
-   be unable to construct the authentication chain and would then have
-   no choice but to omit the extension.
+   In case of a server-side DNS problem, servers may be unable to
+   construct the authentication chain and would then have no choice but
+   to omit the extension.
 
    In the case of a denial of existence response, the authentication
    chain MUST include all DNSSEC signed records from the trust-anchor
@@ -356,12 +380,27 @@ Internet-Draft              tls-dnssec-chain                  April 2021
    chain structure needs to include DS and DNSKEY record sets that cover
    all the necessary branches.
 
-   The topmost DNSKEY RRset in the authentication chain corresponds to
-   the trust anchor (typically the DNS root).  This trust anchor is also
-   preconfigured in the TLS client, but including it in the response
-   from the server permits TLS clients to use the automated trust anchor
-   rollover mechanism defined in [RFC5011] to update their configured
-   trust anchor.
+   The returned chain should also include the DNSKEY RRSets of all
+   relevant trust anchors (typically just the root DNS zone).  Though
+   the same trust anchors are presumably also preconfigured in the TLS
+   client, including them in the response from the server permits TLS
+   clients to use the automated trust anchor rollover mechanism defined
+   in [RFC5011] to update their configured trust anchors.
+
+
+
+Dukhovni, et al.         Expires 14 October 2021                [Page 7]
+
+Internet-Draft              tls-dnssec-chain                  April 2021
+
+
+   Barring prior knowledge of particular trust anchors that the server
+   shares with its clients, the chain constructed by the server MUST be
+   extended as close as possible to the root zone.  Truncation of the
+   chain at some intermediate trust anchor is generally only appropriate
+   inside private networks where all clients and the server are expected
+   to be configured with DNS trust anchors for one or more non-root
+   domains.
 
    The following is an example of the records in the AuthenticationChain
    structure for the HTTPS server at "www.example.com", where there are
@@ -386,16 +425,6 @@ Internet-Draft              tls-dnssec-chain                  April 2021
    asserts the non-existence of both the requested RRset and any
    potentially relevant wildcard records.
 
-
-
-
-Dukhovni, et al.         Expires 13 October 2021                [Page 7]
-
-Internet-Draft              tls-dnssec-chain                  April 2021
-
-
-   example.com. IN SOA
-   RRSIG(example.com. SOA)
    www.example.com. IN NSEC example.com. A NSEC RRSIG
    RRSIG(www.example.com. NSEC)
    example.com. DNSKEY
@@ -413,8 +442,14 @@ Internet-Draft              tls-dnssec-chain                  April 2021
    "example.com" from the ".com" zone.  This example shows NSEC3 records
    with opt-out.
 
-   com. IN SOA
-   RRSIG(com. SOA)
+
+
+
+Dukhovni, et al.         Expires 14 October 2021                [Page 8]
+
+Internet-Draft              tls-dnssec-chain                  April 2021
+
+
    ; covers example.com
    onib9mgub9h0rml3cdf5bgrj59dkjhvj.com. NSEC3 (1 1 0 -
      onib9mgub9h0rml3cdf5bgrj59dkjhvl NS DS RRSIG)
@@ -434,21 +469,6 @@ Internet-Draft              tls-dnssec-chain                  April 2021
    RRSIG(com. DS)
    . DNSKEY
    RRSIG(. DNSKEY)
-
-
-
-
-
-
-
-
-
-
-
-Dukhovni, et al.         Expires 13 October 2021                [Page 8]
-
-Internet-Draft              tls-dnssec-chain                  April 2021
-
 
 2.3.1.  Authenticated Denial of Existence
 
@@ -478,6 +498,14 @@ Internet-Draft              tls-dnssec-chain                  April 2021
    the server, the DNS record set to be serialized is a TLSA record set
    corresponding to the server's domain name, protocol, and port number.
 
+
+
+
+Dukhovni, et al.         Expires 14 October 2021                [Page 9]
+
+Internet-Draft              tls-dnssec-chain                  April 2021
+
+
    The domain name of the server MUST be that included in the TLS
    "server_name" (SNI) extension [RFC6066].  If the server does not
    recognize the SNI name as one if its own names, but wishes to proceed
@@ -490,21 +518,13 @@ Internet-Draft              tls-dnssec-chain                  April 2021
    Section 7 of [RFC7671] does not apply.  See Section 8 for further
    discussion.
 
-   The TLSA record to be queried is constructed by prepending the _port
-   and _transport labels to the domain name as described in [RFC6698],
-   where "port" is the port number taken from the client's
-   "dnssec_chain" extension.  The transport is "tcp" for TLS servers,
-   and "udp" for DTLS servers.  The port number label is the left-most
-   label, followed by the transport, followed by the server domain name
-   (from SNI).
-
-
-
-
-Dukhovni, et al.         Expires 13 October 2021                [Page 9]
-
-Internet-Draft              tls-dnssec-chain                  April 2021
-
+   The TLSA record to be queried is constructed by prepending
+   underscore-prefixed port number and transport name labels to the
+   domain name as described in [RFC6698].  The port number is taken from
+   the client's "dnssec_chain" extension.  The transport name is "tcp"
+   for TLS servers, and "udp" for DTLS servers.  The port number label
+   is the left-most label, followed by the transport name label,
+   followed by the server domain name (from SNI).
 
    The components of the authentication chain are typically built by
    starting at the target record set and its corresponding RRSIG.  Then
@@ -533,6 +553,15 @@ Internet-Draft              tls-dnssec-chain                  April 2021
    exceed the DNS TTLs or signature validity periods of the component
    records in the chain.
 
+
+
+
+
+Dukhovni, et al.         Expires 14 October 2021               [Page 10]
+
+Internet-Draft              tls-dnssec-chain                  April 2021
+
+
 5.  Verification"
 
    A TLS client performing DANE based verification might not need to use
@@ -555,14 +584,7 @@ Internet-Draft              tls-dnssec-chain                  April 2021
    authentication of the server according to the DANE TLS protocol
    [@!RFC6698;RFC7671].
 
-
-
-Dukhovni, et al.         Expires 13 October 2021               [Page 10]
-
-Internet-Draft              tls-dnssec-chain                  April 2021
-
-
-   Clients MAY cache the server's validated TLSA RRset to ammortize the
+   Clients MAY cache the server's validated TLSA RRset to amortize the
    cost of receiving and validating the chain over multiple connections.
    The period of such caching MUST NOT exceed the TTL associated with
    those records.  A client that possesses a validated and unexpired
@@ -588,6 +610,14 @@ Internet-Draft              tls-dnssec-chain                  April 2021
    to WebPKI.  This can happen when a TLS client connection is
    intercepted and redirected to a rogue TLS server presenting a TLS
    certificate that is considered valid from a WebPKI point of view, but
+
+
+
+Dukhovni, et al.         Expires 14 October 2021               [Page 11]
+
+Internet-Draft              tls-dnssec-chain                  April 2021
+
+
    one that does not match the legitimate server's TLSA records.  By
    omitting this extension, such a rogue TLS server could downgrade the
    TLS client to validate the mis-issued certificate using only the
@@ -599,24 +629,10 @@ Internet-Draft              tls-dnssec-chain                  April 2021
    number of hours that the TLS server (or cluster of servers serving
    the same Server Name) commit to serving this extension in the future.
    This is referred to as the "pinning time" or "extension pin" of the
-   extension.  A non-zero extenion pin value received MUST ONLY be used
-   if the extention also contains a valid TLSA authentication chain that
+   extension.  A non-zero extension pin value received MUST ONLY be used
+   if the extension also contains a valid TLSA authentication chain that
    matches the server's certificate chain (the server passes DANE
    authentication based on the enclosed TLSA RRset).
-
-
-
-
-
-
-
-
-
-
-Dukhovni, et al.         Expires 13 October 2021               [Page 11]
-
-Internet-Draft              tls-dnssec-chain                  April 2021
-
 
    Any existing extension pin for the server instance (name and port)
    MUST be cleared on receipt of a valid denial of existence for the
@@ -630,15 +646,33 @@ Internet-Draft              tls-dnssec-chain                  April 2021
    authenticated handshake with a server that returns a "dnssec_chain"
    extension with a zero ExtSupportLifetime.
 
-   Upon completion of a full validated hanshake with a server that
+   Upon completion of a full validated handshake with a server that
    returns a "dnssec_chain" extension with a non-zero ExtSupport
    lifetime, the client MUST update any existing pin lifetime for the
    service (name and port) to a value that is no longer than that
    indicated by the server.  The client MAY, subject to local policy,
    create a previously non-existent pin, again for a lifetime that is
-   not longer than that indicated by the server.  The extension support
-   lifetime is not constrained by any DNS TTLs or RRSIG expirations in
-   the returned chain.
+   not longer than that indicated by the server.
+
+   The extension support lifetime is not constrained by any DNS TTLs or
+   RRSIG expirations in the returned chain.  The extension support
+   lifetime is the time for which the TLS server is committing itself to
+   serve the extension; it is not a validity time for the returned chain
+   data.  During this period the DNSSEC chain may be updated.
+   Therefore, the ExtSupportLifetime value is not constrained by any DNS
+   TTLs or RRSIG expirations in the returned chain.
+
+
+
+
+
+
+
+
+Dukhovni, et al.         Expires 14 October 2021               [Page 12]
+
+Internet-Draft              tls-dnssec-chain                  April 2021
+
 
    Clients MAY implement support for a subset of DANE certificate
    usages.  For example, clients may support only DANE-EE(3) and DANE-
@@ -667,13 +701,6 @@ Internet-Draft              tls-dnssec-chain                  April 2021
    replace the chain with the corresponding denial of existence chain.
    The server's only obligation is continued support for this extension.
 
-
-
-Dukhovni, et al.         Expires 13 October 2021               [Page 12]
-
-Internet-Draft              tls-dnssec-chain                  April 2021
-
-
 7.  Trust Anchor Maintenance"
 
    The trust anchor may change periodically, e.g. when the operator of
@@ -689,6 +716,19 @@ Internet-Draft              tls-dnssec-chain                  April 2021
    periodically checking whether it has changed.  Some applications may
    prefer to implement trust anchor updates as part of their automated
    software updates.
+
+
+
+
+
+
+
+
+
+Dukhovni, et al.         Expires 14 October 2021               [Page 13]
+
+Internet-Draft              tls-dnssec-chain                  April 2021
+
 
 8.  Virtual Hosting"
 
@@ -721,15 +761,6 @@ Internet-Draft              tls-dnssec-chain                  April 2021
    name, may use that name as the TLSA base domain and SNI name for the
    TLS handshake.
 
-
-
-
-
-Dukhovni, et al.         Expires 13 October 2021               [Page 13]
-
-Internet-Draft              tls-dnssec-chain                  April 2021
-
-
    To avoid confusion, it is RECOMMENDED that server operators not
    publish TLSA RRs (_port._tcp. + base domain) based on the expanded
    CNAMEs used to locate their network addresses.  Instead, the server
@@ -747,6 +778,14 @@ Internet-Draft              tls-dnssec-chain                  April 2021
    depends on TLS client policy.  If DANE authentication fails, the
    client may decide to fall back to traditional PKIX authentication.
    In order to do so efficiently within the same TLS handshake, the TLS
+
+
+
+Dukhovni, et al.         Expires 14 October 2021               [Page 14]
+
+Internet-Draft              tls-dnssec-chain                  April 2021
+
+
    server needs to have provided the full X.509 certificate chain.  When
    TLS servers only support DANE-EE or DANE-TA modes, they have the
    option to send a much smaller certificate chain: just the EE
@@ -778,14 +817,6 @@ Internet-Draft              tls-dnssec-chain                  April 2021
    given hosting node, and publish "1 1 1" or "3 1 1" RRs matching the
    common public key.  Since key rollover cannot be simultaneous across
    multiple certificate updates, there will be times when multiple "1 1
-
-
-
-Dukhovni, et al.         Expires 13 October 2021               [Page 14]
-
-Internet-Draft              tls-dnssec-chain                  April 2021
-
-
    1" (or "3 1 1") records will be required to match all the extant
    certificates.  Multiple TLSA records are in any case needed a few
    TTLs before certificate updates as explained in Section 8 of
@@ -803,6 +834,13 @@ Internet-Draft              tls-dnssec-chain                  April 2021
    The provider can of course publish separate TLSA records for each
    customer, which increases the number of such RRsets that need to be
    managed, but makes each one independent of the rest.
+
+
+
+Dukhovni, et al.         Expires 14 October 2021               [Page 15]
+
+Internet-Draft              tls-dnssec-chain                  April 2021
+
 
 10.  Security Considerations
 
@@ -833,15 +871,6 @@ Internet-Draft              tls-dnssec-chain                  April 2021
 
                                  Table 1
 
-
-
-
-
-Dukhovni, et al.         Expires 13 October 2021               [Page 15]
-
-Internet-Draft              tls-dnssec-chain                  April 2021
-
-
 12.  Acknowledgments
 
    Many thanks to Adam Langley for laying the groundwork for this
@@ -853,6 +882,21 @@ Internet-Draft              tls-dnssec-chain                  April 2021
    Visweswaran, Duane Wessels, Nico Williams, and Richard Barnes.
 
 13.  Normative References
+
+   [I-D.ietf-dnsop-svcb-https]
+              Schwartz, B., Bishop, M., and E. Nygren, "Service binding
+              and parameter specification via the DNS (DNS SVCB and
+              HTTPS RRs)", Work in Progress, Internet-Draft, draft-ietf-
+              dnsop-svcb-https-02, 2 November 2020,
+              <https://tools.ietf.org/html/draft-ietf-dnsop-svcb-https-
+              02>.
+
+
+
+Dukhovni, et al.         Expires 14 October 2021               [Page 16]
+
+Internet-Draft              tls-dnssec-chain                  April 2021
+
 
    [RFC1035]  Mockapetris, P., "Domain names - implementation and
               specification", STD 13, RFC 1035, DOI 10.17487/RFC1035,
@@ -888,16 +932,6 @@ Internet-Draft              tls-dnssec-chain                  April 2021
               DOI 10.17487/RFC5246, August 2008,
               <https://www.rfc-editor.org/info/rfc5246>.
 
-
-
-
-
-
-Dukhovni, et al.         Expires 13 October 2021               [Page 16]
-
-Internet-Draft              tls-dnssec-chain                  April 2021
-
-
    [RFC6066]  Eastlake 3rd, D., "Transport Layer Security (TLS)
               Extensions: Extension Definitions", RFC 6066,
               DOI 10.17487/RFC6066, January 2011,
@@ -912,6 +946,13 @@ Internet-Draft              tls-dnssec-chain                  April 2021
               Conversations about DNS-Based Authentication of Named
               Entities (DANE)", RFC 7218, DOI 10.17487/RFC7218, April
               2014, <https://www.rfc-editor.org/info/rfc7218>.
+
+
+
+Dukhovni, et al.         Expires 14 October 2021               [Page 17]
+
+Internet-Draft              tls-dnssec-chain                  April 2021
+
 
    [RFC7671]  Dukhovni, V. and W. Hardaker, "The DNS-Based
               Authentication of Named Entities (DANE) Protocol: Updates
@@ -944,16 +985,6 @@ Internet-Draft              tls-dnssec-chain                  April 2021
               <http://www.nlnetlabs.nl/downloads/publications/
               os3-2015-rp2-xavier-torrent-gorjon.pdf>.
 
-
-
-
-
-
-Dukhovni, et al.         Expires 13 October 2021               [Page 17]
-
-Internet-Draft              tls-dnssec-chain                  April 2021
-
-
    [I-D.agl-dane-serializechain]
               Langley, A., "Serializing DNS Records with DNSSEC
               Authentication", Work in Progress, Internet-Draft, draft-
@@ -971,6 +1002,13 @@ Internet-Draft              tls-dnssec-chain                  April 2021
    [RFC5011]  StJohns, M., "Automated Updates of DNS Security (DNSSEC)
               Trust Anchors", STD 74, RFC 5011, DOI 10.17487/RFC5011,
               September 2007, <https://www.rfc-editor.org/info/rfc5011>.
+
+
+
+Dukhovni, et al.         Expires 14 October 2021               [Page 18]
+
+Internet-Draft              tls-dnssec-chain                  April 2021
+
 
    [RFC5905]  Mills, D., Martin, J., Ed., Burbank, J., and W. Kasch,
               "Network Time Protocol Version 4: Protocol and Algorithms
@@ -1001,15 +1039,6 @@ Appendix A.  Test Vectors
    To reflect operational practice, different zones in the examples are
    in different phases of rolling their signing keys:
 
-
-
-
-
-Dukhovni, et al.         Expires 13 October 2021               [Page 18]
-
-Internet-Draft              tls-dnssec-chain                  April 2021
-
-
    *  All zones use a Key Signing Key (KSK) and Zone Signing Key (ZSK),
       except for the example.com and example.net zones which use a
       Combined Signing Key (CSK).
@@ -1032,36 +1061,7 @@ Internet-Draft              tls-dnssec-chain                  April 2021
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Dukhovni, et al.         Expires 13 October 2021               [Page 19]
+Dukhovni, et al.         Expires 14 October 2021               [Page 19]
 
 Internet-Draft              tls-dnssec-chain                  April 2021
 
@@ -1117,7 +1117,7 @@ A.1.  _443._tcp.www.example.com
 
 
 
-Dukhovni, et al.         Expires 13 October 2021               [Page 20]
+Dukhovni, et al.         Expires 14 October 2021               [Page 20]
 
 Internet-Draft              tls-dnssec-chain                  April 2021
 
@@ -1173,7 +1173,7 @@ Internet-Draft              tls-dnssec-chain                  April 2021
 
 
 
-Dukhovni, et al.         Expires 13 October 2021               [Page 21]
+Dukhovni, et al.         Expires 14 October 2021               [Page 21]
 
 Internet-Draft              tls-dnssec-chain                  April 2021
 
@@ -1229,7 +1229,7 @@ Internet-Draft              tls-dnssec-chain                  April 2021
 
 
 
-Dukhovni, et al.         Expires 13 October 2021               [Page 22]
+Dukhovni, et al.         Expires 14 October 2021               [Page 22]
 
 Internet-Draft              tls-dnssec-chain                  April 2021
 
@@ -1285,7 +1285,7 @@ Internet-Draft              tls-dnssec-chain                  April 2021
 
 
 
-Dukhovni, et al.         Expires 13 October 2021               [Page 23]
+Dukhovni, et al.         Expires 14 October 2021               [Page 23]
 
 Internet-Draft              tls-dnssec-chain                  April 2021
 
@@ -1341,7 +1341,7 @@ A.2.  _25._tcp.example.com NSEC wildcard
 
 
 
-Dukhovni, et al.         Expires 13 October 2021               [Page 24]
+Dukhovni, et al.         Expires 14 October 2021               [Page 24]
 
 Internet-Draft              tls-dnssec-chain                  April 2021
 
@@ -1397,7 +1397,7 @@ A.3.  _25._tcp.example.org NSEC3 wildcard
 
 
 
-Dukhovni, et al.         Expires 13 October 2021               [Page 25]
+Dukhovni, et al.         Expires 14 October 2021               [Page 25]
 
 Internet-Draft              tls-dnssec-chain                  April 2021
 
@@ -1453,7 +1453,7 @@ Internet-Draft              tls-dnssec-chain                  April 2021
 
 
 
-Dukhovni, et al.         Expires 13 October 2021               [Page 26]
+Dukhovni, et al.         Expires 14 October 2021               [Page 26]
 
 Internet-Draft              tls-dnssec-chain                  April 2021
 
@@ -1509,7 +1509,7 @@ A.4.  _443._tcp.www.example.org CNAME
 
 
 
-Dukhovni, et al.         Expires 13 October 2021               [Page 27]
+Dukhovni, et al.         Expires 14 October 2021               [Page 27]
 
 Internet-Draft              tls-dnssec-chain                  April 2021
 
@@ -1565,7 +1565,7 @@ A.5.  _443._tcp.www.example.net DNAME
 
 
 
-Dukhovni, et al.         Expires 13 October 2021               [Page 28]
+Dukhovni, et al.         Expires 14 October 2021               [Page 28]
 
 Internet-Draft              tls-dnssec-chain                  April 2021
 
@@ -1621,7 +1621,7 @@ Internet-Draft              tls-dnssec-chain                  April 2021
 
 
 
-Dukhovni, et al.         Expires 13 October 2021               [Page 29]
+Dukhovni, et al.         Expires 14 October 2021               [Page 29]
 
 Internet-Draft              tls-dnssec-chain                  April 2021
 
@@ -1668,26 +1668,20 @@ Internet-Draft              tls-dnssec-chain                  April 2021
 
 A.6.  _25._tcp.smtp.example.com NSEC Denial of Existence
 
-   example.com.  3600  IN  SOA  ( sns.dns.icann.org. noc.dns.icann.org.
-           2017042720 7200 3600 1209600 3600 )
-   example.com.  3600  IN  RRSIG  ( SOA 13 2 3600 20201202000000
-           20181128000000 1870 example.com.
-           sr214XHDDSIcInHStplCFZQ0CI5pl5aIIrrFRkwyISWYbjp9KncxJlWc4nsvf
-           6npBwVo+MP4/dg9JLO35kVkUw== )
-
-
-
-Dukhovni, et al.         Expires 13 October 2021               [Page 30]
-
-Internet-Draft              tls-dnssec-chain                  April 2021
-
-
    smtp.example.com.  3600  IN  NSEC  ( www.example.com. A AAAA
            RRSIG NSEC )
    smtp.example.com.  3600  IN  RRSIG  ( NSEC 13 3 3600
            20201202000000 20181128000000 1870 example.com.
            rH/K4wghCOm4jpEHwQKiyZzvFIa7qpFySuKIGGetW4SE4O2Mh5jPxcEzf78Hf
            crlsQZmnAUlfmBNCygxAd7JNw== )
+
+
+
+Dukhovni, et al.         Expires 14 October 2021               [Page 30]
+
+Internet-Draft              tls-dnssec-chain                  April 2021
+
+
    example.com.  3600  IN  DNSKEY  ( 257 3 13
            JnA1XgyJTZz+psWvbrfUWLV6ULqIJyUS2CQdhUH9VK35bslWeJpRzrlxCUs7s
            /TsSfZMaGWVvlsuieh5nHcXzA== ) ; Key ID = 1870
@@ -1730,32 +1724,26 @@ Internet-Draft              tls-dnssec-chain                  April 2021
            zKz+DCWkNA/vuheiVPcGqsH40U84KZAlrMRIyozj9WHzf8PsFp/oR8j8vmjjW
            P98cbte4d8NvlGLxzbUzo3+FA== ) ; Key ID = 31918
    .  86400  IN  DNSKEY  ( 256 3 13
-
-
-
-Dukhovni, et al.         Expires 13 October 2021               [Page 31]
-
-Internet-Draft              tls-dnssec-chain                  April 2021
-
-
            8wMZZ4lzHdyKZ4fv8kys/t3QMlgvEadbsbyqWrMhwddSXCZYGRrsAbPpireRW
            xbVcd1VtOrlFBcRDMTN0R0XEQ== ) ; Key ID = 2635
    .  86400  IN  DNSKEY  ( 257 3 13
            yvX+VNTUjxZiGvtr060hVbrPV9H6rVusQtF9lIxCFzbZOJxMQBFmbqlc8Xclv
            Q+gDOXnFOTsgs/frMmxyGOtRg== ) ; Key ID = 47005
    .  86400  IN  RRSIG  ( DNSKEY 13 0 86400 20201202000000
+
+
+
+Dukhovni, et al.         Expires 14 October 2021               [Page 31]
+
+Internet-Draft              tls-dnssec-chain                  April 2021
+
+
            20181128000000 47005 .
            0EPW1ca+N/ZhZPKla77STG734cTeIOjUwq7eW0HsnOfudWmnCEVeco2wLLq9m
            nBT1dtNjIczvLG9pQTnOKUsHQ== )
 
 A.7.  _25._tcp.smtp.example.org NSEC3 Denial of Existence
 
-   example.org.  3600  IN  SOA  ( sns.dns.icann.org. noc.dns.icann.org.
-           2017042720 7200 3600 1209600 3600 )
-   example.org.  3600  IN  RRSIG  ( SOA 13 2 3600 20201202000000
-           20181128000000 56566 example.org.
-           cpKzINSSU0Jk6Y/QrsYLgfXNUY4b/pXDWsXrzIHOT8udmQcJkIU+LtnO9+Qa3
-           2vJqiV6m65FvbBigJ612c3Wyw== )
    vkv62jbv85822q8rtmfnbhfnmnat9ve3.example.org.  3600  IN  NSEC3  (
            1 0 1 - 93u63bg57ppj6649al2n31l92iedkjd6 A AAAA RRSIG )
    vkv62jbv85822q8rtmfnbhfnmnat9ve3.example.org.  3600  IN  RRSIG  (
@@ -1786,14 +1774,6 @@ A.7.  _25._tcp.smtp.example.org NSEC3 Denial of Existence
    example.org.  3600  IN  RRSIG  ( DNSKEY 13 2 3600
            20201202000000 20181128000000 44384 example.org.
            ttse9pYp9PSu0pJ+TOpIVFLWJ6NKOMWZX4Q/SlU6ZfaiKQc0Bg7Tut9+wPunk
-
-
-
-Dukhovni, et al.         Expires 13 October 2021               [Page 32]
-
-Internet-Draft              tls-dnssec-chain                  April 2021
-
-
            6OPPvyHjVXMAsvk0tqV0B+/ag== )
    example.org.  86400  IN  DS  ( 44384 13 2 ec307e2efc8f0117ed96ab48a51
            3c8003e1d9121f1ff11a08b4cdd348d090aa6 )
@@ -1806,6 +1786,14 @@ Internet-Draft              tls-dnssec-chain                  April 2021
            HfWx7kzlBBoJB0vLrvsJtXJ6g== ) ; Key ID = 47417
    org.  86400  IN  DNSKEY  ( 256 3 13
            zTHbb7JM627Bjr8CGOySUarsic91xZU3vvLJ5RjVix9YH6+iwpBXb6qfHyQHy
+
+
+
+Dukhovni, et al.         Expires 14 October 2021               [Page 32]
+
+Internet-Draft              tls-dnssec-chain                  April 2021
+
+
            mlMiAAoaoXh7BUkEBVgDVN8sQ== ) ; Key ID = 9523
    org.  86400  IN  DNSKEY  ( 257 3 13
            Uf24EyNt51DMcLV+dHPInhSpmjPnqAQNUTouU+SGLu+lFRRlBetgw1bJUZNI6
@@ -1843,22 +1831,25 @@ Internet-Draft              tls-dnssec-chain                  April 2021
            0EPW1ca+N/ZhZPKla77STG734cTeIOjUwq7eW0HsnOfudWmnCEVeco2wLLq9m
            nBT1dtNjIczvLG9pQTnOKUsHQ== )
 
+A.8.  _443._tcp.www.insecure.example NSEC3 opt-out insecure delegation
 
 
-Dukhovni, et al.         Expires 13 October 2021               [Page 33]
+
+
+
+
+
+
+
+
+
+
+
+Dukhovni, et al.         Expires 14 October 2021               [Page 33]
 
 Internet-Draft              tls-dnssec-chain                  April 2021
 
 
-A.8.  _443._tcp.www.insecure.example NSEC3 opt-out insecure delegation
-
-   example.  432000  IN  SOA  ( ns.ns-servers.example.
-           hostmaster.ns-servers.example.
-           2018042500 1800 900 604800 43200)
-   example.  432000  IN  RRSIG  ( SOA 13 1 432000 20201202000000
-           20181128000000 15903 example.
-           Hx4gEL0q9Za/jAB0LZ8dduuwef9qPrSyEK3RoSevb1S9UkrLQj1cL08HkiDwz
-           mcduSc5oMky0toC/gjOoZClEA== )
    c1kgc91hrn9nqi2qjh1ms78ki8p7s75o.example.  43200  IN  NSEC3  (
            1 1 1 - shn05itmoa45mmnv74lc4p0nnfmimtjt NS SOA RRSIG DNSKEY
            NSEC3PARAM )
@@ -1898,14 +1889,6 @@ A.8.  _443._tcp.www.insecure.example NSEC3 opt-out insecure delegation
            Q+gDOXnFOTsgs/frMmxyGOtRg== ) ; Key ID = 47005
    .  86400  IN  RRSIG  ( DNSKEY 13 0 86400 20201202000000
            20181128000000 47005 .
-
-
-
-Dukhovni, et al.         Expires 13 October 2021               [Page 34]
-
-Internet-Draft              tls-dnssec-chain                  April 2021
-
-
            0EPW1ca+N/ZhZPKla77STG734cTeIOjUwq7eW0HsnOfudWmnCEVeco2wLLq9m
            nBT1dtNjIczvLG9pQTnOKUsHQ== )
 
@@ -1915,6 +1898,12 @@ Authors' Addresses
    Two Sigma
 
    Email: ietf-dane@dukhovni.org
+
+
+
+Dukhovni, et al.         Expires 14 October 2021               [Page 34]
+
+Internet-Draft              tls-dnssec-chain                  April 2021
 
 
    Shumon Huque
@@ -1957,4 +1946,15 @@ Authors' Addresses
 
 
 
-Dukhovni, et al.         Expires 13 October 2021               [Page 35]
+
+
+
+
+
+
+
+
+
+
+
+Dukhovni, et al.         Expires 14 October 2021               [Page 35]
