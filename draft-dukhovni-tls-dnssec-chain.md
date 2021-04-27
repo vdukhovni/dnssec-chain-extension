@@ -211,18 +211,18 @@ port at the server could be a result of intermediate systems performing
 network address translation, or perhaps a result of a redirect via HTTPS
 or SVCB records (both defined in [@!I-D.ietf-dnsop-svcb-https]).
 
-Though a DNS zone the HTTPS or SVCB records may be signed, a client
-using this protocol is likely to not have direct access to a validating
-resolver, and so cannot check the authenticity of the target port number
+Though a DNS zone's HTTPS or SVCB records may be signed, a client
+using this protocol might not have direct access to a validating resolver,
+and might not be able to check the authenticity of the target port number
 or hostname.  In order to avoid downgrade attacks via forged DNS
-records, the SNI name and port number in the client extension MUST NOT
-be based on insecure information taken from an HTTPS or SVCB record.
-The client MUST instead send the original name and port it would have
-used in the absence of such records, (it SHOULD use the HTTPS or SVCB
-records to select the target transport endpoint).  Servers supporting
-this extension that are targets of HTTPS or SVCB records MUST be
-prepared to process client extensions based on the client's logical
-service endpoint, prior to HTTPS or SVCB indirection.
+records, the SNI name and port number inside the client extension MUST
+be based on the original SNI name and port and MUST NOT be taken from
+the encountered HTTPS or SVCB record. The client supporting this document
+and HTTPS / SVCB records, MUST still use the HTTPS or SVCB records to
+select the target transport endpoint. Servers supporting this extension
+that are targets of HTTPS or SVCB records MUST be provisioned to process
+client extensions based on the client's logical service endpoint's SNI
+and port as it is prior to HTTPS or SVCB indirection.
 
 ## Protocol, TLS 1.3
 
