@@ -456,13 +456,30 @@ DNS records have Time To Live (TTL) parameters, and DNSSEC signatures
 have validity periods (specifically signature expiration times).
 After the TLS server constructs the serialized authentication chain,
 it SHOULD cache and reuse it in multiple TLS connection handshakes.
-However, it MUST refresh and rebuild the chain as TTLs and signature
-validity periods dictate. A server implementation could carefully
-track these parameters and requery component records in the chain
-correspondingly. Alternatively, it could be configured to rebuild the
-entire chain at some predefined periodic interval that does not
-exceed the DNS TTLs or signature validity periods of the component
-records in the chain.
+However, it SHOULD refresh and rebuild the chain as TTL values require.
+A server implementation could carefully track TTL parameters and requery
+component records in the chain correspondingly. Alternatively, it could
+be configured to rebuild the entire chain at some predefined periodic
+interval that does not exceed the DNS TTLs of the component records in
+the chain. If a record in the chain has a very short TTL (eg 0 up to a
+few seconds), the server MAY decide to serve the authentication chain a
+few seconds past the minimum TTL in the chain.  This allows an
+implementation to dedicate a process or single thread to building the
+authentication chain and re-use it for more than a single
+waiting TLS client before needing to rebuild the authentication chain.
+
+# Expired signatures in the Authentication Chain {#sec_caching_exp}
+
+A server MAY look at the signature expiration of RRSIG records. While
+these should never expire before the TTL of the corresponding DNS record
+is reached, if this situation is encountered nevertheless, the server
+MAY lower the TTL to prevent serving expired RRSIGs if possible. If the
+signatures are already expired, the server MUST still include these records
+into the authentication chain. This allows the TLS client to either support
+a grace period for staleness, or allows the TLS client to give a detailed
+error, either as log message or to a potential interactive user of the TLS
+connection. The TLS client SHOULD handle expired RRSIGs similar to how it
+handles expired PKIX certificates.
 
 # Verification" {#sec_verification}
 
