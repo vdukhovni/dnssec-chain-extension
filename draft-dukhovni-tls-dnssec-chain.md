@@ -52,9 +52,9 @@ organization = "NLnet Labs"
 initials = "P."
 surname = "Wouters"
 fullname = "Paul Wouters"
-organization = "Red Hat"
+organization = "No Hats"
 [author.address]
- email = "pwouters@redhat.com"
+ email = "paul@nohats.ca"
 [author.address.postal]
  country = "Canada"
 
