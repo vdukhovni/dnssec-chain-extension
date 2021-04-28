@@ -481,7 +481,7 @@ error, either as log message or to a potential interactive user of the TLS
 connection. The TLS client SHOULD handle expired RRSIGs similar to how it
 handles expired PKIX certificates.
 
-# Verification" {#sec_verification}
+# Verification {#sec_verification}
 
 A TLS client performing DANE based verification might not need to use
 this extension.  For example, the TLS client could perform native DNS
@@ -501,7 +501,7 @@ sometimes implemented in a DNSSEC validation engine or library.
 
 If the authentication chain validates, the client then performs DANE
 authentication of the server according to the DANE TLS protocol
-[@!RFC6698;RFC7671].
+[@!RFC6698;@!RFC7671].
 
 Clients MAY cache the server's validated TLSA RRset to amortize the
 cost of receiving and validating the chain over multiple connections.
@@ -600,7 +600,7 @@ server will, when it updates its cached TLSA authentication chain,
 replace the chain with the corresponding denial of existence chain.
 The server's only obligation is continued support for this extension.
 
-# Trust Anchor Maintenance" {#sec_trustmaint}
+# Trust Anchor Maintenance {#sec_trustmaint}
 
 The trust anchor may change periodically, e.g. when the operator of
 the trust anchor zone performs a DNSSEC key rollover. TLS clients
@@ -616,7 +616,7 @@ periodically checking whether it has changed. Some applications may
 prefer to implement trust anchor updates as part of their automated
 software updates.
 
-# Virtual Hosting" {#virtual}
+# Virtual Hosting {#virtual}
 
 Delivery of application services is often provided by a third party
 on behalf of the domain owner (hosting customer). Since the domain
@@ -781,7 +781,7 @@ in different phases of rolling their signing keys:
 
   * The root and org zones are rolling their ZSK's.
 
-  * The com and org zones are rolling their KSK's.<
+  * The com and org zones are rolling their KSK's.
 
 The test vectors are DNSSEC valid in the same period as the
 certificate is valid, which is in between November 28 2018 and
