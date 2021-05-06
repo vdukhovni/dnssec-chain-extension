@@ -52,10 +52,11 @@ organization = "NLnet Labs"
 initials = "P."
 surname = "Wouters"
 fullname = "Paul Wouters"
-organization = "No Hats"
+organization = "Aiven"
 [author.address]
- email = "paul@nohats.ca"
+ email = "paul.wouters@aiven.io"
 [author.address.postal]
+ city = "Toronto"
  country = "Canada"
 
 [[author]]
