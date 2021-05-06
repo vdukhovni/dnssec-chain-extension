@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- name="GENERATOR" content="github.com/mmarkdown/mmark Mmark Markdown Processor - mmark.miek.nl" -->
-<rfc version="3" ipr="trust200902" docName="draft-dukhovni-tls-dnssec-chain-04" submissionType="independent" category="exp" xml:lang="en" xmlns:xi="http://www.w3.org/2001/XInclude">
+<rfc version="3" ipr="trust200902" docName="draft-dukhovni-tls-dnssec-chain" submissionType="independent" category="exp" xml:lang="en" xmlns:xi="http://www.w3.org/2001/XInclude">
 
 <front>
-<title abbrev="tls-dnssec-chain">TLS DNSSEC Chain Extension</title><seriesInfo value="draft-dukhovni-tls-dnssec-chain-04" stream="independent" status="experimental" name="Internet-Draft"></seriesInfo>
+<title abbrev="tls-dnssec-chain">TLS DNSSEC Chain Extension</title><seriesInfo value="draft-dukhovni-tls-dnssec-chain" stream="independent" status="experimental" name="Internet-Draft"></seriesInfo>
 <author initials="V." surname="Dukhovni" fullname="Viktor Dukhovni"><organization>Two Sigma</organization><address><postal><street></street>
 </postal><email>ietf-dane@dukhovni.org</email>
 </address></author>
@@ -19,14 +19,15 @@
 <country>Netherlands</country>
 </postal><email>willem@nlnetlabs.nl</email>
 </address></author>
-<author initials="P." surname="Wouters" fullname="Paul Wouters"><organization>No Hats</organization><address><postal><street></street>
+<author initials="P." surname="Wouters" fullname="Paul Wouters"><organization>Aiven</organization><address><postal><street></street>
+<city>Toronto</city>
 <country>Canada</country>
-</postal><email>paul@nohats.ca</email>
+</postal><email>paul.wouters@aiven.io</email>
 </address></author>
 <author initials="M." surname="Shore" fullname="Melinda Shore"><organization>Fastly</organization><address><postal><street></street>
 </postal><email>mshore@fastly.com</email>
 </address></author>
-<date year="2021" month="April" day="28"></date>
+<date year="2021" month="May" day="6"></date>
 <area>Security</area>
 <workgroup></workgroup>
 
@@ -112,10 +113,10 @@ approval.</t>
 </section>
 
 <section anchor="requirements-notation"><name>Requirements Notation</name>
-<t>The key words &quot;<bcp14>MUST</bcp14>&quot;, &quot;<bcp14>MUST NOT</bcp14>&quot;, &quot;<bcp14>REQUIRED</bcp14>&quot;,
-&quot;<bcp14>SHALL</bcp14>&quot;, &quot;<bcp14>SHALL NOT</bcp14>&quot;, &quot;<bcp14>SHOULD</bcp14>&quot;, &quot;<bcp14>SHOULD NOT</bcp14>&quot;,
-&quot;<bcp14>RECOMMENDED</bcp14>&quot;, &quot;<bcp14>NOT RECOMMENDED</bcp14>&quot;, &quot;<bcp14>MAY</bcp14>&quot;, and
-&quot;<bcp14>OPTIONAL</bcp14>&quot; in this document are to be interpreted as described in
+<t>The key words "MUST", "MUST NOT", "REQUIRED",
+"SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT",
+"RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+"OPTIONAL" in this document are to be interpreted as described in
 BCP 14 <xref target="RFC2119"></xref> <xref target="RFC8174"></xref> when, and only when, they appear in
 all capitals, as shown here.</t>
 </section>
@@ -199,7 +200,7 @@ form:</t>
 
 <artwork>    struct {
         uint16 ExtSupportLifetime;
-        opaque AuthenticationChain&lt;1..2^16-1&gt;
+        opaque AuthenticationChain&amp;lt;1..2^16-1&amp;gt;
     } DnssecChainExtension;
 </artwork>
 <t>The ExtSupportLifetime value is the number of hours for which the TLS
@@ -302,7 +303,7 @@ RRSIG(onib9mgub9h0rml3cdf5bgrj59dkjhvj.com. NSEC3)
 3rl2r262eg0n1ap5olhae7mah2ah09hi.com. NSEC3 (1 1 0 -
   3rl2r262eg0n1ap5olhae7mah2ah09hk NS DS RRSIG)
 RRSIG(3rl2r262eg0n1ap5olhae7mah2ah09hj.com. NSEC3)
-; closest-encloser &quot;com&quot;
+; closest-encloser "com"
 ck0pojmg874ljref7efn8430qvit8bsm.com. NSEC3 (1 1 0 -
   ck0pojmg874ljref7efn8430qvit8bsm.com
   NS SOA RRSIG DNSKEY NSEC3PARAM)
@@ -358,8 +359,8 @@ discussion.</t>
 <t>The TLSA record to be queried is constructed by prepending
 underscore-prefixed port number and transport name labels to the domain
 name as described in <xref target="RFC6698"></xref>.  The port number is taken from the
-client's <tt>dnssec_chain</tt> extension.  The transport name is &quot;tcp&quot; for TLS
-servers, and &quot;udp&quot; for DTLS servers.  The port number label is the
+client's <tt>dnssec_chain</tt> extension.  The transport name is "tcp" for TLS
+servers, and "udp" for DTLS servers.  The port number label is the
 left-most label, followed by the transport name label, followed by the
 server domain name (from SNI).</t>
 <t>The components of the authentication chain are typically built by
@@ -457,7 +458,7 @@ fetch the TLSA records directly from DNS.</t>
 counter-measure against such downgrade attacks. It's value represents
 the number of hours that the TLS server (or cluster of servers
 serving the same Server Name) commit to serving this extension in the
-future.  This is referred to as the &quot;pinning time&quot; or &quot;extension pin&quot;
+future.  This is referred to as the "pinning time" or "extension pin"
 of the extension.  A non-zero extension pin value received MUST ONLY
 be used if the extension also contains a valid TLSA authentication
 chain that matches the server's certificate chain (the server passes
@@ -492,7 +493,7 @@ DANE-TA(2) <xref target="RFC7218"></xref>, only PKIX-EE(1) and PKIX-TA(0)
 or all four.  Clients that implement DANE-EE(3) and DANE-TA(2) MUST
 implement the relevant updates in <xref target="RFC7671"></xref>.</t>
 <t>For a non-zero saved value of the ExtSupportLifetime element of the
-extension, TLS clients MUST mandate (&quot;pin&quot;) the use of this extension
+extension, TLS clients MUST mandate ("pin") the use of this extension
 by the corresponding TLS servers for the time period specified by the
 pinning value. If during this time, the TLS client does not have a
 valid TLSA record and connects to a TLS server using this extension
@@ -598,10 +599,10 @@ attack protection that the extension pin offers.</t>
 <t>If the hosting provider intends to use end-entity TLSA records
 (certificate usage PKIX-EE(1) or DANE-EE(3)) then the simplest
 approach is to use the same key-pair for all the certificates at a
-given hosting node, and publish &quot;1 1 1&quot; or &quot;3 1 1&quot; RRs matching the
+given hosting node, and publish "1 1 1" or "3 1 1" RRs matching the
 common public key.  Since key rollover cannot be simultaneous across
-multiple certificate updates, there will be times when multiple &quot;1 1
-1&quot; (or &quot;3 1 1&quot;) records will be required to match all the extant
+multiple certificate updates, there will be times when multiple "1 1
+1" (or "3 1 1") records will be required to match all the extant
 certificates.  Multiple TLSA records are in any case needed a few
 TTLs before certificate updates as explained in Section 8 of
 <xref target="RFC7671"></xref>.</t>
@@ -709,9 +710,9 @@ Visweswaran, Duane Wessels, Nico Williams, and Richard Barnes.</t>
 
 <section anchor="test-vectors"><name>Test Vectors</name>
 <t>The test vectors in this appendix are representations of the content
-of the &quot;opaque AuthenticationChain&quot; field in DNS presentation format.
+of the "opaque AuthenticationChain" field in DNS presentation format.
 And except for the <tt>extention_data</tt> in <xref target="hex_dump"></xref>, do not contain
-the &quot;uint16 ExtSupportLifetime&quot; field.</t>
+the "uint16 ExtSupportLifetime" field.</t>
 <t>For brevity and reproducibility all DNS zones involved with the test
 vectors are signed using keys with algorithm 13: ECDSA Curve P-256
 with SHA-256.</t>
