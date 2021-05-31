@@ -102,7 +102,7 @@ performs the appropriate DNS queries, builds the authentication
 chain, and returns it to the client. The server will typically use a
 previously cached authentication chain, but it will need to rebuild
 it periodically as described in (#sec_caching). The client then
-authenticates the chain using a pre-configured DNSSEC trust anchor.
+authenticates the chain using a preconfigured DNSSEC trust anchor.
 
 In the absence of TLSA records, this extension conveys the
 required authenticated denial of existence. Such proofs are needed to
@@ -282,7 +282,7 @@ on client by means of existing DNS library functions.
 
 The returned RRsets MUST contain either the requested TLSA RRset, or
 else the associated denial of existence proof. In either case, the
-chain of RRs MUST be accompanied with the full set of DNS records
+chain of RRs MUST be accompanied by the full set of DNS records
 needed to authenticate the TLSA record set or its denial of existence
 up the DNS hierarchy to either the Root Zone or another trust anchor
 mutually configured by the TLS server and client.
@@ -537,7 +537,7 @@ WebPKI and not via DANE, provided the TLS client is also not able to
 fetch the TLSA records directly from DNS.
 
 The ExtSupportLifetime element of the extension provides a
-counter-measure against such downgrade attacks. It's value represents
+counter-measure against such downgrade attacks. Its value represents
 the number of hours that the TLS server (or cluster of servers
 serving the same Server Name) commit to serving this extension in the
 future.  This is referred to as the "pinning time" or "extension pin"
@@ -751,7 +751,7 @@ following people: Daniel Kahn Gillmor, Jeff Hodges, Allison Mankin,
 Patrick McManus, Rick van Rein, Ilari Liusvaara, Eric Rescorla, Gowri
 Visweswaran, Duane Wessels, Nico Williams, and Richard Barnes.
 
-<reference anchor="HAMPERING" target="http://www.nlnetlabs.nl/downloads/publications/os3-2015-rp2-xavier-torrent-gorjon.pdf">
+<reference anchor="HAMPERING" target="https://www.nlnetlabs.nl/downloads/publications/os3-2015-rp2-xavier-torrent-gorjon.pdf">
     <front>
     <title>Discovery method for a DNSSEC validating stub resolver</title>
     <author fullname="Xavier Torrent Gorjon" initials="X." surname="Gorjon"/>
@@ -766,7 +766,7 @@ Visweswaran, Duane Wessels, Nico Williams, and Richard Barnes.
 
 The test vectors in this appendix are representations of the content
 of the "opaque AuthenticationChain" field in DNS presentation format.
-And except for the `extention_data` in (#hex_dump), do not contain
+And except for the `extension_data` in (#hex_dump), do not contain
 the "uint16 ExtSupportLifetime" field.
 
 For brevity and reproducibility all DNS zones involved with the test
@@ -785,8 +785,8 @@ in different phases of rolling their signing keys:
   * The com and org zones are rolling their KSK's.
 
 The test vectors are DNSSEC valid in the same period as the
-certificate is valid, which is in between November 28 2018 and
-December 2 2020, with the following root trust anchor:
+certificate is valid, which is in between November 28, 2018 and
+December 2, 2020 and with the following root trust anchor:
 
 ```
 .  IN  DS  ( 47005 13 2 2eb6e9f2480126691594d649a5a613de3052e37861634

@@ -1,4 +1,4 @@
-VERSION = 05
+VERSION = 06
 DOCNAME = draft-dukhovni-tls-dnssec-chain
 today := $(shell TZ=UTC date +%Y-%m-%dT00:00:00Z)
 
