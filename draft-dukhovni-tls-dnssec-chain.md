@@ -91,7 +91,7 @@ extension for in-band transport of the complete set of DNSSEC
 enable a TLS client to perform DANE Authentication [@!RFC6698;@!RFC7671]
 of a TLS server without the need to perform out-of-band DNS lookups.
 Retrieval of the required DNS records may be unavailable to the client
-[@HAMPERING], or may incur undesirable additional latency.
+[@NLNETLABS], or may incur undesirable additional latency.
 
 The extension described here allows a TLS client to request that the
 TLS server return the DNSSEC authentication chain corresponding to
@@ -130,14 +130,14 @@ interoperability among implementations.
 
 ## Scope of the experiment
 
-The mechanism described in this document, is intended to be done with
+The mechanism described in this document is intended to be used with
 applications on the wider internet. One application of TLS well
 suited for the TLS DNSSEC Chain extension is DNS over TLS [@!RFC7858].
 In fact, one of the authentication methods for DNS over TLS *is* the
 mechanism described in this document, as specified in Section 8.2.2
 of [@!RFC8310].
 
-The need for the mechanism when DANE authenticating DNS over TLS
+The need for this mechanism when using DANE to authenticate a DNS over TLS
 resolver is obvious, since DNS may not be available to perform the
 required DNS lookups.  Other applications of TLS would benefit from
 using this mechanism as well. The client sides of those applications
@@ -223,7 +223,7 @@ and HTTPS / SVCB records, MUST still use the HTTPS or SVCB records to
 select the target transport endpoint. Servers supporting this extension
 that are targets of HTTPS or SVCB records MUST be provisioned to process
 client extensions based on the client's logical service endpoint's SNI
-and port as it is prior to HTTPS or SVCB indirection.
+name and port as it is prior to HTTPS or SVCB indirection.
 
 ## Protocol, TLS 1.3
 
@@ -288,8 +288,8 @@ up the DNS hierarchy to either the Root Zone or another trust anchor
 mutually configured by the TLS server and client.
 
 When some subtree in the chain is subject to redirection via DNAME
-records, the associated inferred CNAME records need not be included,
-they can be inferred by the DNS validation code in the client.  Any
+records, the associated inferred CNAME records need not be included.
+They can be inferred by the DNS validation code in the client.  Any
 applicable ordinary CNAME records that are not synthesized from DNAME
 records MUST be included along with their RRSIGs.
 
@@ -363,8 +363,8 @@ RRSIG(. DNSKEY)
 ```
 
 The following is an example of (hypothetical) insecure delegation of
-`example.com` from the `.com` zone. This example shows NSEC3 records
-with opt-out.
+`example.com` from the `.com` zone. This example shows NSEC3 [@RFC5155]
+records with opt-out.
 
 ```
 ; covers example.com
@@ -751,7 +751,7 @@ following people: Daniel Kahn Gillmor, Jeff Hodges, Allison Mankin,
 Patrick McManus, Rick van Rein, Ilari Liusvaara, Eric Rescorla, Gowri
 Visweswaran, Duane Wessels, Nico Williams, and Richard Barnes.
 
-<reference anchor="HAMPERING" target="https://www.nlnetlabs.nl/downloads/publications/os3-2015-rp2-xavier-torrent-gorjon.pdf">
+<reference anchor="NLNETLABS" target="https://www.nlnetlabs.nl/downloads/publications/os3-2015-rp2-xavier-torrent-gorjon.pdf">
     <front>
     <title>Discovery method for a DNSSEC validating stub resolver</title>
     <author fullname="Xavier Torrent Gorjon" initials="X." surname="Gorjon"/>
