@@ -72,10 +72,10 @@ organization = "Fastly"
 .# Abstract
 
 This document describes an experimental TLS extension for in-band
-transport of the complete set of DNSSEC validated records needed to
+transport of the complete set of DNSSEC validatable records needed to
 perform DANE authentication of a TLS server without the need to
 perform separate out-of-band DNS lookups.  When the requisite DNS
-records do not exist, the extension conveys a validated denial of
+records do not exist, the extension conveys a validatable denial of
 existence proof.
 
 This experimental extension is developed outside the IETF and is
@@ -104,16 +104,16 @@ previously cached authentication chain, but it will need to rebuild
 it periodically as described in (#sec_caching). The client then
 authenticates the chain using a preconfigured DNSSEC trust anchor.
 
-In the absence of TLSA records, this extension conveys the
-required authenticated denial of existence. Such proofs are needed to
-securely signal that specified TLSA records are not available so that
-TLS clients can safely fall back to WebPKI based authentication if
-allowed by local policy.  These proofs are also needed to avoid
-downgrade from opportunistic authenticated TLS (when DANE TLSA
-records are present) to unauthenticated opportunistic TLS (in the
-absence of DANE). Denial of existence records are also used by the
-TLS client to clear no longer relevant extension pins, as described
-in (#pinning).
+In the absence of TLSA records, this extension conveys the required
+authenticated denial of existence. Such proofs are needed to securely
+signal that specified TLSA records are not available so that TLS clients
+can safely fall back to Public-Key Infrastructure X.509 (PKIX, sometimes called
+WebPKI) based authentication if allowed by local policy. These proofs
+are also needed to avoid downgrade from opportunistic authenticated TLS
+(when DANE TLSA records are present) to unauthenticated opportunistic TLS
+(in the absence of DANE). Denial of existence records are also used by
+the TLS client to clear no longer relevant extension pins, as described in
+(#pinning).
 
 This extension supports DANE authentication of either X.509
 certificates or raw public keys as described in the DANE
@@ -147,7 +147,7 @@ service. Therefore we invite other TLS services to try out this
 mechanism as well.
 
 In the TLS working group, concerns have been raised that the pinning
-technique, as described in (#pinning) would complicate deployability
+technique as described in (#pinning) would complicate deployability
 of the TLS DNSSEC Chain extension.  The goal of the experiment is to
 study these complications in real world deployments.  This experiment
 hopefully will give the TLS working group some insight into whether
@@ -175,7 +175,7 @@ A client MAY include an extension of type `dnssec_chain` in the
 consists of the server's 16-bit TCP port number in network
 (big-endian) byte order. Clients sending this extension MUST also
 send the Server Name Identification (SNI, [@!RFC6066])
-extension. Together, these make it possible for the server to
+extension. Together, these make it possible for the TLS server to
 determine which authenticated TLSA RRset chain needs to be used for
 the `dnssec_chain` extension.
 
@@ -193,7 +193,7 @@ the server does not have access to the requested DNS chain - for
 example due to a misconfiguration or expired chain - the server MUST
 omit the extension rather than send an incomplete chain. Clients that
 are expecting this extension MUST interpret this as a downgrade
-attack and MUST abort the TLS session.  Therefore, servers MUST send
+attack and MUST abort the TLS connection.  Therefore, servers MUST send
 denial of existence proofs, unless, for the particular application
 protocol or service, clients are expected to continue even in the
 absence of such a proof.  As with all TLS extensions, if the server
@@ -227,10 +227,10 @@ name and port as it is prior to HTTPS or SVCB indirection.
 
 ## Protocol, TLS 1.3
 
-In TLS 1.3 [@!RFC8446], the server adds its `dnssec_chain` extension to the
-extension block of the Certificate message containing the end entity
-certificate being validated, rather than to the extended ServerHello
-message.
+In TLS 1.3 [@!RFC8446], when the server receives the `dnssec_chain` extension,
+it adds its `dnssec_chain` extension to the extension block of the Certificate
+message containing the end entity certificate being validated, rather than to
+the extended ServerHello message.
 
 The extension protocol behavior otherwise follows that specified for
 TLS version 1.2 [@!RFC5246].
@@ -280,16 +280,16 @@ Use of native DNS wire format records enables easier generation of
 the data structure on the server and easier verification of the data
 on client by means of existing DNS library functions.
 
-The returned RRsets MUST contain either the requested TLSA RRset, or
-else the associated denial of existence proof. In either case, the
-chain of RRs MUST be accompanied by the full set of DNS records
-needed to authenticate the TLSA record set or its denial of existence
-up the DNS hierarchy to either the Root Zone or another trust anchor
-mutually configured by the TLS server and client.
+The returned RRsets MUST contain either the TLSA RRset or else the
+associated denial of existence proof of the configured (and requested)
+SNI name and port. In either case, the chain of RRsets MUST be accompanied
+by the full set of DNS records needed to authenticate the TLSA record set
+or its denial of existence up the DNS hierarchy to either the Root Zone
+or another trust anchor mutually configured by the TLS server and client.
 
 When some subtree in the chain is subject to redirection via DNAME
 records, the associated inferred CNAME records need not be included.
-They can be inferred by the DNS validation code in the client.  Any
+They can be inferred by the DNS validation code in the client. Any
 applicable ordinary CNAME records that are not synthesized from DNAME
 records MUST be included along with their RRSIGs.
 
@@ -299,7 +299,7 @@ extension.
 
 In the case of a denial of existence response, the authentication
 chain MUST include all DNSSEC signed records from the trust-anchor
-zone to a proof of non-existence of either the (possibly redirected
+zone to a proof of either the non-existence of the (possibly redirected
 via aliases) TLSA records or else of an insecure delegation above or
 at the (possibly redirected) owner name of the requested TLSA RRset.
 
@@ -308,7 +308,7 @@ multiple branches of the DNS tree. In this case, the authentication
 chain structure needs to include DS and DNSKEY record sets that cover
 all the necessary branches.
 
-The returned chain should also include the DNSKEY RRSets of all relevant
+The returned chain SHOULD also include the DNSKEY RRSets of all relevant
 trust anchors (typically just the root DNS zone).  Though the same trust
 anchors are presumably also preconfigured in the TLS client, including
 them in the response from the server permits TLS clients to use the
@@ -390,12 +390,14 @@ RRSIG(. DNSKEY)
 
 ### Authenticated Denial of Existence {#denial_of_existence}
 
-TLS servers supporting this extension that do not have a signed TLSA
-record MUST instead return a DNSSEC chain that provides authenticated
-denial of existence. A TLS client receiving proof of authenticated
-denial of existence MUST use an alternative method to verify the TLS
-server identity or close the connection. Such an alternative could be
-the classic WebPKI model of preinstalled root CA's.
+TLS servers that support this extension and respond to a request
+containing this extension that do not have a signed TLSA record for the
+configured (and requested) SNI name and port MUST instead return a DNSSEC
+chain that provides authenticated denial of existence for the configured
+SNI name and port. A TLS client receiving proof of authenticated denial
+of existence MUST use an alternative method to verify the TLS server
+identity or close the connection. Such an alternative could be the
+classic PKIX model of preinstalled root CA's.
 
 Authenticated denial chains include NSEC or NSEC3 records that
 demonstrate one of the following facts:
@@ -494,13 +496,13 @@ TLS server reply to update the extension pinning status of the TLS
 server's extension lifetime. See (#pinning).
 
 A TLS client making use of this specification, and which receives a
-valid DNSSEC authentication chain extension from a server, MUST use
-this information to perform DANE authentication of the server.  In
+valid DNSSEC authentication chain extension from a TLS server, MUST use
+this information to perform DANE authentication of the TLS server.  In
 order to perform the validation, it uses the mechanism specified by
 the DNSSEC protocol [@!RFC4035;@!RFC5155].  This mechanism is
 sometimes implemented in a DNSSEC validation engine or library.
 
-If the authentication chain validates, the client then performs DANE
+If the authentication chain validates, the TLS client then performs DANE
 authentication of the server according to the DANE TLS protocol
 [@!RFC6698;@!RFC7671].
 
@@ -525,15 +527,15 @@ extension. Such TLS clients requesting this extension would abort a
 connection to a TLS server that does not respond with a validatable
 extension reply.
 
-However, in a mixed-use deployment of WebPKI and DANE, there is the
+However, in a mixed-use deployment of PKIX and DANE, there is the
 possibility that the security of a TLS client is downgraded from DANE
-to WebPKI. This can happen when a TLS client connection is
+to PKIX. This can happen when a TLS client connection is
 intercepted and redirected to a rogue TLS server presenting a TLS
-certificate that is considered valid from a WebPKI point of view, but
+certificate that is considered valid from a PKIX point of view, but
 one that does not match the legitimate server's TLSA records. By
 omitting this extension, such a rogue TLS server could downgrade the
 TLS client to validate the mis-issued certificate using only the
-WebPKI and not via DANE, provided the TLS client is also not able to
+PKIX and not via DANE, provided the TLS client is also not able to
 fetch the TLSA records directly from DNS.
 
 The ExtSupportLifetime element of the extension provides a
@@ -551,7 +553,7 @@ MUST be cleared on receipt of a valid denial of existence for the
 associated TLSA RRset. The same also applies if the client obtained
 the denial of existence proof via another method, such as through
 direct DNS queries.  Based on the TLS client's local policy, it MAY
-then terminate the connection or MAY continue using WebPKI based
+then terminate the connection or MAY continue using PKIX based
 server authentication.
 
 Extension pins MUST also be cleared upon the completion of a DANE
@@ -581,17 +583,32 @@ or all four.  Clients that implement DANE-EE(3) and DANE-TA(2) MUST
 implement the relevant updates in [@!RFC7671].
 
 For a non-zero saved value of the ExtSupportLifetime element of the
-extension, TLS clients MUST mandate ("pin") the use of this extension
-by the corresponding TLS servers for the time period specified by the
-pinning value. If during this time, the TLS client does not have a
-valid TLSA record and connects to a TLS server using this extension
-for the associated name and port, and it does not obtain a valid
-authentication chain in this extension, it MUST either abort the
-connection or delay communication with the server via the TLS session
-until it is able to obtain valid TLSA records (or non-existence
-proof) out of band, such as via direct DNS lookups.  If attempts to
-obtain the TLSA RRset out of band fail, the client MUST abort the TLS
-session.
+extension, TLS clients that do not have a valid TLSA RRset or proof of
+non-existence MUST ("pin") use the extension for the associated name and
+port to obtain this information from the TLS server. This TLS client
+then MUST require that the TLS server responds with this extension
+that MUST contain a valid TLSA RRset or proof of non-existence of the
+TLSA RRset that covers the requested name and port. The TLS client MUST
+require this for as long as the time period specified by the pin value,
+independent of the DNS TTLs. If during this process, the TLS client fails
+to receive this information, it MUST either abort the connection or delay
+communication with the server via the TLS connection until it is able
+to obtain valid TLSA records (or proof of non-existence) out of band,
+such as via direct DNS lookups.  If attempts to obtain the TLSA RRset
+out of band fail, the client MUST abort the TLS connection. It MAY try
+a new TLS connection again, for example using an exponential back-off
+timer, in an attempt to reach a different TLS server instance that does
+properly serve the extension.
+
+A TLS client that has a valid TLSA RRset and a valid non-zero extension
+pin time MAY still refrain from requesting the extension as long as it
+uses its existing valid TLSA RRset to validate the TLS server. This RRset
+MUST NOT be used beyond its received TTL. As soon as the TLSA RRset's
+TTL has expired, the TLS client with a valid non-zero extension pin
+time MUST request the extension and MUST abort the TLS connection if
+the server responds without the extension. A TLS client MAY attempt
+to use another DNS transport to obtain a valid TLSA RRset before
+initiating a new TLS connection.
 
 Note that requiring the extension is NOT the same as requiring the
 use of DANE TLSA records or even DNSSEC. A DNS zone operator may at
@@ -720,17 +737,28 @@ managed, but makes each one independent of the rest.
 
 The security considerations of the normatively referenced RFCs all
 pertain to this extension. Since the server is delivering a chain of
-DNS records and signatures to the client, it MUST rebuild the chain
-in accordance with TTL and signature expiration of the chain
-components as described in (#sec_caching).  TLS clients
-need roughly accurate time in order to properly authenticate these
-signatures. This could be achieved by running a time synchronization
-protocol like NTP [@RFC5905] or SNTP [@RFC5905], which are already widely used today. TLS clients
+DNS records and signatures to the client, it MUST rebuild the chain in
+accordance with TTL and signature expiration of the chain components
+as described in (#sec_caching).  TLS clients need roughly accurate
+time in order to properly authenticate these signatures. This could be
+achieved by running a time synchronization protocol like NTP [@RFC5905]
+or SNTP [@RFC5905], which are already widely used today. TLS clients
 MUST support a mechanism to track and roll over the trust anchor key,
-or be able to avail themselves of a service that does this, as
-described in (#sec_trustmaint).  Security
-considerations related to mandating the use of this extension are
-described in (#pinning).
+or be able to avail themselves of a service that does this, as described
+in (#sec_trustmaint).  Security considerations related to mandating the
+use of this extension are described in (#pinning).
+
+The received DNSSEC chain could contain DNS RRs that are not related
+to the TLSA verification of the intended DNS name. If such a unrelated
+RR is not DNSSEC signed, it MUST be disgarded. If the unrelated RRset
+is DNSSEC signed, the TLS client MAY decide to add these RRsets and
+their DNSSEC signatures to its cache. It MAY even pass this data to the
+local system resolver for caching outside the application. However, care
+must be taken that caching these records could be used for timing and
+caching attacks to de-anonymize the TLS client or its user. TLS client
+that want to present the strongest anonymity protection to their users,
+MUST refrain from using and caching all unrelated RRs.
+
 
 # IANA Considerations {#iana_requests}
 
