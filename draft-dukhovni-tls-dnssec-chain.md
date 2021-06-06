@@ -534,12 +534,12 @@ intercepted and redirected to a rogue TLS server presenting a TLS
 certificate that is considered valid from a PKIX point of view, but
 one that does not match the legitimate server's TLSA records. By
 omitting this extension, such a rogue TLS server could downgrade the
-TLS client to validate the mis-issued certificate using only the
-PKIX and not via DANE, provided the TLS client is also not able to
+TLS client to validate the mis-issued certificate using only PKIX
+and not via DANE, provided the TLS client is also not able to
 fetch the TLSA records directly from DNS.
 
 The ExtSupportLifetime element of the extension provides a
-counter-measure against such downgrade attacks. Its value represents
+countermeasure against such downgrade attacks. Its value represents
 the number of hours that the TLS server (or cluster of servers
 serving the same Server Name) commit to serving this extension in the
 future.  This is referred to as the "pinning time" or "extension pin"
@@ -582,13 +582,14 @@ DANE-TA(2) [@!RFC7218], only PKIX-EE(1) and PKIX-TA(0)
 or all four.  Clients that implement DANE-EE(3) and DANE-TA(2) MUST
 implement the relevant updates in [@!RFC7671].
 
-For a non-zero saved value of the ExtSupportLifetime element of the
-extension, TLS clients that do not have a valid TLSA RRset or proof of
-non-existence MUST ("pin") use the extension for the associated name and
+For a non-zero saved value ("pin") of the ExtSupportLifetime element of the
+extension, TLS clients that do not have a cached TLSA RRset with an
+unexpired TTL MUST use the extension for the associated name and
 port to obtain this information from the TLS server. This TLS client
 then MUST require that the TLS server responds with this extension
 that MUST contain a valid TLSA RRset or proof of non-existence of the
-TLSA RRset that covers the requested name and port. The TLS client MUST
+TLSA RRset that covers the requested name and port. Note that a non-existence
+proof or proof of insecure delegation will clear the pin. The TLS client MUST
 require this for as long as the time period specified by the pin value,
 independent of the DNS TTLs. If during this process, the TLS client fails
 to receive this information, it MUST either abort the connection or delay
@@ -600,14 +601,14 @@ a new TLS connection again, for example using an exponential back-off
 timer, in an attempt to reach a different TLS server instance that does
 properly serve the extension.
 
-A TLS client that has a valid TLSA RRset and a valid non-zero extension
+A TLS client that has a cached validated TLSA RRset and a valid non-zero extension
 pin time MAY still refrain from requesting the extension as long as it
-uses its existing valid TLSA RRset to validate the TLS server. This RRset
-MUST NOT be used beyond its received TTL. As soon as the TLSA RRset's
+uses the cached TLSA RRset to authenticate the TLS server. This RRset
+MUST NOT be used beyond its received TTL. Once the TLSA RRset's
 TTL has expired, the TLS client with a valid non-zero extension pin
 time MUST request the extension and MUST abort the TLS connection if
 the server responds without the extension. A TLS client MAY attempt
-to use another DNS transport to obtain a valid TLSA RRset before
+to obtain the valid TLSA RRset by some other means before
 initiating a new TLS connection.
 
 Note that requiring the extension is NOT the same as requiring the
