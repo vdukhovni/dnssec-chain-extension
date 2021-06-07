@@ -756,10 +756,9 @@ is DNSSEC signed, the TLS client MAY decide to add these RRsets and
 their DNSSEC signatures to its cache. It MAY even pass this data to the
 local system resolver for caching outside the application. However, care
 must be taken that caching these records could be used for timing and
-caching attacks to de-anonymize the TLS client or its user. TLS client
-that want to present the strongest anonymity protection to their users,
+caching attacks to de-anonymize the TLS client or its user. A TLS client
+that wants to present the strongest anonymity protection to their users,
 MUST refrain from using and caching all unrelated RRs.
-
 
 # IANA Considerations {#iana_requests}
 
