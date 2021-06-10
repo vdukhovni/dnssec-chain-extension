@@ -210,7 +210,7 @@ connections.
 Differences between the client's notional port number and the actual
 port at the server could be a result of intermediate systems performing
 network address translation, or perhaps a result of a redirect via HTTPS
-or SVCB records (both defined in [@!I-D.ietf-dnsop-svcb-https]).
+or SVCB records (both defined in [@I-D.ietf-dnsop-svcb-https]).
 
 Though a DNS zone's HTTPS or SVCB records may be signed, a client
 using this protocol might not have direct access to a validating resolver,
